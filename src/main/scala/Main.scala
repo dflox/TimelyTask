@@ -1,7 +1,4 @@
 import com.github.nscala_time.time.Imports.*
-import org.joda.time.format.PeriodFormat
-
-import javax.swing.JToolBar.Separator
 
 def main(args:Array[String]) = {
   val userName = System.getProperty("user.name")
@@ -61,7 +58,7 @@ def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
   (0 until period).map(startDay + _.days).toList
 }
 
-def printTable(width: Int, startDay: DateTime, period: Int, tasks: List[Task]) = {
+def printTable(width: Int, startDay: DateTime, period: Int, tasks: List[Task]): Unit = {
   val days: List[DateTime] = (0 until period).map(startDay + _.days).toList
   days.foreach(day => {
     print(day.toString("dd. MMM yy") + " |")

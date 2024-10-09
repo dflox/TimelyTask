@@ -12,3 +12,6 @@ val today: DateTime = DateTime.now()
 val numberOfDays: Int = 7
 val days: List[DateTime] = (0 until numberOfDays).map(today + _.days).toList
 days.foreach(day => println(day.dayOfWeek.getAsText))
+
+Task(1, "Task 1", "Description of Task 1", Priority(1, 1, "High", java.awt.Color.RED, "High Priority", 1, true), Status(1, "Open", "Task is open", java.awt.Color.GREEN)).description
+Priority(1, 1, "High", java.awt.Color.RED, "High Priority", 1, true).toString()
