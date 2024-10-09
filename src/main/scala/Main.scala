@@ -1,3 +1,8 @@
+import com.github.nscala_time.time.Imports.*
+import org.joda.time.format.PeriodFormat
+
+import javax.swing.JToolBar.Separator
+
 def main(args:Array[String]) = {
   val userName = System.getProperty("user.name")
   val greeting = "Hello " + userName + ","
@@ -6,6 +11,7 @@ def main(args:Array[String]) = {
   println("Welcome to TimelyTask! \n")
   printLine()
   println("Calender" + createSpace(width - 20) + date)
+  println("Calender" + createSpace(width - 20) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - "))
   printLine()
   println("Time |" +
           "Monday" + createSpace(spaceBetweenDays()) + "|" +
@@ -18,9 +24,28 @@ def main(args:Array[String]) = {
   println("Type:(not implemented yet) to add a task")
 
 }
+
+// Variables
 val width = 100
 val date = "07-10 oct 24"
+val dateToday: DateTime = DateTime.now()
 val lettersOfDayColumn = 61
+
+// Functions
+
+// Get the first Day of the week
+def getFirstDayOfWeek(day: DateTime): DateTime = {
+  day - (day.getDayOfWeek - 1).days
+}
+
+/*
+  Get a time period in a given Format as String starting with a given day and going forward for a given TimePeriod
+*/
+def getDatePeriod(day: DateTime, timePeriod: Int, formatStart: String, formatEnd: String, separator: String): String = {
+  val lastDay: DateTime = day + (timePeriod - 1).days
+  day.toString(formatStart) + separator + lastDay.toString(formatEnd)
+}
+
 def spaceBetweenDays(): Int = {
   (width - lettersOfDayColumn) / 7
 }
@@ -32,4 +57,19 @@ def createLine(length: Int): String = {
 }
 def printLine(): Unit = {
   println(createLine(width))
+}
+
+def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
+  (0 until period).map(startDay + _.days).toList
+}
+
+def printTable(width: Int, startDay: DateTime, period: Int, tasks: List[Task]) = {
+  val days: List[DateTime] = (0 until period).map(startDay + _.days).toList
+  days.foreach(day => {
+    print(day.toString("dd. MMM yy") + " |")
+    tasks.foreach(task => {
+      print(task.name + createSpace(spaceBetweenDays() - task.name.length) + "|")
+    })
+    println()
+  })
 }
