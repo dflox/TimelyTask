@@ -10,7 +10,6 @@ def main(args:Array[String]) = {
   println(greeting)
   println("Welcome to TimelyTask! \n")
   printLine()
-  println("Calender" + createSpace(width - 20) + date)
   println("Calender" + createSpace(width - 20) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - "))
   printLine()
   println("Time |" +
@@ -27,7 +26,6 @@ def main(args:Array[String]) = {
 
 // Variables
 val width = 100
-val date = "07-10 oct 24"
 val dateToday: DateTime = DateTime.now()
 val lettersOfDayColumn = 61
 
