@@ -1,32 +1,26 @@
 import com.github.nscala_time.time.Imports.*
+import jline.TerminalFactory
 
 def main(args:Array[String]) = {
-  val userName = System.getProperty("user.name")
-  val greeting = "Hello " + userName + ","
-  printLine()
-  println(greeting)
-  println("Welcome to TimelyTask! \n")
-  printLine()
-  println("Calender" + createSpace(width - headerLetters) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - "))
+  if width > terminalWidth then {
+    println(s"The current calender width ($width) is too large for the terminal width ($terminalWidth). Please adjust the width to be smaller than the terminal width.")
+    System.exit(0)
+  }
   printTable(width, getFirstDayOfWeek(dateToday), 7)
-  /* println("Time |" +
-          "Monday" + createSpace(spaceBetweenDays()) + "|" +
-          "Thusday" + createSpace(spaceBetweenDays()) + "|" +
-          "Wednesday" +  createSpace(spaceBetweenDays()) +"|" +
-          "Thursday" + createSpace(spaceBetweenDays()) + "|" +
-          "Friday" + createSpace(spaceBetweenDays()) + "|" +
-          "Saturday" + createSpace(spaceBetweenDays()) + "|" + "Sunday")
-  */
-  println("Type:(not implemented yet) to add a task")
 
 }
 
 // Variables
-val width = 150
-val format = "r"
-val dateToday: DateTime = DateTime.now()
-val headerLetters = 25 // The amount of letters in "Calender" + the date period
 
+val format = "m"
+val dateToday: DateTime = DateTime.now()
+val timeColumn = "| Time |"
+val headerLetters = 25 // The amount of letters in "Calender+DD. - DD. MMM. YY"
+
+// get Terminal width
+val terminal = TerminalFactory.get()
+val terminalWidth = terminal.getWidth
+val width = terminalWidth
 // Functions
 
 // Get the first Day of the week
@@ -48,8 +42,8 @@ def createSpace(length: Int): String = {
 def createLine(length: Int): String = {
   "-" * length
 }
-def printLine(): Unit = {
-  println(createLine(width))
+def printLine(lineWidth: Int): Unit = {
+  println(createLine(lineWidth))
 }
 
 def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
@@ -58,21 +52,33 @@ def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
 
 // Print a line, then (time, Monday, Tuesday,(starting with the start day)...) and then a line, creating a list of all Strings(time + days + |) then calculating the amount of letters to ensure equal spaces between the columnns
 def printTable(width: Int, startDay: DateTime, period: Int): Unit = {
-  printLine()
   val daysList = getDaySpan(startDay, period)
   var table = List[String]()
-  table = table :+ "|Time  |"
+  table = table :+ timeColumn
   daysList.foreach(day => table = table :+ day.dayOfWeek().getAsText + "|")
   val letterAmount = table.map(_.length).sum
   val spaceBetween = ((width - table.head.length - period) / period)
+  val actualWidth = timeColumn.length + period + (period * spaceBetween)
 
-  print("|time  |")
+
+  // Printing
+  val userName = System.getProperty("user.name")
+  val greeting = "Hello " + userName + ","
+  // Welcome message
+  printLine(actualWidth)
+  println(greeting)
+  println("Welcome to TimelyTask! \n")
+  // print the header
+  printLine(actualWidth)
+  println("Calender" + createSpace(actualWidth - headerLetters) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - "))
+  // print the TopRow
+  print(timeColumn)
   daysList.foreach(day => print(columnSpacer(day.dayOfWeek().getAsText, spaceBetween, format) + "|")) // print the days
   println()
-  printLine()
+  printLine(actualWidth)
+  // print the time rows
 
-  //temp. testing
-  println("spaceBetween: " + spaceBetween)
+
 }
 
 
@@ -84,7 +90,7 @@ def columnSpacer(text: String, totalSpace: Int, format: String): String = {
   val space = totalSpace - text.length
   format match {
     case "l" => text + createSpace(space) // left
-    case "m" => createSpace(space/2) + text + createSpace(space/2) // middle
+    case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
     case "r" => createSpace(space) + text // right
   }
 }

@@ -9,5 +9,6 @@ lazy val root = project
     scalaVersion := scala3Version,
 
     libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test,
-    libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.34.0"
+    libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.34.0",
+      libraryDependencies += "jline" % "jline" % "2.14.6"
   )
