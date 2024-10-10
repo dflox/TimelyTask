@@ -6,6 +6,7 @@ def main(args:Array[String]) = {
     println(s"The current calender width ($width) is too large for the terminal width ($terminalWidth). Please adjust the width to be smaller than the terminal width.")
     System.exit(0)
   }
+  println("\u001b[2J") // clear the terminal
   printTable(width, getFirstDayOfWeek(dateToday), 7)
 
 }
