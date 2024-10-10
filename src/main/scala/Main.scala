@@ -14,10 +14,13 @@ def main(args:Array[String]) = {
 
 val format = "m"
 val dateToday: DateTime = DateTime.now()
-val timeColumn = "| Time |"
+val timeColumn = "| Time  |"
 val headerLetters = 25 // The amount of letters in "Calender+DD. - DD. MMM. YY"
+val lines = 30 // The amount of lines the Rows have
+val hours = 24 // The amount of hours the Rows show
+val startAt = 8.25 // The time the Rows start at
 
-// get Terminal width
+// set the width of the calender to the terminal width
 val terminal = TerminalFactory.get()
 val terminalWidth = terminal.getWidth
 val width = terminalWidth
@@ -71,12 +74,16 @@ def printTable(width: Int, startDay: DateTime, period: Int): Unit = {
   // print the header
   printLine(actualWidth)
   println("Calender" + createSpace(actualWidth - headerLetters) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - "))
+  printLine(actualWidth)
   // print the TopRow
   print(timeColumn)
   daysList.foreach(day => print(columnSpacer(day.dayOfWeek().getAsText, spaceBetween, format) + "|")) // print the days
   println()
   printLine(actualWidth)
   // print the time rows
+  calculateInterval(lines, hours) match {
+    case (interval, lines) => printRows(startAt ,hours, interval, period, spaceBetween)
+  }
 
 
 }
@@ -92,5 +99,35 @@ def columnSpacer(text: String, totalSpace: Int, format: String): String = {
     case "l" => text + createSpace(space) // left
     case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
     case "r" => createSpace(space) + text // right
+  }
+}
+
+def calculateInterval(lines: Int, hours: Double): (Double, Int) = {
+  if (lines <= 0) {
+    throw new IllegalArgumentException("Number of lines must be greater than 0")
+  }
+
+  val possibleIntervals = List(4.0, 2.0, 1.0, 0.5, 0.25)
+  val rawInterval = hours / lines
+
+  val chosenInterval = possibleIntervals.filter(_ >= rawInterval).min
+  val maxLines = (hours / chosenInterval).toInt
+
+  (chosenInterval, math.min(lines, maxLines))
+}
+
+def printRows(startTime: Double, hours: Double, interval: Double, period: Int, spaceBetween: Int): Unit = {
+  val lines = (hours / interval).toInt
+  for (i <- 0 until lines) {
+    var hour = startTime + i * interval
+    if (hour >= 24) hour -= 24
+    val hourWhole = hour.toInt
+    val minute = ((hour - hourWhole) * 60).toInt
+    val hourString = f"$hourWhole%02d:$minute%02d"
+    print(s"| $hourString |")
+    for (_ <- 0 until period) {
+      print(createSpace(spaceBetween) + "|")
+    }
+    println()
   }
 }
