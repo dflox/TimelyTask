@@ -23,6 +23,7 @@ def main(args:Array[String]) = {
 
 // Variables
 val width = 150
+val format = "r"
 val dateToday: DateTime = DateTime.now()
 val headerLetters = 25 // The amount of letters in "Calender" + the date period
 
@@ -55,26 +56,35 @@ def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
   (0 until period).map(startDay + _.days).toList
 }
 
-// Print a line, then (time, Monday, Tuesday,(starting with the start day)...) and then a line, creating a list of all Strings(time + days + |) then calculating the amount of letters to ensure equal spaces between the collumns
+// Print a line, then (time, Monday, Tuesday,(starting with the start day)...) and then a line, creating a list of all Strings(time + days + |) then calculating the amount of letters to ensure equal spaces between the columnns
 def printTable(width: Int, startDay: DateTime, period: Int): Unit = {
   printLine()
-  val days = getDaySpan(startDay, period)
+  val daysList = getDaySpan(startDay, period)
   var table = List[String]()
-  table = table :+ "Time  |"
-  days.foreach(day => table = table :+ day.dayOfWeek().getAsText + "|")
+  table = table :+ "|Time  |"
+  daysList.foreach(day => table = table :+ day.dayOfWeek().getAsText + "|")
   val letterAmount = table.map(_.length).sum
-  val spaceBetween = (width - letterAmount) / (period + 1)
-  def daySpacing(dayWithoutSpaces: String): String = {
-    createSpace(spaceBetween)/2 + dayWithoutSpaces + createSpace(spaceBetween)/2
-  }
-  var tablePrintable = List[String]()
-  tablePrintable = tablePrintable :+ table.head
-  tablePrintable = tablePrintable :+ daySpacing(days.head.dayOfWeek().getAsText)
-  days.tail.foreach(day => tablePrintable = tablePrintable :+ "|" + daySpacing(day.dayOfWeek().getAsText))
-  tablePrintable.foreach(print)
+  val spaceBetween = ((width - table.head.length - period) / period)
+
+  print("|time  |")
+  daysList.foreach(day => print(columnSpacer(day.dayOfWeek().getAsText, spaceBetween, format) + "|")) // print the days
   println()
   printLine()
+
+  //temp. testing
+  println("spaceBetween: " + spaceBetween)
 }
 
-//function collumSpacer(text: String, totalSpace: Int, format: String): String = {
-// will produze a String with the text acording to the format(left,middle,right and the given totalSpace
+
+def columnSpacer(text: String, totalSpace: Int, format: String): String = {
+  // check if the text is longer than the total space, if so cut it
+  if (text.length > totalSpace) {
+    return text.substring(0, totalSpace)
+  }
+  val space = totalSpace - text.length
+  format match {
+    case "l" => text + createSpace(space) // left
+    case "m" => createSpace(space/2) + text + createSpace(space/2) // middle
+    case "r" => createSpace(space) + text // right
+  }
+}
