@@ -102,6 +102,7 @@ def columnSpacer(text: String, totalSpace: Int, format: String): String = {
   }
 }
 
+// Calculate the interval between the hours and the amount of lines
 def calculateInterval(lines: Int, hours: Double): (Double, Int) = {
   if (lines <= 0) {
     throw new IllegalArgumentException("Number of lines must be greater than 0")
@@ -116,6 +117,7 @@ def calculateInterval(lines: Int, hours: Double): (Double, Int) = {
   (chosenInterval, math.min(lines, maxLines))
 }
 
+// Print the rows with the time
 def printRows(startTime: Double, hours: Double, interval: Double, period: Int, spaceBetween: Int): Unit = {
   val lines = (hours / interval).toInt
   for (i <- 0 until lines) {
@@ -123,7 +125,7 @@ def printRows(startTime: Double, hours: Double, interval: Double, period: Int, s
     if (hour >= 24) hour -= 24
     val hourWhole = hour.toInt
     val minute = ((hour - hourWhole) * 60).toInt
-    val hourString = f"$hourWhole%02d:$minute%02d"
+    val hourString = f"$hourWhole%02d:$minute%02d" // format the hour to be 2 digits
     print(s"| $hourString |")
     for (_ <- 0 until period) {
       print(createSpace(spaceBetween) + "|")
