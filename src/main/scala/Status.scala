@@ -1,4 +1,4 @@
 import java.awt.Color
 
-case class Status(id: Int, name: String, description: String, color: Color) {
+class Status(id: Int, var name: String, var description: String, var color: Color) {
 }
