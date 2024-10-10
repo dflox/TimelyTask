@@ -17,13 +17,14 @@ val format = "m"
 val dateToday: DateTime = DateTime.now()
 val timeColumn = "| Time  |"
 val headerLetters = 25 // The amount of letters in "Calender+DD. - DD. MMM. YY"
-val lines = 30 // The amount of lines the Rows have
 val hours = 24 // The amount of hours the Rows show
 val startAt = 8.25 // The time the Rows start at
 
 // set the width of the calender to the terminal width
 val terminal = TerminalFactory.get()
 val terminalWidth = terminal.getWidth
+val terminalHeight = terminal.getHeight
+val lines = terminalHeight - 11
 val width = terminalWidth
 // Functions
 
@@ -69,7 +70,6 @@ def printTable(width: Int, startDay: DateTime, period: Int): Unit = {
   val userName = System.getProperty("user.name")
   val greeting = "Hello " + userName + ","
   // Welcome message
-  printLine(actualWidth)
   println(greeting)
   println("Welcome to TimelyTask! \n")
   // print the header
@@ -82,14 +82,22 @@ def printTable(width: Int, startDay: DateTime, period: Int): Unit = {
   println()
   printLine(actualWidth)
   // print the time rows
-  calculateInterval(lines, hours) match {
-    case (interval, lines) => printRows(startAt ,hours, interval, period, spaceBetween)
-  }
-
+  val (interval, maxLines) = calculateInterval(lines, hours)
+  printRows(startAt, hours, interval, period, spaceBetween)
+  printLine(actualWidth)
+  alignTop(terminalHeight, maxLines)
 
 }
 
-
+def alignTop (totalLines: Int, used: Int): Int = {
+  val unused: Int = totalLines - used - 11
+  if (unused > 0) {
+    for (_ <- 0 until unused) {
+      println()
+    }
+  }
+  unused
+}
 def columnSpacer(text: String, totalSpace: Int, format: String): String = {
   // check if the text is longer than the total space, if so cut it
   if (text.length > totalSpace) {
