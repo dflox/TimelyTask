@@ -7,24 +7,24 @@ def main(args:Array[String]) = {
   println(greeting)
   println("Welcome to TimelyTask! \n")
   printLine()
-  println("Calender" + createSpace(width - 20) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - "))
-  printLine()
-  println("Time |" +
+  println("Calender" + createSpace(width - headerLetters) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - "))
+  printTable(width, getFirstDayOfWeek(dateToday), 7)
+  /* println("Time |" +
           "Monday" + createSpace(spaceBetweenDays()) + "|" +
           "Thusday" + createSpace(spaceBetweenDays()) + "|" +
           "Wednesday" +  createSpace(spaceBetweenDays()) +"|" +
           "Thursday" + createSpace(spaceBetweenDays()) + "|" +
           "Friday" + createSpace(spaceBetweenDays()) + "|" +
           "Saturday" + createSpace(spaceBetweenDays()) + "|" + "Sunday")
-  printLine()
+  */
   println("Type:(not implemented yet) to add a task")
 
 }
 
 // Variables
-val width = 100
+val width = 150
 val dateToday: DateTime = DateTime.now()
-val lettersOfDayColumn = 61
+val headerLetters = 25 // The amount of letters in "Calender" + the date period
 
 // Functions
 
@@ -41,9 +41,6 @@ def getDatePeriod(day: DateTime, timePeriod: Int, formatStart: String, formatEnd
   day.toString(formatStart) + separator + lastDay.toString(formatEnd)
 }
 
-def spaceBetweenDays(): Int = {
-  (width - lettersOfDayColumn) / 7
-}
 def createSpace(length: Int): String = {
   " " * length
 }
@@ -58,13 +55,26 @@ def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
   (0 until period).map(startDay + _.days).toList
 }
 
-def printTable(width: Int, startDay: DateTime, period: Int, tasks: List[Task]): Unit = {
-  val days: List[DateTime] = (0 until period).map(startDay + _.days).toList
-  days.foreach(day => {
-    print(day.toString("dd. MMM yy") + " |")
-    tasks.foreach(task => {
-      print(task.name + createSpace(spaceBetweenDays() - task.name.length) + "|")
-    })
-    println()
-  })
+// Print a line, then (time, Monday, Tuesday,(starting with the start day)...) and then a line, creating a list of all Strings(time + days + |) then calculating the amount of letters to ensure equal spaces between the collumns
+def printTable(width: Int, startDay: DateTime, period: Int): Unit = {
+  printLine()
+  val days = getDaySpan(startDay, period)
+  var table = List[String]()
+  table = table :+ "Time  |"
+  days.foreach(day => table = table :+ day.dayOfWeek().getAsText + "|")
+  val letterAmount = table.map(_.length).sum
+  val spaceBetween = (width - letterAmount) / (period + 1)
+  def daySpacing(dayWithoutSpaces: String): String = {
+    createSpace(spaceBetween)/2 + dayWithoutSpaces + createSpace(spaceBetween)/2
+  }
+  var tablePrintable = List[String]()
+  tablePrintable = tablePrintable :+ table.head
+  tablePrintable = tablePrintable :+ daySpacing(days.head.dayOfWeek().getAsText)
+  days.tail.foreach(day => tablePrintable = tablePrintable :+ "|" + daySpacing(day.dayOfWeek().getAsText))
+  tablePrintable.foreach(print)
+  println()
+  printLine()
 }
+
+//function collumSpacer(text: String, totalSpace: Int, format: String): String = {
+// will produze a String with the text acording to the format(left,middle,right and the given totalSpace
