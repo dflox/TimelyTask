@@ -2,18 +2,17 @@ package view
 
 import com.github.nscala_time.time.Imports.*
 import jline.{Terminal, TerminalFactory}
-
+import util.Align._
 
 class TUI {
 
-  // Variables
-
-  val format = "m"
+  // Constants
+  val align: Align = Align.c
   val dateToday: DateTime = DateTime.now()
   val timeColumn = "| Time  |"
   val headerLetters = 25 // The amount of letters in "Calendar+DD. - DD. MMM. YY"
-  val hours = 24 // The amount of hours the Rows show
-  val startAt = 8.25 // The time the Rows start at
+  val hours = 24 // The amount of hours the columns show
+  val startAt = 8.25 // The time the columns start at
 
   // set the width of the calendar to the terminal width
   val terminal: Terminal = TerminalFactory.get()
@@ -70,18 +69,14 @@ class TUI {
 
 
     // Printing
-    val userName = System.getProperty("user.name")
-    val greeting = "Hello " + userName + ","
-    // Welcome message
-    println(greeting)
-    println("Welcome to TimelyTask! \n")
+    
     // print the header
     printLine(actualWidth)
     println("Calender" + createSpace(actualWidth - headerLetters) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - "))
     printLine(actualWidth)
     // print the TopRow
     print(timeColumn)
-    daysList.foreach(day => print(columnSpacer(day.dayOfWeek().getAsText, spaceBetween, format) + "|")) // print the days
+    daysList.foreach(day => print(columnSpacer(day.dayOfWeek().getAsText, spaceBetween, align) + "|")) // print the days
     println()
     printLine(actualWidth)
     // print the time rows
@@ -102,16 +97,16 @@ class TUI {
     unused
   }
 
-  def columnSpacer(text: String, totalSpace: Int, format: String): String = {
+  def columnSpacer(text: String, totalSpace: Int, align: Align): String = {
     // check if the text is longer than the total space, if so cut it
     if (text.length > totalSpace) {
       return text.substring(0, totalSpace)
     }
     val space = totalSpace - text.length
-    format match {
-      case "l" => text + createSpace(space) // left
-      case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
-      case "r" => createSpace(space) + text // right
+    align match {
+      case Align.l => text + createSpace(space) // left
+      case Align.c => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
+      case Align.r => createSpace(space) + text // right
     }
   }
 
