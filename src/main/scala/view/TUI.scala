@@ -12,8 +12,8 @@ class TUI {
   val dateToday: DateTime = DateTime.now()
   val timeColumn = "| Time  |"
   val headerLetters = 25 // The amount of letters in "Calendar+DD. - DD. MMM. YY"
-  val hours = 24 // The amount of hours the Rows show
-  val startAt = 8.25 // The time the Rows start at
+  val hours = 8 // The amount of hours the Rows show
+  val startAt = 6.75 // The time the Rows start at
 
   // set the width of the calendar to the terminal width
   val terminal: Terminal = TerminalFactory.get()
