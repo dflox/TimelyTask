@@ -29,36 +29,7 @@ class TUI {
     printTable(width, getFirstDayOfWeek(dateToday), 7)
   }
 
-  // Get the first Day of the week
-  def getFirstDayOfWeek(day: DateTime): DateTime = {
-    day - (day.getDayOfWeek - 1).days
-  }
-
-  /*
-    Get a time period in a given Format as String starting with a given day and going forward for a given TimePeriod
-  */
-  def getDatePeriod(day: DateTime, timePeriod: Int, formatStart: String, formatEnd: String, separator: String): String = {
-    val lastDay: DateTime = day + (timePeriod - 1).days
-    day.toString(formatStart) + separator + lastDay.toString(formatEnd)
-  }
-
-  def createSpace(length: Int): String = {
-    " " * length
-  }
-
-  def createLine(length: Int): String = {
-    "-" * length
-  }
-
-  def printLine(lineWidth: Int): Unit = {
-    println(createLine(lineWidth))
-  }
-
-  def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
-    (0 until period).map(startDay + _.days).toList
-  }
-
-  // Print a line, then (time, Monday, Tuesday,(starting with the start day)...) and then a line, creating a list of all Strings(time + days + |) then calculating the amount of letters to ensure equal spaces between the columns
+  // Print the table
   def printTable(width: Int, startDay: DateTime, period: Int): Unit = {
     val daysList = getDaySpan(startDay, period)
     var table = List[String]()
@@ -92,6 +63,7 @@ class TUI {
 
   }
 
+  // Align the text to the top of the terminal
   def alignTop(totalLines: Int, used: Int): Int = {
     val unused: Int = totalLines - used - 11
     if (unused > 0) {
@@ -102,6 +74,7 @@ class TUI {
     unused
   }
 
+  // Align the text by adding spaces to the left, right or middle
   def columnSpacer(text: String, totalSpace: Int, format: String): String = {
     // check if the text is longer than the total space, if so cut it
     if (text.length > totalSpace) {
@@ -145,5 +118,37 @@ class TUI {
       }
       println()
     }
+  }
+
+
+  // Get the first Day of the week
+  def getFirstDayOfWeek(day: DateTime): DateTime = {
+    day - (day.getDayOfWeek - 1).days
+  }
+
+  // Get a time period in a given Format as String starting with a given day and going forward for a given TimePeriod
+  def getDatePeriod(day: DateTime, timePeriod: Int, formatStart: String, formatEnd: String, separator: String): String = {
+    val lastDay: DateTime = day + (timePeriod - 1).days
+    day.toString(formatStart) + separator + lastDay.toString(formatEnd)
+  }
+
+  // write a given amount of spaces
+  def createSpace(length: Int): String = {
+    " " * length
+  }
+
+  // write a given amount of lines
+  def createLine(length: Int): String = {
+    "-" * length
+  }
+
+  // print a line with a given width
+  def printLine(lineWidth: Int): Unit = {
+    println(createLine(lineWidth))
+  }
+
+  // Get a list of days starting with a given day and going forward for a given TimePeriod
+  def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
+    (0 until period).map(startDay + _.days).toList
   }
 }
