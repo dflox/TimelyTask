@@ -2,10 +2,8 @@ package view
 
 import com.github.nscala_time.time.Imports.*
 import jline.{Terminal, TerminalFactory}
-import util.Align._
 
 class TUI {
-
   // Constants
   val align: Align = Align.c
   val dateToday: DateTime = DateTime.now()

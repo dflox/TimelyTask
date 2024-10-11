@@ -1,4 +1,4 @@
-package util
+package view
 
 enum Align(stringRepresentation: String):
   override def toString: String = stringRepresentation

@@ -3,7 +3,7 @@ package view
 import com.github.nscala_time.time.Imports.*
 import jline.Terminal
 import model.*
-import util.Align
+import util._
 
 case class CalendarView(align: Align, terminal: Terminal, startDate: Option[DateTime], startTime: Option[DateTime],
                         timeRange: Option[Period], tasks: List[Task]) {

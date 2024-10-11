@@ -1,6 +1,6 @@
-package util
+package view
 
-case class tuiHelper(){
+case class TUIHelper(){
   def createSpace(length: Int): String = {
     " " * length
   }
