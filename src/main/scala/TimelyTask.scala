@@ -8,5 +8,6 @@ def main(args:Array[String]): Unit = {
 //    System.exit(0)
 //  }
   val tui: TUI = new TUI()
+  println("Welcome to TimelyTask!")
   tui.run()
 }
