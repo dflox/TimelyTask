@@ -3,6 +3,7 @@ package view
 import com.github.nscala_time.time.Imports.*
 import jline.{Terminal, TerminalFactory}
 import model.Task
+import view.UtilTUI.*
 
 class TUI extends View[List[Task]] {
 
@@ -68,16 +69,6 @@ class TUI extends View[List[Task]] {
 
   }
 
-  // Align the text to the top of the terminal
-  def alignTop(totalLines: Int, used: Int): String = {
-    val unused: Int = totalLines - used - 11
-    if (unused > 0) {
-      "\n" * unused
-    } else {
-      ""
-    }
-  }
-
   // Align the text by adding spaces to the left, right or middle
   def columnSpacer(text: String, totalSpace: Int, format: String): String = {
     // check if the text is longer than the total space, if so cut it
@@ -125,31 +116,5 @@ class TUI extends View[List[Task]] {
     }
     builder.toString()
   }
-
-
-  // Get the first Day of the week
-  def getFirstDayOfWeek(day: DateTime): DateTime = {
-    day - (day.getDayOfWeek - 1).days
-  }
-
-  // Get a time period in a given Format as String starting with a given day and going forward for a given TimePeriod
-  def getDatePeriod(day: DateTime, timePeriod: Int, formatStart: String, formatEnd: String, separator: String): String = {
-    val lastDay: DateTime = day + (timePeriod - 1).days
-    day.toString(formatStart) + separator + lastDay.toString(formatEnd)
-  }
-
-  // write a given amount of spaces
-  def createSpace(length: Int): String = {
-    " " * length
-  }
-
-  // write a given amount of lines
-  def createLine(length: Int): String = {
-    "-" * length
-  }
-
-  // Get a list of days starting with a given day and going forward for a given TimePeriod
-  def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
-    (0 until period).map(startDay + _.days).toList
-  }
+  
 }

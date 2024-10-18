@@ -10,5 +10,6 @@ lazy val root = project
 
     libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test,
     libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.34.0",
-      libraryDependencies += "jline" % "jline" % "2.14.6"
+    libraryDependencies += "jline" % "jline" % "2.14.6",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % Test
   )
