@@ -2,9 +2,9 @@ package view
 
 import com.github.nscala_time.time.Imports.*
 import jline.{Terminal, TerminalFactory}
+import model.Task
 
-
-class TUI {
+class TUI extends View[List[Task]] {
 
   // Variables
 
@@ -24,13 +24,16 @@ class TUI {
   // Functions
 
   // RUN
-  def run(): Unit = {
-    println("\u001b[2J") // clear the terminal
-    printTable(width, getFirstDayOfWeek(dateToday), 7)
+  def render(model: List[Task]): String = {
+    val builder = new StringBuilder()
+    builder.append("\u001b[2J") // clear the terminal
+    builder.append(createTable(width, getFirstDayOfWeek(dateToday), 7))
+    builder.toString()
   }
 
-  // Print the table
-  def printTable(width: Int, startDay: DateTime, period: Int): Unit = {
+  // Create the table
+  def createTable(width: Int, startDay: DateTime, period: Int): String = {
+    // Variables
     val daysList = getDaySpan(startDay, period)
     var table = List[String]()
     table = table :+ timeColumn
@@ -38,40 +41,41 @@ class TUI {
     val letterAmount = table.map(_.length).sum
     val spaceBetween = (width - table.head.length - period) / period
     val actualWidth = timeColumn.length + period + (period * spaceBetween)
+    val builder = new StringBuilder()
 
-
-    // Printing
+    // Creating
     val userName = System.getProperty("user.name")
     val greeting = "Hello " + userName + ","
     // Welcome message
-    println(greeting)
-    println("Welcome to TimelyTask! \n")
-    // print the header
-    printLine(actualWidth)
-    println("Calender" + createSpace(actualWidth - headerLetters) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - "))
-    printLine(actualWidth)
-    // print the TopRow
-    print(timeColumn)
-    daysList.foreach(day => print(columnSpacer(day.dayOfWeek().getAsText, spaceBetween, format) + "|")) // print the days
-    println()
-    printLine(actualWidth)
-    // print the time rows
+    builder.append(greeting + "\n")
+    builder.append("Welcome to TimelyTask! \n")
+    // Create the header
+    builder.append(createLine(actualWidth) + "\n")
+    builder.append("Calender" + createSpace(actualWidth - headerLetters) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - ") + "\n")
+    builder.append(createLine(actualWidth) + "\n")
+    // Create the TopRow
+    builder.append(timeColumn)
+    daysList.foreach(day => builder.append(columnSpacer(day.dayOfWeek().getAsText, spaceBetween, format) + "|")) // print the days
+    builder.append("\n")
+    builder.append(createLine(actualWidth) + "\n")
+    // Create the time rows
     val (interval, maxLines) = calculateInterval(lines, hours)
-    printRows(startAt, hours, interval, period, spaceBetween)
-    printLine(actualWidth)
-    alignTop(terminalHeight, maxLines)
+    builder.append(createRows(startAt, hours, interval, period, spaceBetween))
+    builder.append(createLine(actualWidth) + "\n")
+    builder.append(alignTop(terminalHeight, maxLines) + "\n")
+
+    builder.toString()
 
   }
 
   // Align the text to the top of the terminal
-  def alignTop(totalLines: Int, used: Int): Int = {
+  def alignTop(totalLines: Int, used: Int): String = {
     val unused: Int = totalLines - used - 11
     if (unused > 0) {
-      for (_ <- 0 until unused) {
-        println()
-      }
+      "\n" * unused
+    } else {
+      ""
     }
-    unused
   }
 
   // Align the text by adding spaces to the left, right or middle
@@ -103,21 +107,23 @@ class TUI {
     (chosenInterval, math.min(lines, maxLines))
   }
 
-  // Print the rows with the time
-  def printRows(startTime: Double, hours: Double, interval: Double, period: Int, spaceBetween: Int): Unit = {
+  // Create the rows with the time
+  def createRows(startTime: Double, hours: Double, interval: Double, period: Int, spaceBetween: Int): String = {
     val lines = (hours / interval).toInt
+    val builder = new StringBuilder()
     for (i <- 0 until lines) {
       var hour = startTime + i * interval
       if (hour >= 24) hour -= 24
       val hourWhole = hour.toInt
       val minute = ((hour - hourWhole) * 60).toInt
       val hourString = f"$hourWhole%02d:$minute%02d" // format the hour to be 2 digits
-      print(s"| $hourString |")
+      builder.append(s"| $hourString |")
       for (_ <- 0 until period) {
-        print(createSpace(spaceBetween) + "|")
+        builder.append(createSpace(spaceBetween) + "|")
       }
-      println()
+      builder.append("\n")
     }
+    builder.toString()
   }
 
 
@@ -140,11 +146,6 @@ class TUI {
   // write a given amount of lines
   def createLine(length: Int): String = {
     "-" * length
-  }
-
-  // print a line with a given width
-  def printLine(lineWidth: Int): Unit = {
-    println(createLine(lineWidth))
   }
 
   // Get a list of days starting with a given day and going forward for a given TimePeriod
