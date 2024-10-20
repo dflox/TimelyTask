@@ -1,7 +1,7 @@
 package util
 
-import model.{Data, XmlSerializable, YamlSerializable}
-import model.settings.{DataType, FileType}
+import model.fileio.{XmlSerializable, YamlSerializable}
+import model.settings.FileType
 
 import scala.util.{Failure, Success, Try}
 import scala.io.Source
@@ -10,7 +10,7 @@ import io.circe.syntax.*
 import io.circe.Encoder
 import io.circe.parser.decode
 import io.circe.Decoder
-import io.circe.generic.auto._
+import model.fileio.Data
 
 import scala.reflect.ClassTag
 
@@ -97,31 +97,3 @@ object FileLoader {
     }
   }
 }
-
-//  def load(datatype: DataType, filetype: FileType, folderPath: String): Try[List[_]] = {
-//    val filePath = s"$folderPath/${datatype.toString.toLowerCase}.${filetype.toString.toLowerCase}"
-//    loadFile(filePath) match {
-//      case Success(content) => filetype match {
-//        case FileType.JSON => Success(content.split("\n").map(datatype.getJsonDecoder).toList)
-//        case FileType.XML => Success(content.split("\n").map(datatype.getXmlDecoder).toList)
-//        case FileType.YAML => Success(content.split("\n").map(datatype.getYamlDecoder).toList)
-//      }
-//      case Failure(exception) => Failure(exception)
-//    }
-//
-//  }
-//
-//  def save(datatype: DataType, filetype: FileType, folderPath: String, data: List[?]): Try[String] = {
-//    var dataString = ""
-//    filetype match {
-//      case FileType.JSON => dataString = data.map(datatype.getJsonEncoder).mkString("\n") // Does this create a JSON object
-//      case FileType.XML => dataString = data.map(datatype.getXmlEncoder).mkString("\n")
-//      case FileType.YAML => dataString = data.map(datatype.getYamlEncoder).mkString("\n")
-//    }
-//    val filePath = s"$folderPath/${datatype.toString.toLowerCase}.${filetype.toString.toLowerCase}"
-//    saveFile(filePath, dataString) match {
-//      case Success(_) => Success(filePath)
-//      case Failure(exception) => Failure(exception)
-//    }
-//  }
-

@@ -1,7 +1,8 @@
-package model
+package model.fileio
 
 import model.settings.DataType
 
-trait Data[T] {
+trait Data[T
+] {
   val dataType: DataType
 }

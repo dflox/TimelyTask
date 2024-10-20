@@ -1,48 +1,25 @@
 package model
 
+import model.fileio._
 import model.settings.DataType
 
 import java.awt.Color
 import java.util.UUID
-import scala.xml.XML
 
-class State(var name: String, var description: String, var color: Color) extends Data[State] with XmlSerializable[State] with YamlSerializable[State] {
+class State(var name: String, var description: String, var color: Color) extends StateEncoders {
   val uuid: UUID = UUID.randomUUID()
+}
+
+object State extends StateEncoders {
   
-  val dataType: DataType = DataType.STATE
-  
-  val XmlEncoder: State => String = state => {
-    <state>
-      <name>
-        {state.name}
-      </name>
-      <description>
-        {state.description}
-      </description>
-      <color>
-        {state.color}
-      </color>
-    </state>.toString()
+  implicit val yamlSerializable: YamlSerializable[State] = new YamlSerializable[State] {
+    override val YamlEncoder: State => String = encodeToYaml
+    override val YamlDecoder: String => State = decodeFromYaml
   }
-  
-  val XmlDecoder: String => State = xml => {
-    val state = XML.loadString(xml)
-    State(
-      (state \ "name").text,
-      (state \ "description").text,
-      Color.decode((state \ "color").text)
-    )
+
+  implicit val xmlSerializable: XmlSerializable[State] = new XmlSerializable[State] {
+    override val dataType: DataType = DataType.STATE
+    override val XmlEncoder: State => String = encodeToXml
+    override val XmlDecoder: String => State = decodeFromXml
   }
-  
-  val YamlEncoder: State => String = state => {
-    s"name: ${state.name}\ndescription: ${state.description}\ncolor: ${state.color}"
-  }
-  
-  val YamlDecoder: String => State = yaml => {
-    val name = yaml.split("\n")(0).split(":")(1).trim
-    val description = yaml.split("\n")(1).split(":")(1).trim
-    val color = Color.decode(yaml.split("\n")(2).split(":")(1).trim)
-    State(name, description, color)
-  }
-    
 }
