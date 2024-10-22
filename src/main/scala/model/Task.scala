@@ -1,6 +1,6 @@
 package model
 
-import com.github.nscala_time.time.Imports.*
+import com.github.nscala_time.time.Imports._
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
