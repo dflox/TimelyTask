@@ -14,7 +14,6 @@ lazy val root = project
     version := "0.1.0-SNAPSHOT",
 
     scalaVersion := scala3Version,
-
     libraryDependencies += "org.scalameta" %% "munit" % scalaMetaVersion % Test,
     libraryDependencies += "com.github.nscala-time" %% "nscala-time" % nscalaTimeVersion,
     libraryDependencies += "jline" % "jline" % jlineVersion,
@@ -25,6 +24,5 @@ lazy val root = project
       "io.circe" %% "circe-core",
       "io.circe" %% "circe-generic",
       "io.circe" %% "circe-parser"
-    ).map(_ % circeVersion),
-
+    ).map(_ % circeVersion)
   )
