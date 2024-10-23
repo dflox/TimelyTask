@@ -14,7 +14,7 @@ import io.circe.generic.auto.*
 import model.settings.StartView.TABLE
 import model.settings.Theme.DARK
 
-case class Controller(view: View[List[Task]]) {
+class Controller(view: View[List[Task]]) {
 
   var tasks: List[Task] = List()
   var tags: mutable.HashMap[UUID, Tag] = mutable.HashMap()
@@ -33,7 +33,7 @@ case class Controller(view: View[List[Task]]) {
   }
 
   def run(): Unit = {
-
+    loadConfigTest()
   }
 }
 
