@@ -26,8 +26,4 @@ class TUI extends View[List[Task]] {
     builder.append(calendarTUI.createTable(getFirstDayOfWeek(dateTime), 7, terminalHeight, terminalWidth))
     builder.toString()
   }
-
-  // Create the table
-
-  
 }

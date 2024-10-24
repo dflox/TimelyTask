@@ -7,6 +7,7 @@ val scalaMetaVersion = "1.0.0"
 val scalaYamlVersion = "0.3.0"
 val scalaXmlVersion = "2.3.0"
 
+
 lazy val root = project
   .in(file("."))
   .settings(
