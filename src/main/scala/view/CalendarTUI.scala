@@ -30,8 +30,6 @@ class CalendarTUI {
     var table = List[String]()
     table = table :+ timeColumn
     daysList.foreach(day => table = table :+ day.dayOfWeek().getAsText + "|") // dayList toString
-
-
     val letterAmount = table.map(_.length).sum
     val spaceBetween = (width - table.head.length - period) / period
     val actualWidth = timeColumnLength + period + (period * spaceBetween)
@@ -61,8 +59,8 @@ class CalendarTUI {
       format match {
         case "l" => text + createSpace(space) // left
         case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
-        case "r" => createSpace(space) + text // right
-      }
+        case "r" => createSpace(math.max(space, 0)) + text // right
+        }
     }
     def header(actualWidth: Int, dateToday: DateTime): String = {
       val builder = new StringBuilder()
@@ -79,7 +77,8 @@ class CalendarTUI {
       val builder = new StringBuilder()
       for (i <- 0 until lines) {
         var hour = startTime + i * interval
-        if (hour >= 24) hour -= 24
+        if (hour >= 24) hour = hour % 24
+
         val hourWhole = hour.toInt
         val minute = ((hour - hourWhole) * 60).toInt
         val hourString = f"$hourWhole%02d:$minute%02d" // format the hour to be 2 digits
@@ -94,9 +93,6 @@ class CalendarTUI {
 
     // Calculate the interval between the hours and the amount of lines
     def calculateInterval(lines: Int, hours: Double): (Double, Int) = {
-      if (lines <= 0) {
-        throw new IllegalArgumentException("Number of lines must be greater than 0")
-      }
 
       val possibleIntervals = List(4.0, 2.0, 1.0, 0.5, 0.25)
       val rawInterval = hours / lines
