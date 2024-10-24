@@ -4,13 +4,7 @@ import view.UtilTUI._
 import com.github.nscala_time.time.Imports.*
 import model.Task
 
-class CalendarTUI extends View[List[Task]] {
-
-  def update(model: List[Task]): String = {
-    val builder = new StringBuilder()
-    builder.append(createTable(getFirstDayOfWeek(dateTime), 7, terminalHeight, terminalWidth))
-    builder.toString()
-  }
+class CalendarTUI {
 
   // Variables
   val format = "m"
