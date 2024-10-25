@@ -11,10 +11,16 @@ class CalendarTUISpec extends AnyWordSpec {
 
     "align the text to the left" in {
       val calendarTUI = new CalendarTUI
-
       calendarTUI.columnSpacer("Hello", 10, "l") should be("Hello     ")
       calendarTUI.columnSpacer("Hello", 5, "l") should be("Hello")
       calendarTUI.columnSpacer("Hello", 0, "l") should be("Hello")
+    }
+
+    "align the text to the right" in {
+      val calendarTUI = new CalendarTUI
+      calendarTUI.columnSpacer("Hello", 10, "r") should be("     Hello")
+      calendarTUI.columnSpacer("Hello", 5, "r") should be("Hello")
+      calendarTUI.columnSpacer("Hello", 0, "r") should be("Hello")
     }
 
     "create a table with the correct format" in {
