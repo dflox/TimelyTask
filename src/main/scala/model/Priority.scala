@@ -1,7 +1,11 @@
 package model
 
-import java.awt.Color
+import model.settings.DataType
 
-case class Priority(id: Int, rank: Int, name: String, color: Color, description: String,
+import java.awt.Color
+import java.util.UUID
+
+case class Priority(name: String, description: String, rank: Int, color: Color,
                     daysPreDeadline: Int, postponable: Boolean) {
+  val uuid: UUID = UUID.randomUUID()
 }

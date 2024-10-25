@@ -40,4 +40,23 @@ object UtilTUI {
       ""
     }
   }
+
+  // check if the text is longer than the total space, if so cut it
+  def cutText(text: String, totalSpace: Int): String = {
+    if (text.length > totalSpace) {
+      text.substring(0, totalSpace)
+    } else {
+      text
+    }
+  }
+  def welcomeMessage(): String = {
+    val userName = System.getProperty("user.name")
+    val greeting = s"Hello $userName,\nWelcome to TimelyTask!\n"
+    greeting
+  }
+
+  def clearTerminal(): String = {
+    "\u001b[H\u001b[2J"
+  }
+
 }

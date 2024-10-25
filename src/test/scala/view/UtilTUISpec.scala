@@ -1,7 +1,7 @@
 package view
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers._
-import com.github.nscala_time.time.Imports.*
+import com.github.nscala_time.time.Imports._
 import view.UtilTUI.*
 
 class UtilTUISpec extends AnyWordSpec {
@@ -50,6 +50,19 @@ class UtilTUISpec extends AnyWordSpec {
         alignTop(totalLines = 10, used = 5) should be("\n" * 5)
         alignTop(totalLines = 10, used = 10) should be("")
         alignTop(totalLines = 10, used = 0) should be("\n" * 10)
+      }
+
+      "cut the text if it is longer than the total space" in {
+        cutText("Hello World", 5) should be("Hello")
+        cutText("Hello World", 11) should be("Hello World")
+        cutText("Hello World", 0) should be("")
+      }
+      "write a welcome Message" in {
+        val userName = System.getProperty("user.name")
+        welcomeMessage() should be(s"Hello $userName,\nWelcome to TimelyTask!\n")
+      }
+      "clear the terminal" in {
+        clearTerminal() should be("\u001b[H\u001b[2J")
       }
     }
 }
