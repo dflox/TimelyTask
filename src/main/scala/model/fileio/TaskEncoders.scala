@@ -34,9 +34,9 @@ trait TaskEncoders
       <deadline>
         {task.deadline}
       </deadline>
-      <status>
-        {task.status}
-      </status>
+      <state>
+        {task.state}
+      </state>
       <estimatedDuration>
         {task.estimatedDuration}
       </estimatedDuration>
@@ -59,13 +59,13 @@ trait TaskEncoders
     val description = (xmlConv \\ "description").text
     val priority = UUID.fromString((xmlConv \\ "priority").text)
     val tags = HashSet((xmlConv \\ "tags").text.split(",").map(UUID.fromString)*)
-    val deadline = Deadline.fromPrintString((xmlConv \\ "deadline").text)
-    val status = UUID.fromString((xmlConv \\ "status").text)
+    val deadline = Deadline.fromString((xmlConv \\ "deadline").text)
+    val state = UUID.fromString((xmlConv \\ "state").text)
     val estimatedDuration = Period.parse((xmlConv \\ "estimatedDuration").text)
     val dependentOn = HashSet((xmlConv \\ "dependentOn").text.split(",").map(UUID.fromString)*)
     val reoccurring = (xmlConv \\ "reoccurring").text.toBoolean
     val recurrenceInterval = Period.parse((xmlConv \\ "recurrenceInterval").text)
-    Task(name, description, priority, tags, deadline, status, estimatedDuration, dependentOn, reoccurring, recurrenceInterval)
+    Task(name, description, priority, tags, deadline, state, estimatedDuration, dependentOn, reoccurring, recurrenceInterval)
   }
 
   // Helper for YAML Encoding
@@ -76,7 +76,7 @@ trait TaskEncoders
        |priority: ${task.priority}
        |tags: ${task.tags.mkString(",")}
        |deadline: ${task.deadline}
-       |status: ${task.status}
+       |state: ${task.state}
        |estimatedDuration: ${task.estimatedDuration}
        |dependentOn: ${task.dependentOn.mkString(",")}
        |reoccurring: ${task.reoccurring}
@@ -91,13 +91,13 @@ trait TaskEncoders
     val description = lines(1)
     val priority = UUID.fromString(lines(2))
     val tags = HashSet(lines(3).split(",").map(UUID.fromString)*)
-    val deadline = Deadline.fromPrintString(lines(4))
-    val status = UUID.fromString(lines(5))
+    val deadline = Deadline.fromString(lines(4))
+    val state = UUID.fromString(lines(5))
     val estimatedDuration = Period.parse(lines(6))
     val dependentOn = HashSet(lines(7).split(",").map(UUID.fromString)*)
     val reoccurring = lines(8).toBoolean
     val recurrenceInterval = Period.parse(lines(9))
-    Task(name, description, priority, tags, deadline, status, estimatedDuration, dependentOn, reoccurring, recurrenceInterval)
+    Task(name, description, priority, tags, deadline, state, estimatedDuration, dependentOn, reoccurring, recurrenceInterval)
   }
 
   // Implement XmlSerializable methods
