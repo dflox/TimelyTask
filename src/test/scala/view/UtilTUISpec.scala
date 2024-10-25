@@ -59,7 +59,7 @@ class UtilTUISpec extends AnyWordSpec {
       }
       "write a welcome Message" in {
         val userName = System.getProperty("user.name")
-        welcomeMessage() should be(s"Hello $userName,\nWelcome to TimelyTask! \n")
+        welcomeMessage() should be(s"Hello $userName,\nWelcome to TimelyTask!\n")
       }
       "clear the terminal" in {
         clearTerminal() should be("\u001b[H\u001b[2J")
