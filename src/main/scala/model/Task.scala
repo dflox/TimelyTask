@@ -8,7 +8,7 @@ import scala.collection.immutable.HashSet
 
 case class Task(name: String, description: String,
                 priority: UUID, tags: HashSet[UUID] = new HashSet[UUID](), deadline: Deadline,
-                status: UUID, estimatedDuration: Period, dependentOn: HashSet[UUID] = new HashSet[UUID](),
+                state: UUID, estimatedDuration: Period, dependentOn: HashSet[UUID] = new HashSet[UUID](),
                 reoccurring: Boolean, recurrenceInterval: Period) {
 
   val uuid: UUID = UUID.randomUUID()
