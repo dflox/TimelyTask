@@ -1,7 +1,7 @@
 package view
 
 import com.github.nscala_time.time.Imports.*
-import jline.{Terminal, TerminalFactory}
+import org.jline.terminal.{Terminal, TerminalBuilder}
 import model.Task
 import view.UtilTUI._
 
@@ -10,7 +10,7 @@ class TUI extends View[List[Task]] {
   // Variables
   val dateTime: DateTime = DateTime.now()
   // set the width of the calendar to the terminal width
-  val terminal: Terminal = TerminalFactory.get()
+  val terminal: Terminal = TerminalBuilder.builder().system(true).build()
   val terminalWidth: Int = terminal.getWidth
   val terminalHeight: Int = terminal.getHeight
 
