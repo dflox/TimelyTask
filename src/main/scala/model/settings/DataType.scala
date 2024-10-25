@@ -7,18 +7,18 @@ enum DataType {
 
   def getFileName: String = this match {
     case CONFIG => "config"
-    case TASK => "tasks"
-    case PRIORITY => "priorities"
-    case TAG => "tags"
-    case STATE => "states"
+    case TASK => "task"
+    case PRIORITY => "priority"
+    case TAG => "tag"
+    case STATE => "state"
   }
 }
 object DataType {
   def fromString(fileName: String): DataType = fileName match {
     case "config" => DataType.CONFIG
-    case "tasks" => DataType.TASK
-    case "priorities" => DataType.PRIORITY
-    case "tags" => DataType.TAG
-    case "states" => DataType.STATE
+    case "task" => DataType.TASK
+    case "priority" => DataType.PRIORITY
+    case "tag" => DataType.TAG
+    case "state" => DataType.STATE
   }
 }
