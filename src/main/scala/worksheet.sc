@@ -25,5 +25,3 @@ days.foreach(day => println(day.dayOfWeek.getAsText))
 
 val d = new Deadline(DateTime.now(), None, None)
 d.toString
-
-

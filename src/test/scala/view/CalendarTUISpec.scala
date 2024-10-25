@@ -1,9 +1,10 @@
 package view
 
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.matchers.should.Matchers._
-import com.github.nscala_time.time.Imports._
-import view.UtilTUI._
+import org.scalatest.matchers.should.Matchers.*
+import com.github.nscala_time.time.Imports.*
+import view.UtilTUI.*
+import view.tui.CalendarTUI
 
 class CalendarTUISpec extends AnyWordSpec {
 

@@ -1,51 +1,45 @@
-package view
-import view.UtilTUI._
+package view.tui
 
 import com.github.nscala_time.time.Imports.*
+import controller.*
 import model.Task
+import util.TimeSelection
+import view.UtilTUI.*
+import view.View
+import view.model.CalendarModel
 
-class CalendarTUI {
-
-  // Variables
-  val format = "m"
-  val timeColumn = "| Time  |"
-  val timeColumnLength = timeColumn.length
-  val headerPeriodFormat = "Calendar+DD. - DD. MMM. YY"
-  val headerLetters = headerPeriodFormat.length // the amount of space(letters) the period String takes
-
-  // variables used to set the specific time format
-  val hours = 8 // The amount of hours the Rows show
-  val startAt = 6.75 // The time the Rows start at
-
-
-
-
-
-  def createTable(startDay: DateTime, period: Int, terminalHeight: Int, terminalWidth: Int): String = {
-    val heightAvailable: Int = terminalHeight - 11
-    val width: Int = terminalWidth
+class CalendarTUI() extends View[CalendarModel] {
+  
+  override def update(calModel: CalendarModel): String = {
+    import calModel.*
 
     // Variables
-    val daysList = getDaySpan(startDay, period)
+    val heightAvailable: Int = terminalHeight - 11
+    val width: Int = terminalWidth
+    val daysList = timeSelection.getDaySpan
+    
+    // Calculate Actual Width
     var table = List[String]()
     table = table :+ timeColumn
     daysList.foreach(day => table = table :+ day.dayOfWeek().getAsText + "|") // dayList toString
-    val letterAmount = table.map(_.length).sum
-    val spaceBetween = (width - table.head.length - period) / period
-    val actualWidth = timeColumnLength + period + (period * spaceBetween)
+    //val letterAmount = table.map(_.length).sum#
+    // Calculate the possible Space that each day has (subtract the timeColumn and the seperator for the days)
+    val spaceBetween = (width - table.head.length - timeSelection.dayCount) / timeSelection.dayCount
+    val actualWidth = timeColumnLength + timeSelection.dayCount + (timeSelection.dayCount * spaceBetween)
+    
+    // Start Building Output
     val builder = new StringBuilder()
 
     // Creating
-    builder.append(welcomeMessage())
-    builder.append(header(actualWidth, startDay))
+    builder.append(header(actualWidth, timeSelection, headerLetterCount))
     // Create the TopRow
     builder.append(timeColumn)
     daysList.foreach(day => builder.append(columnSpacer(day.dayOfWeek().getAsText, spaceBetween, format) + "|")) // print the days
     builder.append("\n")
     builder.append(createLine(actualWidth) + "\n")
     // Create the time rows
-    val (interval, maxLines) = calculateInterval(heightAvailable, hours)
-    builder.append(createRows(startAt, hours, interval, period, spaceBetween))
+    val (interval, maxLines) = calculateInterval(heightAvailable, timeSelection.timeFrame)
+    builder.append(createRows(startAt, timeSelection.timeFrame, interval, timeSelection.dayCount, spaceBetween))
     builder.append(createLine(actualWidth) + "\n")
     builder.append(alignTop(terminalHeight, maxLines) + "\n")
 
@@ -64,11 +58,11 @@ class CalendarTUI {
         case "r" => createSpace(math.max(space, 0)) + text // right
         }
     }
-    def header(actualWidth: Int, dateToday: DateTime): String = {
+      def header(actualWidth: Int, timeSelection: TimeSelection, headerLetterCount: Int): String = {
       val builder = new StringBuilder()
       // Create the header
       builder.append(createLine(actualWidth) + "\n")
-      builder.append("Calender" + createSpace(actualWidth - headerLetters) + getDatePeriod(getFirstDayOfWeek(dateToday), 7, "dd.", "dd. MMM yy", " - ") + "\n")
+      builder.append("Calender" + createSpace(actualWidth - headerLetterCount) + timeSelection.toString("dd.", "dd. MMM yy", " - ") + "\n")
       builder.append(createLine(actualWidth) + "\n")
       builder.toString()
     }
@@ -94,13 +88,13 @@ class CalendarTUI {
     }
 
     // Calculate the interval between the hours and the amount of lines
-    def calculateInterval(lines: Int, hours: Double): (Double, Int) = {
+    def calculateInterval(lines: Int, timeFrame: Interval): (interval: Double, maxLines: Int) = {
 
       val possibleIntervals = List(4.0, 2.0, 1.0, 0.5, 0.25)
-      val rawInterval = hours / lines
+      val rawInterval = timeFrame / lines
 
       val chosenInterval = possibleIntervals.filter(_ >= rawInterval).min
-      val maxLines = (hours / chosenInterval).toInt
+      val maxLines = (timeFrame / chosenInterval).toInt
 
       (chosenInterval, math.min(lines, maxLines))
     }
