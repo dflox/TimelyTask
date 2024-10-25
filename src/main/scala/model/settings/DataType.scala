@@ -5,7 +5,7 @@ import model._
 enum DataType {
   case CONFIG, TASK, PRIORITY, TAG, STATE
 
-  def getFileName: String = this match {
+  override def toString: String = this match {
     case CONFIG => "config"
     case TASK => "tasks"
     case PRIORITY => "priorities"
