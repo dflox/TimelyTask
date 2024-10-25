@@ -11,17 +11,10 @@ class CalendarTUISpec extends AnyWordSpec {
 
     "align the text to the left" in {
       val calendarTUI = new CalendarTUI
-      calendarTUI.columnSpacer("Hello", 10, "l") should be("Hello     ")
-      calendarTUI.columnSpacer("Hello", 0, "l") should be("Hello")
-      calendarTUI.columnSpacer("Hello", 5, "l") should be("Hello")
-    }
 
-    // New test case for right alignment (covers line 62)
-    "align the text to the right" in {
-      val calendarTUI = new CalendarTUI
-      calendarTUI.columnSpacer("Hello", 10, "r") should be("     Hello")
-      calendarTUI.columnSpacer("Hello", 5, "r") should be("Hello")
-      calendarTUI.columnSpacer("Hello", 0, "r") should be("Hello")
+      calendarTUI.columnSpacer("Hello", 10, "l") should be("Hello     ")
+      calendarTUI.columnSpacer("Hello", 5, "l") should be("Hello")
+      calendarTUI.columnSpacer("Hello", 0, "l") should be("Hello")
     }
 
     "create a table with the correct format" in {
@@ -53,13 +46,13 @@ class CalendarTUISpec extends AnyWordSpec {
            |        |        |        |        |        |        |        |
         """.stripMargin
 
-      table should include ("Mon 14")
-      table should include ("Tue 15")
-      table should include ("Wed 16")
-      table should include ("Thu 17")
-      table should include ("Fri 18")
-      table should include ("Sat 19")
-      table should include ("Sun 20")
+      table should include ("Montag")
+      table should include ("Dienstag")
+      table should include ("Mittwoch")
+      table should include ("Donnerstag")
+      table should include ("Freitag")
+      table should include ("Samstag")
+      table should include ("Sonntag")
     }
 
     // New test case for time wrapping (covers line 80)

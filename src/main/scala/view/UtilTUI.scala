@@ -51,7 +51,7 @@ object UtilTUI {
   }
   def welcomeMessage(): String = {
     val userName = System.getProperty("user.name")
-    val greeting = s"Hello $userName,\nWelcome to TimelyTask!"
+    val greeting = s"Hello $userName,\nWelcome to TimelyTask!\n"
     greeting
   }
 

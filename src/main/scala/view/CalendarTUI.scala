@@ -55,7 +55,9 @@ class CalendarTUI {
     // Align the text (by adding spaces) to the left, right or middle
     def columnSpacer(text: String, totalSpace: Int, format: String): String = {
       cutText(text, totalSpace)
-      val space = totalSpace - text.length
+      var space = totalSpace - text.length
+      if space < 0 then space = 0
+
       format match {
         case "l" => text + createSpace(space) // left
         case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
