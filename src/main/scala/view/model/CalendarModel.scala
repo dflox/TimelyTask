@@ -1,8 +1,14 @@
 package view.model
 
+import com.github.nscala_time.time.Imports.DateTime
 import view.tui.*
 import util.TimeSelection
 import model.Task
+
+sealed trait ViewModel {
+  val userName: String = System.getProperty("user.name")
+  val today: DateTime = DateTime.now()
+}
 
 case class CalendarModel(timeSelection: TimeSelection,
                          terminalHeight: Int,

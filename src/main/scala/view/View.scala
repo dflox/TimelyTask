@@ -1,5 +1,7 @@
 package view
 
-trait View[T] {
-  def update(model: T): String
+import view.model.ViewModel
+
+trait View[+T <: ViewModel] {
+  def update(model: ViewModel): String
 }

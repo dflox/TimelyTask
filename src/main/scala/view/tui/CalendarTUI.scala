@@ -38,8 +38,8 @@ class CalendarTUI() extends View[CalendarModel] {
     builder.append("\n")
     builder.append(createLine(actualWidth) + "\n")
     // Create the time rows
-    val (interval, maxLines) = calculateInterval(heightAvailable, timeSelection.timeFrame)
-    builder.append(createRows(startAt, timeSelection.timeFrame, interval, timeSelection.dayCount, spaceBetween))
+    val (interval, maxLines) = calculateInterval(heightAvailable, timeSelection.interval)
+    builder.append(createRows(startAt, timeSelection.interval, interval, timeSelection.dayCount, spaceBetween))
     builder.append(createLine(actualWidth) + "\n")
     builder.append(alignTop(terminalHeight, maxLines) + "\n")
 
