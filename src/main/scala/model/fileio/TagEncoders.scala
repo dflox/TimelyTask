@@ -1,9 +1,9 @@
 package model.fileio
 
 import model.Tag
+import model.settings.DataType
 
 import scala.xml.XML
-import model.settings.DataType
 
 // Trait for handling serialization of Tag class
 trait TagEncoders extends XmlSerializable[Tag] with YamlSerializable[Tag] with Data[Tag] {

@@ -2,11 +2,11 @@ package model.fileio
 
 import com.github.nscala_time.time.Imports.*
 import model.settings.DataType
+import model.{Deadline, Task}
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
 import scala.xml.XML
-import model.{Deadline, Task}
 
 trait TaskEncoders
   extends XmlSerializable[Task]

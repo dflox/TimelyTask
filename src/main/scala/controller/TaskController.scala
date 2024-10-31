@@ -1,20 +1,19 @@
 package controller
 
-import view.*
-import model.*
 import com.github.nscala_time.time.Imports.*
-import model.settings.FileType.{JSON, XML}
+import io.circe.generic.auto.*
+import view.*
+import view.model.settings.FileType.{JSON, XML}
+import view.model.settings.StartView.TABLE
+import view.model.settings.Theme.DARK
+import view.model.settings.{DataType, FileType, StartView, Theme}
+import model.{Config, State, *}
 
 import java.awt.Color
 import java.util.UUID
-import scala.collection.immutable.HashSet
-import scala.collection.immutable.HashMap
-import io.circe.generic.auto.*
-import model.settings.StartView.TABLE
-import model.settings.Theme.DARK
-import model.settings.{FileType, StartView, Theme, DataType}
+import scala.collection.immutable.{HashMap, HashSet}
 
-class TaskController(view: View[ViewModel]) extends Controller {
+class TaskController(view: View) extends Controller {
 
   val tag: HashSet[UUID] = HashSet(new Tag(name = "test", None).uuid)
   val testTask1: Task = new Task("Test", "Test", new Priority(name = "test", description = "test", rank = 1, color = Color.BLACK, daysPreDeadline = 4, postponable = false).uuid, tag, new Deadline(date = DateTime.now(), None, None), new State(name = "test", description = "test", color = Color.BLACK).uuid, Period.days(1), new HashSet[UUID](), false, Period.days(1))

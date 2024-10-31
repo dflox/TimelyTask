@@ -1,5 +1,5 @@
 package controller
 
 trait Controller {
-
+  
 }

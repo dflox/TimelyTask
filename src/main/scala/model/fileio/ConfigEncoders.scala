@@ -1,7 +1,8 @@
 package model.fileio
 
-import model.settings.*
 import model.Config
+import model.settings.*
+
 import scala.xml.XML
 
 trait ConfigEncoders

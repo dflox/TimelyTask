@@ -18,7 +18,7 @@ class Window {
   val terminalHeight: Int = terminal.getHeight
 
   // Instance of the CalendarTUI
-  val calendarTUI: View[CalendarModel] = new CalendarTUI()
+  val calendarTUI: View = new CalendarTUI()
   val taskController: TaskController = new TaskController(calendarTUI)
 
 

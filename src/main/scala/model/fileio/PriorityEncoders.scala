@@ -1,10 +1,10 @@
 package model.fileio
 
 import model.Priority
+import model.settings.DataType
 
 import java.awt.Color
 import scala.xml.XML
-import model.settings.DataType
 
 trait PriorityEncoders
     extends XmlSerializable[Priority]

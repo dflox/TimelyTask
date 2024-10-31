@@ -1,5 +1,5 @@
 import com.github.nscala_time.time.Imports.*
-import model.*
+import controller.*
 
 val processStart: DateTime = DateTime.now()
 val processEnd: DateTime = processStart + (1.hours + 10.minutes + 5.seconds)
@@ -25,3 +25,8 @@ days.foreach(day => println(day.dayOfWeek.getAsText))
 
 val d = new Deadline(DateTime.now(), None, None)
 d.toString
+
+DateTime.now()
+
+26.5 % 24
+

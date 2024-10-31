@@ -1,6 +1,6 @@
 package model
 
-import model.fileio._
+import model.fileio.*
 import model.settings.DataType
 
 import java.awt.Color

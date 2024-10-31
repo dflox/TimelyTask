@@ -1,7 +1,7 @@
 package model
-import model.settings.*
 import io.circe.generic.auto.*
-import model.fileio._
+import model.fileio.*
+import model.settings.*
 
 case class Config (defaultStartView: StartView, defaultDataFileType: FileType, defaultTheme: Theme) extends ConfigEncoders {
 }
