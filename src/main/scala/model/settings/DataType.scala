@@ -1,7 +1,5 @@
 package model.settings
 
-import model.*
-
 enum DataType {
   case CONFIG, TASK, PRIORITY, TAG, STATE
 

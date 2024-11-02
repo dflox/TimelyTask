@@ -1,4 +1,4 @@
-package view.model
+package view
 
 import com.github.nscala_time.time.Imports.{DateTime, Interval, LocalTime}
 import com.github.nscala_time.time.RichLocalTime

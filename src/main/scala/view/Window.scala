@@ -5,8 +5,8 @@ import controller.*
 import org.jline.terminal.{Terminal, TerminalBuilder}
 import util.TimeSelection
 import view.UtilTUI.*
-import view.model.CalendarModel
-import view.tui.CalendarTUI
+import view.CalendarModel
+import view.tui.*
 
 class Window {
 
@@ -18,8 +18,7 @@ class Window {
   val terminalHeight: Int = terminal.getHeight
 
   // Instance of the CalendarTUI
-  val calendarTUI: View = new CalendarTUI()
-  val taskController: TaskController = new TaskController(calendarTUI)
+  val taskController: TaskController = new TaskController(CalendarTUI)
 
 
   // Functions
@@ -29,7 +28,7 @@ class Window {
     val builder = new StringBuilder()
     builder.append(welcomeMessage())
     print(clearTerminal())
-    builder.append(calendarTUI.update(new CalendarModel(timeSelection = new TimeSelection(DateTime.now(), 7, 8.hours), terminalHeight = terminalHeight, terminalWidth = terminalWidth, tasks = taskController.tasks)))
+    builder.append(CalendarTUI.update(new CalendarModel(timeSelection = new TimeSelection(DateTime.now(), 7, 8.hours), terminalHeight = terminalHeight, terminalWidth = terminalWidth, tasks = taskController.tasks)))
     print(builder.toString())
   }
 }

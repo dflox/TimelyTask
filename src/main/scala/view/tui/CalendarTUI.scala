@@ -6,7 +6,7 @@ import model.Task
 import util.TimeSelection
 import view.UtilTUI.*
 import view.View
-import view.model.CalendarModel
+import view.*
 
 object CalendarTUI extends View {
   

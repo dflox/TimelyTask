@@ -1,7 +1,7 @@
 package view
 
-import view.model.ViewModel
+import view.*
 
 trait View {
-  def update(model: ViewModel): String
+  def update(model: CalendarModel): String
 }

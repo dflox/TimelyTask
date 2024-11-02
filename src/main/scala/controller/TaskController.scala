@@ -2,12 +2,9 @@ package controller
 
 import com.github.nscala_time.time.Imports.*
 import io.circe.generic.auto.*
-import view.*
-import view.model.settings.FileType.{JSON, XML}
-import view.model.settings.StartView.TABLE
-import view.model.settings.Theme.DARK
-import view.model.settings.{DataType, FileType, StartView, Theme}
-import model.{Config, State, *}
+import model.*
+import model.settings.*
+import view.View
 
 import java.awt.Color
 import java.util.UUID
@@ -25,7 +22,6 @@ class TaskController(view: View) extends Controller {
   val config: Config = TaskController.getConfig
 
   def run(): Unit = {
-    println(view.update(tasks));
     val dead = testTask1.deadline.toString()
   }
 }
@@ -34,7 +30,7 @@ object TaskController {
   val defaultConfigFolderPath: String = "./"
 
   def getConfig: Config = {
-    val config: Config = new Config(defaultStartView = TABLE, defaultDataFileType = FileType.JSON, defaultTheme = Theme.DARK)
+    val config: Config = new Config(defaultStartView = StartView.TABLE, defaultDataFileType = FileType.JSON, defaultTheme = Theme.DARK)
     config
   }
 }
