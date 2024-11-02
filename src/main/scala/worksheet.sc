@@ -12,11 +12,11 @@ val numberOfDays: Int = 7
 val days: List[DateTime] = (0 until numberOfDays).map(today + _.days).toList
 days.foreach(day => println(day.dayOfWeek.getAsText))
 
-// test json serialization
-import model.Config
-import model.settings.FileType.JSON
-import io.circe.generic.auto._
-//
+//// test json serialization
+//import model.Config
+//import model.settings.FileType.JSON
+//import io.circe.generic.auto._
+////
 //val config: Config = Config.defaultConfig
 //FileLoader.save[Config](JSON, "./", List(config))
 //

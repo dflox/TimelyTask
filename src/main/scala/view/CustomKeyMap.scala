@@ -1,5 +1,0 @@
-package view
-
-trait CustomKeyMap {
-
-}
