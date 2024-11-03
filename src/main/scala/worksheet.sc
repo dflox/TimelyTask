@@ -23,10 +23,4 @@ days.foreach(day => println(day.dayOfWeek.getAsText))
 //FileLoader.save[Config](JSON, "./", List(config))
 //
 
-val d = new Deadline(DateTime.now(), None, None)
-d.toString
-
-DateTime.now()
-
-26.5 % 24
 
