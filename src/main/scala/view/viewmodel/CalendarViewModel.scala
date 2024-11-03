@@ -2,6 +2,7 @@ package view
 
 import com.github.nscala_time.time.Imports.LocalTime
 import model.{Model, Task, TimeSelection}
+import view.viewmodel.ViewModel
 
 case class CalendarViewModel(model: Model, timeSelection: TimeSelection) extends ViewModel {
   import CalendarViewModel._

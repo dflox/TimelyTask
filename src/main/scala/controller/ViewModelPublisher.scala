@@ -1,6 +1,6 @@
 package controller
 
-import view.ViewModel
+import view.viewmodel.ViewModel
 
 trait ViewModelObserver {
   def onViewModelChange(newViewModel: ViewModel): Unit

@@ -1,6 +1,6 @@
 import com.github.nscala_time.time.Imports.*
 import model.{Task, TimeSelection}
-import view.CalendarTUI
+import view.tui.CalendarTUI
 
 val processStart: DateTime = DateTime.now()
 val processEnd: DateTime = processStart + (1.hours + 10.minutes + 5.seconds)

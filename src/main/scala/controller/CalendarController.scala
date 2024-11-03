@@ -13,6 +13,7 @@ import io.circe.generic.auto.*
 import model.settings.ViewType.TABLE
 import model.settings.Theme.DARK
 import model.settings.{DataType, FileType, Theme, ViewType}
+import view.viewmodel.ViewModel
 
 class CalendarController(modelPublisher: ModelPublisher, viewModelPublisher: ViewModelPublisher) extends Controller {
   def handleAction(action: Action): ViewModel = {

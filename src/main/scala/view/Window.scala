@@ -2,6 +2,7 @@ package view
 
 import controller.ViewModelObserver
 import org.jline.terminal.Terminal
+import view.viewmodel.ViewModel
 
 import java.io.PrintWriter
 

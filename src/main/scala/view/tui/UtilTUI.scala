@@ -1,4 +1,4 @@
-package view
+package view.tui
 
 import com.github.nscala_time.time.Imports.*
 

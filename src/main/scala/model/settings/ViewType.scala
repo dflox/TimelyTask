@@ -1,7 +1,6 @@
 package model.settings
 
-import view.TUIView
-import view.CalendarTUI
+import view.tui.{CalendarTUI, TUIView}
 
 enum ViewType {
   case CALENDAR, TABLE, KANBAN, SETTINGS, TASK

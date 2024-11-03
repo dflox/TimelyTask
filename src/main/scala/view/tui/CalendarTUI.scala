@@ -1,9 +1,10 @@
-package view
+package view.tui
 
 import com.github.nscala_time.time.Imports.*
-import model.Task
-import model.TimeSelection
-import view.UtilTUI.*
+import model.{Task, TimeSelection}
+import UtilTUI.*
+import view.viewmodel.ViewModel
+import view.{CalendarViewModel, TUIModel}
 
 object CalendarTUI extends TUIView {
   override def update(viewModel: ViewModel): String = {
@@ -12,8 +13,8 @@ object CalendarTUI extends TUIView {
   
   override def update(viewModel: ViewModel, TUIModel: TUIModel): String = {
     val calendarViewModel: CalendarViewModel = viewModel.asInstanceOf[CalendarViewModel]
-    import calendarViewModel.*
     import TUIModel.*
+    import calendarViewModel.*
     
     // Variables
     val heightAvailable: Int = terminalHeight - headerHeight - footerHeight

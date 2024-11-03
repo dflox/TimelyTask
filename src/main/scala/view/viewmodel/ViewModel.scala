@@ -1,9 +1,9 @@
-package view
+package view.viewmodel
 
 import com.github.nscala_time.time.Imports.{DateTime, Interval, LocalTime}
 import com.github.nscala_time.time.RichLocalTime
-import view.*
 import model.Model
+import view.*
 
 trait ViewModel {
   val model: Model

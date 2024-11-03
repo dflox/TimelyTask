@@ -2,6 +2,7 @@ package view
 
 import controller.*
 import model.*
+import view.viewmodel.ViewModel
 
 class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Controller], viewModelPublisher: ViewModelPublisher) {
   
