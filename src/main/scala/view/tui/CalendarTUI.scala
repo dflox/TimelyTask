@@ -10,8 +10,8 @@ import view.*
 
 object CalendarTUI extends View {
   
-  override def update(calModel: CalendarModel): String = {
-    import calModel.*
+  override def update(viewModel: CalendarModel): String = {
+    import viewModel.*
 
     // Variables
     val heightAvailable: Int = terminalHeight - 11
