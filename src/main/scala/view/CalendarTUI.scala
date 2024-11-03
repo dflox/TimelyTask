@@ -19,14 +19,14 @@ object CalendarTUI extends TUIView {
     import TUIModel.*
     
     // Variables
-    val heightAvailable: Int = terminalHeight - 11
+    val heightAvailable: Int = terminalHeight - headerHeight - footerHeight
     val width: Int = terminalWidth
     val daysList = timeSelection.getDaySpan
 
     // Calculate Actual Width
     var table = List[String]()
     table = table :+ timeColumn
-    daysList.foreach(day => table = table :+ day.dayOfWeek().getAsText + "|") // dayList toString
+    daysList.foreach(day => table = table :+ day.toString(dayFormat) + "|") // dayList toString
 
     // Calculate the possible Space that each day has (subtract the timeColumn and the seperator for the days)
     val spacePerColumn = (width - table.head.length - timeSelection.dayCount) / timeSelection.dayCount
@@ -36,18 +36,18 @@ object CalendarTUI extends TUIView {
     val builder = new StringBuilder()
 
     // Creating
-    builder.append(header(actualWidth, timeSelection, headerLetterCount))
+    builder.append(header(actualWidth, timeSelection))
     // Create the TopRow
     builder.append(timeColumn)
-    daysList.foreach(day => builder.append(columnSpacer(day.dayOfWeek().getAsText, spacePerColumn, format) + "|")) // print the days
+    daysList.foreach(day => builder.append(columnSpacer(day.toString(dayFormat), spacePerColumn, format) + "|")) // print the days
     builder.append("\n")
     builder.append(createLine(actualWidth) + "\n")
 
     // Create the time and task rows
-    val (intervals, lines) = calculateInterval(heightAvailable, timeSelection.interval)
-    builder.append(createRows(intervals, timeSelection, model.tasks, spacePerColumn))
+    val (timeSlice, lines) = calculatePeriod(heightAvailable, timeSelection.timeFrameInterval)
+    builder.append(createRows(timeSlice, lines, timeSelection, model.tasks, spacePerColumn))
     builder.append(createLine(actualWidth) + "\n")
-    builder.append(alignTop(terminalHeight, lines) + "\n")
+    builder.append(alignTop(terminalHeight, lines + headerHeight + footerHeight) + "\n")
 
     builder.toString()
   }
@@ -63,51 +63,54 @@ object CalendarTUI extends TUIView {
       case "r" => createSpace(math.max(space, 0)) + text // right
     }
   }
-  def header(actualWidth: Int, timeSelection: TimeSelection, headerLetterCount: Int): String = {
+  def header(actualWidth: Int, timeSelection: TimeSelection): String = {
+    val title = "Calendar"
+    val dateformat = "dd. - dd. MMM. yyyy"
+    val headerLetterCount: Int = (title+dateformat).length // the amount of space(letters) the period String takes
     val builder = new StringBuilder()
     // Create the header
     builder.append(createLine(actualWidth) + "\n")
-    builder.append("Calender" + createSpace(actualWidth - headerLetterCount) + timeSelection.toString("dd.", "dd. MMM yy", " - ") + "\n")
+    builder.append(title + createSpace(actualWidth - headerLetterCount) + timeSelection.toString("dd.", "dd. MMM yyyy", " - ") + "\n")
     builder.append(createLine(actualWidth) + "\n")
     builder.toString()
   }
 
   // Create the rows with time and tasks
-  def createRows(intervals: Seq[Interval], timeSelection: TimeSelection, tasks: List[Task], spacePerColumn: Int): String = {
+  def createRows(timeSlice: Period, lines: Int, timeSelection: TimeSelection, tasks: List[Task], spacePerColumn: Int): String = {
     val builder = new StringBuilder()
 
-    val format = "HH:mm"
+    val format = "| HH:mm |"
 
-    for (interval <- intervals) {
-      builder.append(interval.getStart.toString(format))
-      for (day <- timeSelection.getDaySpan) {
+    for (line <- 0 until lines) {
+      val startTime = timeSelection.day.withPeriodAdded(timeSlice, line)
+      val timeSlicesPerDay: Seq[Interval] = (0 until timeSelection.dayCount)
+        .map(day => new Interval(startTime.withPeriodAdded(1.day, day), timeSlice))
+
+      builder.append(startTime.toString(format))
+
+      timeSlicesPerDay.foreach(interval => {
         val tasksTimeslot = tasks.filter(task => interval.contains(task.deadline.date))
         val taskString = tasksTimeslot.map(_.name).mkString(", ")
         builder.append(columnSpacer(taskString, spacePerColumn, "l") + "|")
-      }
+      })
+
       builder.append("\n")
     }
     builder.toString()
   }
 
   // Calculate the intervals between the hours and the amount of lines
-  private def calculateInterval(lines: Int, timeFrame: Interval): (Seq[Interval], Int) = {
-    val possibleIntervals = List(4.0, 2.0, 1.0, 0.5, 0.25)
+  def calculatePeriod(linesAvailable: Int, timeFrame: Interval): (Period, Int) = {
+    val possibleIntervalsMinutes = List(24.0, 12.0, 10.0, 8.0, 6.0, 4.0, 2.0, 1.0, 0.5, 0.25).map(_ * 60)
 
-    val optimalInterval: Double = timeFrame.toDurationMillis / lines / 1000.0 / 3600.0
+    val optimalIntervalMinutes: Double = timeFrame.toDurationMillis / linesAvailable / 1000.0 / 60.0
 
-    val chosenInterval: Double = possibleIntervals.filter(_ >= optimalInterval).min
-    val maxLines = (timeFrame.toDurationMillis / 1000.0 / 3600.0 / chosenInterval).toInt
+    val chosenIntervalMinutes: Double = possibleIntervalsMinutes.filter(_ >= optimalIntervalMinutes).min
+    val countOfChosenIntervals = (timeFrame.toDurationMillis / chosenIntervalMinutes / 1000.0 / 60.0).toInt
 
-    val chosenLines = math.min(lines, maxLines)
-
-    // Create the intervals
-    val intervals = for (i <- 0 until chosenLines) yield {
-      val start = timeFrame.getStart + convDoubleToTime(chosenInterval * i)
-      val end = start + convDoubleToTime(chosenInterval)
-      new Interval(start, end)
-    }
-    (intervals, chosenLines)
+    val chosenLines = math.min(linesAvailable, countOfChosenIntervals)
+    val timeSlice: Period = chosenIntervalMinutes.toInt.minutes.normalizedStandard()
+    (timeSlice, chosenLines)
   }
 
   private def convDoubleToTime(d: Double): Period = {

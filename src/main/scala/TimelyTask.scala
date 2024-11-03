@@ -33,7 +33,7 @@ object TimelyTask {
     terminal.writer().println("starting")
     window.updateView()
     while (running) {
-      val input = reader.read(1) // Read a single character
+      val input = reader.read() // Read a single character
       window.onUserInput(input)
     }
     

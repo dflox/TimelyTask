@@ -2,7 +2,6 @@ package view
 
 import controller.*
 import model.*
-import org.jline.keymap.KeyMap
 
 class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Controller], viewModelPublisher: ViewModelPublisher) {
   

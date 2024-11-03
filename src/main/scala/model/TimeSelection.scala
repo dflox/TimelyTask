@@ -3,7 +3,7 @@ package model
 import com.github.nscala_time.time.Imports.*
 
 case class TimeSelection(day: DateTime, dayCount: Int, timeFrame: Period){
-  val interval: Interval = new Interval(day, day + (dayCount - 1).days) 
+  val timeFrameInterval: Interval = new Interval(day, day.withPeriodAdded(timeFrame, 1)) 
   // Get the first Day of the week
   def getFirstDayOfWeek: DateTime = {
     day - (day.getDayOfWeek - 1).days

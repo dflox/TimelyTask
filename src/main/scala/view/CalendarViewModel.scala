@@ -9,14 +9,16 @@ case class CalendarViewModel(model: Model, timeSelection: TimeSelection) extends
   val format = "m"
   val timeColumn = "| Time  |"
   val timeColumnLength: Int = timeColumn.length
-  val headerPeriodFormat = "Calendar+DD. - DD. MMM. YY"
-  val headerLetterCount: Int = headerPeriodFormat.length // the amount of space(letters) the period String takes
 
   // variables used to set the specific time format
   val startAt: LocalTime = new LocalTime(6, 45, 0) // The time the Rows start at
   val minWidthTimeColoumn = 7 // The minimum width of the time column
   val minWidthColoumn = 3
   val minTerminalWidth: Int = 2 + minWidthTimeColoumn + timeSelection.dayCount * (minWidthColoumn + 1)
+  val headerHeight = 5
+  val footerHeight = 1
+  val timeFormat = "HH:mm"
+  val dayFormat = "EEE dd"
 }
 
 object CalendarViewModel {

@@ -15,3 +15,9 @@ case class Task(name: String, description: String,
   val realDuration: Option[Period] = None
   val completionDate: Option[DateTime] = None
 }
+
+object Task {
+  val exampleTask: Task = Task("ExTask", "This is an example task",
+    UUID.randomUUID(), HashSet(UUID.randomUUID()), Deadline(DateTime.now(), None, None),
+    UUID.randomUUID(), 1.hour, HashSet(UUID.randomUUID()), false, 1.hour)
+}

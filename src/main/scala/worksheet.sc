@@ -1,4 +1,6 @@
 import com.github.nscala_time.time.Imports.*
+import model.{Task, TimeSelection}
+import view.CalendarTUI
 
 val processStart: DateTime = DateTime.now()
 val processEnd: DateTime = processStart + (1.hours + 10.minutes + 5.seconds)
@@ -21,3 +23,16 @@ days.foreach(day => println(day.dayOfWeek.getAsText))
 //FileLoader.save[Config](JSON, "./", List(config))
 //
 
+new Period(0,0,0,0,0,121,0,0).normalizedStandard()
+
+
+val timeSelection = TimeSelection(new DateTime(2024, 10, 14, 22, 0), 2, 5.hour)
+val tasks = List(Task.exampleTask)
+val spacePerColumn = 10
+CalendarTUI.createRows(1.hour, 5, timeSelection, tasks, spacePerColumn)
+
+val timeSelection2 = TimeSelection(DateTime.now().withPeriodAdded(2.hour, -1), 2, 5.hour)
+val rows2 = CalendarTUI.createRows(1.hour, 5, timeSelection2, tasks, spacePerColumn)
+rows2
+
+DateTime.now().toString("EEEE dd")

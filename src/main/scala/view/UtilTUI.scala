@@ -33,7 +33,7 @@ object UtilTUI {
 
   // Align the text to the top by adding newlines
   def alignTop(totalLines: Int, used: Int): String = {
-    val unused: Int = totalLines - used
+    val unused: Int = totalLines - used - 3
     if (unused > 0) {
       "\n" * unused
     } else {
