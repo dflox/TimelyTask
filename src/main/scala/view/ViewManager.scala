@@ -2,7 +2,6 @@ package view
 
 import controller.ViewModelPublisher
 import model.settings.ViewType
-import view.CalendarTUI
 
 class ViewManager (viewModelPublisher: ViewModelPublisher) {
   private var activeView: ViewType = ViewType.CALENDAR

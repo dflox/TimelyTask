@@ -41,11 +41,6 @@ class UtilTUISpec extends AnyWordSpec {
         getDaySpan(date, 3) should be(List(new DateTime(2024, 10, 14, 0, 0), new DateTime(2024, 10, 15, 0, 0), new DateTime(2024, 10, 16, 0, 0)))
       }
       
-      "return a time period in a given Format as String starting with a given day and going forward for a given TimePeriod" in {
-        val date = new DateTime(2024, 10, 14, 0, 0)
-        getDatePeriod(date, 3, "dd.", "dd. MMM yy", " - ") should be("14. - 16. Okt. 24")
-      }
-      
       "return a string with the specified number of newlines" in {
         alignTop(totalLines = 10, used = 5) should be("\n" * 5)
         alignTop(totalLines = 10, used = 10) should be("")

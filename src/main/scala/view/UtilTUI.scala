@@ -25,12 +25,6 @@ object UtilTUI {
     (0 until period).map(startDay + _.days).toList
   }
 
-  // Get a time period in a given Format as String starting with a given day and going forward for a given TimePeriod
-  def getDatePeriod(day: DateTime, timePeriod: Int, formatStart: String, formatEnd: String, separator: String): String = {
-    val lastDay: DateTime = day + (timePeriod - 1).days
-    day.toString(formatStart) + separator + lastDay.toString(formatEnd)
-  }
-
   // Align the text to the top by adding newlines
   def alignTop(totalLines: Int, used: Int): String = {
     val unused: Int = totalLines - used - 3

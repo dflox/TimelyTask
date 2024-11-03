@@ -1,12 +1,9 @@
 package view
 
 import com.github.nscala_time.time.Imports.*
-import controller.*
 import model.Task
 import model.TimeSelection
 import view.UtilTUI.*
-import view.View
-import view.*
 
 object CalendarTUI extends TUIView {
   override def update(viewModel: ViewModel): String = {
@@ -119,5 +116,4 @@ object CalendarTUI extends TUIView {
     val minutes = ((dd - hours) * 60).toInt
     new Period(0, 0, 0, 0, minutes, hours, 0, 0)
   }
-
 }
