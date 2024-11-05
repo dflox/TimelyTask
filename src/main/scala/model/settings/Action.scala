@@ -59,3 +59,6 @@ case object Exit extends Action
 
 case object Help extends Action
 case object About extends Action
+
+// other
+case object NoAction extends Action

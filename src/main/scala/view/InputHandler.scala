@@ -2,19 +2,20 @@ package view
 
 import controller.*
 import model.*
+import model.utility.*
 import view.viewmodel.ViewModel
 
 class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Controller], viewModelPublisher: ViewModelPublisher) {
   
-  def handleInput(input: Int): ViewModel = {
-    val viewAction: Action = keyMapManager.getActiveKeymap.getBound(input.toChar.toString)
-    val globalAction: Action = keyMapManager.getGlobalKeymap.getBound(input.toChar.toString)
+  def handleInput(key: Keyboard): ViewModel = {
+    val viewAction: Action = keyMapManager.getActiveActionKeymap.getOrElse(key, NoAction)
+    val globalAction: Action = keyMapManager.getGlobalActionKeymap.getOrElse(key, NoAction)
     val viewModel = controllerMap.get(viewAction).orElse(controllerMap.get(globalAction)) match {
       case Some(controller) => controller.handleAction(viewAction)
       case None => viewModelPublisher.getCurrentViewModel
     }
     viewModelPublisher.updateViewModel(viewModel)
-    viewModel    
+    viewModel
   }
 }
 

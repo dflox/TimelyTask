@@ -1,6 +1,7 @@
 package view
 
 import controller.ViewModelObserver
+import model.utility.*
 import org.jline.terminal.Terminal
 import view.viewmodel.ViewModel
 
@@ -10,7 +11,7 @@ import java.io.PrintWriter
 class Window (terminal: Terminal, inputHandler: InputHandler, viewManager: ViewManager) extends ViewModelObserver {
   val writer: PrintWriter = terminal.writer()
   
-  def onUserInput(key: Int): Unit = {
+  def onUserInput(key: Keyboard): Unit = {
     // Call InputHandler to interpret the event and delegate appropriately
     writer.println("key pressed: " + key)
     inputHandler.handleInput(key)
