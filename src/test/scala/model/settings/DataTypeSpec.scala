@@ -1,9 +1,11 @@
 package model.settings
 
+import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers._
 
-class DataTypeSpec extends AnyWordSpec {
+
+class DataTypeSpec extends AnyWordSpec{
   "The DataType" should {
     "print the correct data type" in {
       DataType.TAG.toString should be("tag")

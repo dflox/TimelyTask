@@ -1,8 +1,8 @@
 package view
 
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.matchers.should.Matchers.*
-import com.github.nscala_time.time.Imports.*
+import org.scalatest.matchers.should.Matchers._
+import com.github.nscala_time.time.Imports._
 import model.{Task, TimeSelection}
 import view.tui.CalendarTUI
 
