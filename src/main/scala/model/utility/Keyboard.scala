@@ -113,8 +113,6 @@ case object P extends Keyboard
 
 case object Q extends Keyboard
 
-  
-
 case object R extends Keyboard
 
 case object S extends Keyboard

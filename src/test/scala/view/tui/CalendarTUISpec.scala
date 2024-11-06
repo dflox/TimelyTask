@@ -1,4 +1,4 @@
-package view
+package view.tui
 
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers._
