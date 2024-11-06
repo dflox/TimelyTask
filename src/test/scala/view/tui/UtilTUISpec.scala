@@ -2,7 +2,7 @@ package view
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers._
 import com.github.nscala_time.time.Imports._
-import view.tui.UtilTUI.*
+import view.tui.UtilTUI._
 
 class UtilTUISpec extends AnyWordSpec {
 
