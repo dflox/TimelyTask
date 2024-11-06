@@ -111,11 +111,4 @@ object CalendarTUI extends TUIView {
     val timeSlice: Period = chosenIntervalMinutes.toInt.minutes.normalizedStandard()
     (timeSlice, chosenLines)
   }
-
-  private def convDoubleToTime(d: Double): Period = {
-    val dd = d % 24
-    val hours = dd.toInt
-    val minutes = ((dd - hours) * 60).toInt
-    new Period(0, 0, 0, 0, minutes, hours, 0, 0)
-  }
 }

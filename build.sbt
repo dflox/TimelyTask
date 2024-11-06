@@ -6,6 +6,7 @@ val nscalaTimeVersion = "2.34.0"
 val scalaMetaVersion = "1.0.0"
 val scalaYamlVersion = "0.3.0"
 val scalaXmlVersion = "2.3.0"
+val mockitoVersion = "3.2.10.0"
 
 
 lazy val root = project
@@ -21,6 +22,7 @@ lazy val root = project
     libraryDependencies += "org.scalatest" %% "scalatest" % scalaTestVersion % Test,
     libraryDependencies += "org.virtuslab" %% "scala-yaml" % scalaYamlVersion % Test,
     libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion,
+    libraryDependencies += "org.scalatestplus" %% "mockito-3-4" % mockitoVersion % Test,
     libraryDependencies ++= Seq(
       "io.circe" %% "circe-core",
       "io.circe" %% "circe-generic",

@@ -23,16 +23,11 @@ case class CalendarViewModel(model: Model, timeSelection: TimeSelection) extends
   val dayFormat = "EEE dd"
 }
 
-object CalendarViewModel {
-  def createViewModel(model: Model, timeSelection: TimeSelection): ViewModel = {
-    CalendarViewModel(model, timeSelection)
-  }
-  def createViewModel(model: Model): ViewModel = {
-    CalendarViewModel(model, TimeSelection.defaultTimeSelection)
-  }
-  
-  def copy(viewModel: ViewModel, timeSelection: TimeSelection): ViewModel = {
-    val calendarViewModel: CalendarViewModel = viewModel.asInstanceOf[CalendarViewModel]
-    CalendarViewModel(calendarViewModel.model, calendarViewModel.timeSelection)
-  }
-}
+//object CalendarViewModel {
+//  def createViewModel(model: Model, timeSelection: TimeSelection): ViewModel = {
+//    CalendarViewModel(model, timeSelection)
+//  }
+//  def createViewModel(model: Model): ViewModel = {
+//    CalendarViewModel(model, TimeSelection.defaultTimeSelection)
+//  }
+//}
