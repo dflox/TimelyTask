@@ -1,4 +1,4 @@
-package view
+package view.viewmodel
 
 case class TUIModel(terminalHeight: Int,
                     terminalWidth: Int

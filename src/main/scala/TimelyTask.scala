@@ -7,6 +7,7 @@ import org.jline.keymap.BindingReader
 import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.{Terminal, TerminalBuilder}
+import view.viewmodel.CalendarViewModel
 
 import scala.collection.immutable.HashSet
 

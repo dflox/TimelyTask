@@ -43,8 +43,9 @@ class UtilTUISpec extends AnyWordSpec {
       
       "return a string with the specified number of newlines" in {
         alignTop(totalLines = 10, used = 5) should be("\n" * 5)
-        alignTop(totalLines = 10, used = 10) should be("")
         alignTop(totalLines = 10, used = 0) should be("\n" * 10)
+        alignTop(totalLines = 10, used = 10) should be("")
+        alignTop(totalLines = 10, used = 11) should be("")
       }
 
       "cut the text if it is longer than the total space" in {

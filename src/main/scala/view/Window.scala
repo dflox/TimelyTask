@@ -4,6 +4,7 @@ import controller.ViewModelObserver
 import model.utility.*
 import org.jline.terminal.Terminal
 import view.viewmodel.ViewModel
+import view.viewmodel.*
 
 import java.io.PrintWriter
 

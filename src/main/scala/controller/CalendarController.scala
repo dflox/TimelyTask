@@ -4,7 +4,7 @@ import view.*
 import model.{Action, *}
 import com.github.nscala_time.time.Imports.*
 import model.settings.FileType.{JSON, XML}
-
+import view.viewmodel.*
 import java.awt.Color
 import java.util.UUID
 import scala.collection.immutable.{HashMap, HashSet}

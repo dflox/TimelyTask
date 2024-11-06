@@ -1,4 +1,4 @@
-package model
+package model.utility
 
 import com.github.nscala_time.time.Imports.*
 

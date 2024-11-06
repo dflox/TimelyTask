@@ -1,10 +1,11 @@
 package view.tui
 
 import com.github.nscala_time.time.Imports.*
-import model.{Task, TimeSelection}
+import model.utility.*
 import UtilTUI.*
-import view.viewmodel.ViewModel
-import view.{CalendarViewModel, TUIModel}
+import view.viewmodel.*
+import model.*
+
 
 object CalendarTUI extends TUIView {
   override def update(viewModel: ViewModel): String = {

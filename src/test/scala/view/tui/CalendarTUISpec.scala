@@ -3,8 +3,11 @@ package view.tui
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers._
 import com.github.nscala_time.time.Imports._
-import model.{Task, TimeSelection}
+import model.utility.*
 import view.tui.CalendarTUI
+import view.viewmodel.*
+import model.*
+import model.Model
 
 class CalendarTUISpec extends AnyWordSpec {
 
