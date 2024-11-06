@@ -1,5 +1,6 @@
 import com.github.nscala_time.time.Imports.*
-import model.{Task, TimeSelection}
+import model.{Model, Task, TimeSelection}
+import view.CalendarViewModel
 import view.tui.CalendarTUI
 
 val processStart: DateTime = DateTime.now()
@@ -36,3 +37,8 @@ val rows2 = CalendarTUI.createRows(1.hour, 5, timeSelection2, tasks, spacePerCol
 rows2
 
 DateTime.now().toString("EEEE dd")
+
+val viewModel: CalendarViewModel = new CalendarViewModel(Model.default, TimeSelection.defaultTimeSelection)
+
+viewModel.copy(timeSelection = viewModel.timeSelection.copy(day = viewModel.timeSelection.day + 1.days))
+

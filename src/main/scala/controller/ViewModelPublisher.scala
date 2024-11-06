@@ -14,6 +14,7 @@ class ViewModelPublisher(private var viewModel: ViewModel) {
   }
 
   def updateViewModel(newViewModel: ViewModel): Unit = {
+    viewModel = newViewModel
     observers.foreach(_.onViewModelChange(newViewModel))
   }
   

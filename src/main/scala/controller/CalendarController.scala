@@ -17,6 +17,7 @@ import view.viewmodel.ViewModel
 
 class CalendarController(modelPublisher: ModelPublisher, viewModelPublisher: ViewModelPublisher) extends Controller {
   def handleAction(action: Action): ViewModel = {
+    //handleCalendarAction(action, viewModelPublisher.getCurrentViewModel.asInstanceOf[CalendarViewModel])
     viewModelPublisher.getCurrentViewModel match
       case model: CalendarViewModel =>
         handleCalendarAction(action, model)

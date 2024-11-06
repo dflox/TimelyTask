@@ -1,6 +1,7 @@
 import controller.*
 import view.*
 import model.*
+import model.settings.ViewType
 import model.utility.*
 import org.jline.keymap.BindingReader
 import org.jline.reader.impl.history.DefaultHistory
@@ -38,7 +39,8 @@ object TimelyTask {
     val activeViewPublisher = new ActiveViewPublisher()
     
     val window = new Window(terminal, inputHandler, viewManager)
-    
+
+    activeViewPublisher.updateActiveView(ViewType.CALENDAR)
     viewModelPublisher.subscribe(window)
     modelPublisher.subscribe(controller)
     activeViewPublisher.subscribe(keyMapManager)
