@@ -42,6 +42,6 @@ class CalendarController(modelPublisher: ModelPublisher, viewModelPublisher: Vie
   }
 
   def onModelChange(model: Model): Unit = {
-
+    
   }
 }
