@@ -125,8 +125,6 @@ case object V extends Keyboard
 
 case object W extends Keyboard
 
-  
-
 case object X extends Keyboard
 
 case object Y extends Keyboard

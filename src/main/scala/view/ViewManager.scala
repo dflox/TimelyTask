@@ -12,8 +12,4 @@ class ViewManager (viewModelPublisher: ViewModelPublisher) {
     val model = viewModelPublisher.getCurrentViewModel
     view.update(model, tuiModel)
   }
-
-  def getActiveViewModel: ViewModel = {
-    viewModelPublisher.getCurrentViewModel
-  }
 }
