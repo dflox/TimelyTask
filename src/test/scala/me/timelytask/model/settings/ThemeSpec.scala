@@ -1,4 +1,4 @@
-package me.timelytask.settings
+package me.timelytask.model.settings
 
 import me.timelytask.model.settings.Theme
 import org.scalatest.matchers.should.Matchers.*

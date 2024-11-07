@@ -1,4 +1,4 @@
-package me.timelytask.settings
+package me.timelytask.model.settings
 
 import me.timelytask.model.settings.DataType
 import org.scalatest.matchers.must.Matchers
