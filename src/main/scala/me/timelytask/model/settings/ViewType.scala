@@ -16,10 +16,11 @@ enum ViewType {
   // TODO: Implement the rest of the cases
   def getTUIView: TUIView = this match {
     case CALENDAR => CalendarTUI
-    case TABLE => ???
-    case KANBAN => ???
-    case SETTINGS => ???
-    case TASK => ???
+    case _ => CalendarTUI
+//    case TABLE => ???
+//    case KANBAN => ???
+//    case SETTINGS => ???
+//    case TASK => ???
   }
 }
 object ViewType {
