@@ -45,3 +45,5 @@ val viewModel: CalendarViewModel = new CalendarViewModel(Model.default, TimeSele
 
 val viewModel2: CalendarViewModel = viewModel.copy(timeSelection = viewModel.timeSelection.copy(day = viewModel.timeSelection.getFirstDayOfWeek, dayCount = 7))
 
+val i = 0
+s"($i)"

@@ -15,11 +15,6 @@ object UtilTUI {
     " " * length
   }
 
-  // Get the first Day of the week
-  def getFirstDayOfWeek(day: DateTime): DateTime = {
-    day - (day.getDayOfWeek - 1).days
-  }
-
   // Get a list of days starting with a given day and going forward for a given TimePeriod
   def getDaySpan(startDay: DateTime, period: Int): List[DateTime] = {
     (0 until period).map(startDay + _.days).toList
@@ -43,6 +38,7 @@ object UtilTUI {
       text
     }
   }
+  
   def welcomeMessage(): String = {
     val userName = System.getProperty("user.name")
     val greeting = s"Hello $userName,\nWelcome to TimelyTask!\n"

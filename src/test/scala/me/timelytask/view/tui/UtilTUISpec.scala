@@ -31,11 +31,6 @@ class UtilTUISpec extends AnyWordSpec {
           createSpace(-1)
         }
       }
-
-      "return the first day of the week" in {
-        val date = new DateTime(2024, 10, 18, 0, 0)
-        getFirstDayOfWeek(date) should be(new DateTime(2024, 10, 14, 0, 0))
-      }
       
       "return a list of days starting with a given day and going forward for a given TimePeriod" in {
         val date = new DateTime(2024, 10, 14, 0, 0)
