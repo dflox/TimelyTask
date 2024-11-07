@@ -20,3 +20,6 @@ sbt clean coverage test
 ```bash
 sbt coverageReport
 ```
+```bash
+sbt -jvm-debug 5005
+```

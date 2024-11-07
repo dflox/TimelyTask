@@ -12,8 +12,6 @@ class Window (terminal: Terminal, inputHandler: InputHandler, viewManager: ViewM
   val writer: PrintWriter = terminal.writer()
   
   def onUserInput(key: Keyboard): Unit = {
-    // Call InputHandler to interpret the event and delegate appropriately
-    //writer.println("key pressed: " + key)
     inputHandler.handleInput(key)
   }
 
