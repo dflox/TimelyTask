@@ -1,7 +1,7 @@
 package me.timelytask.controller
 
 import me.timelytask.model.settings.{Action, Exit, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek, ViewType}
-import me.timelytask.model.utility.{A, AltDown, AltLeft, AltRight, AltUp, B, Backslash, Backspace, C, Colon, Comma, CtrlA, CtrlB, CtrlC, CtrlD, CtrlDown, CtrlE, CtrlF, CtrlG, CtrlH, CtrlI, CtrlJ, CtrlK, CtrlL, CtrlLeft, CtrlM, CtrlN, CtrlO, CtrlP, CtrlQ, CtrlR, CtrlRight, CtrlS, CtrlT, CtrlU, CtrlUp, CtrlV, CtrlW, CtrlX, CtrlY, CtrlZ, D, Delete, Dot, E, End, Enter, F, F1, F10, F11, F12, F2, F3, F4, F5, F6, F7, F8, F9, G, H, Home, I, Insert, J, K, Keyboard, L, M, MoveDown, MoveLeft, MoveRight, MoveUp, N, Num0, Num1, Num2, Num3, Num4, Num5, Num6, Num7, Num8, Num9, O, P, PageDown, PageUp, Q, R, S, Semicolon, ShiftDown, ShiftLeft, ShiftRight, ShiftUp, Slash, Space, T, Tab, U, V, W, X, Y, Z}
+import me.timelytask.model.utility.*
 import org.jline.keymap.KeyMap
 
 class KeyMapManager extends ActiveViewObserver {
