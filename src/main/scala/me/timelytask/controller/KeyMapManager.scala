@@ -1,6 +1,6 @@
 package me.timelytask.controller
 
-import me.timelytask.model.settings.{Action, Exit, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek, ViewType}
+import me.timelytask.model.settings.*
 import me.timelytask.model.utility.*
 import org.jline.keymap.KeyMap
 
@@ -43,7 +43,8 @@ object KeyMapManager {
         MoveLeft -> PreviousDay,
         CtrlRight -> NextWeek,
         CtrlLeft -> PreviousWeek,
-        T -> GoToToday
+        T -> GoToToday,
+        W -> ShowWholeWeek
       )
     },
     ViewType.TABLE -> Map(),

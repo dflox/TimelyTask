@@ -3,7 +3,7 @@ package me.timelytask.controller
 import com.github.nscala_time.time.Imports.*
 import io.circe.generic.auto.*
 import me.timelytask.model.Model
-import me.timelytask.model.settings.{Action, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek}
+import me.timelytask.model.settings.{Action, ShowWholeWeek, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek}
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
 import java.awt.Color
@@ -21,20 +21,23 @@ class CalendarController(modelPublisher: ModelPublisher, viewModelPublisher: Vie
         viewModelPublisher.getCurrentViewModel
   }
   
-  private def handleCalendarAction(action: Action, model: CalendarViewModel): ViewModel = {
+  private def handleCalendarAction(action: Action, viewModel: CalendarViewModel): ViewModel = {
     action match {
       case NextDay =>
-        model.copy(timeSelection = model.timeSelection.copy(day = model.timeSelection.day + 1.days))
+        viewModel.copy(timeSelection = viewModel.timeSelection.copy(day = viewModel.timeSelection.day + 1.days))
       case PreviousDay =>
-        model.copy(timeSelection = model.timeSelection.copy(day = model.timeSelection.day - 1.days))
+        viewModel.copy(timeSelection = viewModel.timeSelection.copy(day = viewModel.timeSelection.day - 1.days))
       case NextWeek =>
-        model.copy(timeSelection = model.timeSelection.copy(day = model.timeSelection.day + 7.days))
+        viewModel.copy(timeSelection = viewModel.timeSelection.copy(day = viewModel.timeSelection.day + 7.days))
       case PreviousWeek =>
-        model.copy(timeSelection = model.timeSelection.copy(day = model.timeSelection.day - 7.days))
+        viewModel.copy(timeSelection = viewModel.timeSelection.copy(day = viewModel.timeSelection.day - 7.days))
       case GoToToday =>
-        model.copy(timeSelection = model.timeSelection
-          .copy(day = DateTime.now().withTime(model.timeSelection.day.toLocalTime)))
-      case _ => model
+        viewModel.copy(timeSelection = viewModel.timeSelection
+          .copy(day = DateTime.now().withTime(viewModel.timeSelection.day.toLocalTime)))
+      case ShowWholeWeek =>
+        viewModel.copy(timeSelection = viewModel.timeSelection
+          .copy(day = viewModel.timeSelection.getFirstDayOfWeek, dayCount = 7))
+      case _ => viewModel
     }
   }
 
