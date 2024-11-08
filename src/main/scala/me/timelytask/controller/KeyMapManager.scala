@@ -45,8 +45,8 @@ object KeyMapManager {
         CtrlLeft -> PreviousWeek,
         T -> GoToToday,
         W -> ShowWholeWeek,
-        plus -> ShowMoreDays,
-        minus -> ShowLessDays
+        Plus -> ShowMoreDays,
+        Minus -> ShowLessDays
       )
     },
     ViewType.TABLE -> Map(),
@@ -184,8 +184,8 @@ object KeyMapManager {
     keyMap.bind(Dot, ".")
     keyMap.bind(Comma, ",")
     keyMap.bind(Colon, ":")
-    keyMap.bind(plus, "+")
-    keyMap.bind(minus, "-")
+    keyMap.bind(Plus, "+")
+    keyMap.bind(Minus, "-")
     keyMap.bind(Semicolon, ";")
     keyMap.bind(Slash, "/")
     keyMap.bind(Backslash, "\\")   
