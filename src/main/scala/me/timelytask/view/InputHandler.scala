@@ -1,7 +1,7 @@
 package me.timelytask.view
 
 import me.timelytask.controller.*
-import me.timelytask.model.settings.{Action, Exit, GoToToday, NextDay, NextWeek, NoAction, PreviousDay, PreviousWeek, ShowWholeWeek}
+import me.timelytask.model.settings.{Action, Exit, GoToToday, NextDay, NextWeek, NoAction, PreviousDay, PreviousWeek, ShowLessDays, ShowMoreDays, ShowWholeWeek}
 import me.timelytask.model.utility.Keyboard
 import me.timelytask.view.viewmodel.ViewModel
 
@@ -28,6 +28,8 @@ object InputHandler {
     PreviousWeek -> calendarController,
     GoToToday -> calendarController,
     ShowWholeWeek -> calendarController,
+    ShowMoreDays -> calendarController,
+    ShowLessDays -> calendarController,
     Exit -> persistenceController,
   )
 }

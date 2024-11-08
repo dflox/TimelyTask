@@ -24,6 +24,9 @@ case object GoToDate extends Action
 
 case object ShowWholeWeek extends Action
 
+case object ShowMoreDays extends Action
+case object ShowLessDays extends Action
+
 // Taskview actions
 case object NextField extends Action
 case object PreviousField extends Action

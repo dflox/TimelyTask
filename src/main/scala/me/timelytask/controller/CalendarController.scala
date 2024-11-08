@@ -3,7 +3,7 @@ package me.timelytask.controller
 import com.github.nscala_time.time.Imports.*
 import io.circe.generic.auto.*
 import me.timelytask.model.Model
-import me.timelytask.model.settings.{Action, ShowWholeWeek, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek}
+import me.timelytask.model.settings.{Action, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek, ShowLessDays, ShowMoreDays, ShowWholeWeek}
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
 import java.awt.Color
@@ -37,6 +37,10 @@ class CalendarController(modelPublisher: ModelPublisher, viewModelPublisher: Vie
       case ShowWholeWeek =>
         Some(viewModel.copy(timeSelection = viewModel.timeSelection
           .copy(day = viewModel.timeSelection.getFirstDayOfWeek, dayCount = 7)))
+      case ShowLessDays =>
+        Some(viewModel.copy(timeSelection = viewModel.timeSelection.copy(dayCount = viewModel.timeSelection.dayCount - 1)))
+      case ShowMoreDays =>
+        Some(viewModel.copy(timeSelection = viewModel.timeSelection.copy(dayCount = viewModel.timeSelection.dayCount + 1)))
       case _ => None
     }
   }

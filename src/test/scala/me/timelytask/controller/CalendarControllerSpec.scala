@@ -112,7 +112,33 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
 
       updatedViewModel.timeSelection.day shouldEqual (timeSelection.getFirstDayOfWeek)
     }
-    
+
+    "handle ShowLessDays action correctly" in {
+      val modelPublisher = mock[ModelPublisher]
+      val viewModelPublisher = mock[ViewModelPublisher]
+      val timeSelection = TimeSelection.defaultTimeSelection
+      val calendarViewModel = CalendarViewModel(Model.default, timeSelection)
+      when(viewModelPublisher.getCurrentViewModel).thenReturn(calendarViewModel)
+
+      val controller = new CalendarController(modelPublisher, viewModelPublisher)
+      val updatedViewModel = controller.handleAction(ShowLessDays).get.asInstanceOf[CalendarViewModel]
+
+      updatedViewModel.timeSelection.dayCount shouldEqual (timeSelection.dayCount - 1)
+    }
+
+    "handle ShowMoreDays action correctly" in {
+      val modelPublisher = mock[ModelPublisher]
+      val viewModelPublisher = mock[ViewModelPublisher]
+      val timeSelection = TimeSelection.defaultTimeSelection
+      val calendarViewModel = CalendarViewModel(Model.default, timeSelection)
+      when(viewModelPublisher.getCurrentViewModel).thenReturn(calendarViewModel)
+
+      val controller = new CalendarController(modelPublisher, viewModelPublisher)
+      val updatedViewModel = controller.handleAction(ShowMoreDays).get.asInstanceOf[CalendarViewModel]
+
+      updatedViewModel.timeSelection.dayCount shouldEqual (timeSelection.dayCount + 1)
+    }
+
     "should have a onModelChange method" in {
       val modelPublisher = mock[ModelPublisher]
       val viewModelPublisher = mock[ViewModelPublisher]
