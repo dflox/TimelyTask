@@ -60,5 +60,22 @@ class UtilTUISpec extends AnyWordSpec {
       "clear the terminal" in {
         clearTerminal() should be("\u001b[H\u001b[2J")
       }
+      "align the text to the left" in {
+        UtilTUI.columnSpacer("Hello", 10, "l") should be("Hello     ")
+        UtilTUI.columnSpacer("Hello", 5, "l") should be("Hello")
+        UtilTUI.columnSpacer("Hello", 0, "l") should be("Hello")
+      }
+
+      "align the text to the middle" in {
+        UtilTUI.columnSpacer("Hello", 10, "m") should be("  Hello   ")
+        UtilTUI.columnSpacer("Hello", 5, "m") should be("Hello")
+        UtilTUI.columnSpacer("Hello", 0, "m") should be("Hello")
+      }
+
+      "align the text to the right" in {
+        UtilTUI.columnSpacer("Hello", 10, "r") should be("     Hello")
+        UtilTUI.columnSpacer("Hello", 5, "r") should be("Hello")
+        UtilTUI.columnSpacer("Hello", 0, "r") should be("Hello")
+      }
     }
 }

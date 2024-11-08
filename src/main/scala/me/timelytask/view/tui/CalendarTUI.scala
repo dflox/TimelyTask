@@ -50,18 +50,6 @@ object CalendarTUI extends TUIView {
 
     builder.toString()
   }
-  // Align the text (by adding spaces) to the left, right or middle
-  def columnSpacer(text: String, totalSpace: Int, format: String): String = {
-    cutText(text, totalSpace)
-    var space = totalSpace - text.length
-    if space < 0 then space = 0
-
-    format match {
-      case "l" => text + createSpace(space) // left
-      case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
-      case "r" => createSpace(math.max(space, 0)) + text // right
-    }
-  }
   def header(actualWidth: Int, timeSelection: TimeSelection): String = {
     val title = "Calendar"
     val dateformat = "dd. - dd. MMM. yyyy"

@@ -5,7 +5,6 @@ import me.timelytask.model.Model
 import me.timelytask.model.utility.TimeSelection
 
 case class CalendarViewModel(model: Model, timeSelection: TimeSelection) extends ViewModel {
-  import CalendarViewModel.*
   // Variables
   val format = "m"
   val timeColumn = "| Time  |"

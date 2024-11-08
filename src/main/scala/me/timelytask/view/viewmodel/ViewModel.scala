@@ -6,7 +6,6 @@ import me.timelytask.model.Model
 
 trait ViewModel {
   val model: Model
-  val userName: String = System.getProperty("user.name")
   val today: DateTime = DateTime.now()
 }
 
