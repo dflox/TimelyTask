@@ -1,11 +1,12 @@
 package me.timelytask.view
 
 import me.timelytask.controller.*
-import me.timelytask.model.settings.{Action, Exit, GoToToday, NextDay, NextWeek, NoAction, PreviousDay, PreviousWeek, ShowLessDays, ShowMoreDays, ShowWholeWeek}
+import me.timelytask.model.settings.*
 import me.timelytask.model.utility.Keyboard
+import me.timelytask.util.Publisher
 import me.timelytask.view.viewmodel.ViewModel
 
-class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Controller], viewModelPublisher: ViewModelPublisher) {
+class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Controller], viewModelPublisher: Publisher[ViewModel]) {
   
   def handleInput(key: Keyboard): Option[ViewModel] = {
     val action: Action = keyMapManager.getActiveActionKeymap.getOrElse(key,
@@ -15,7 +16,7 @@ class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Cont
       case None => None
     }
     if viewModel.isDefined then
-      viewModelPublisher.updateViewModel(viewModel.get)
+      viewModelPublisher.update(viewModel.get)
     viewModel
   }
 }

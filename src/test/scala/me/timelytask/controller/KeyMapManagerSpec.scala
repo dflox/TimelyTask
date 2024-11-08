@@ -1,7 +1,7 @@
 package me.timelytask.controller
 
-import me.timelytask.model.utility.*
 import me.timelytask.model.settings.*
+import me.timelytask.model.utility.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -15,7 +15,7 @@ class KeyMapManagerSpec extends AnyWordSpec{
     "set action keymap" in {
       val keyMapManager = new KeyMapManager
       keyMapManager.setKeymap(ViewType.KANBAN, Map(MoveRight -> NextDay))
-      keyMapManager.onActiveViewChange(ViewType.KANBAN)
+      keyMapManager.onChange(ViewType.KANBAN)
       keyMapManager.getActiveActionKeymap should be(Map(MoveRight -> NextDay))
     }
   }

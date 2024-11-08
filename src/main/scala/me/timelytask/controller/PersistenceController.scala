@@ -2,12 +2,13 @@ package me.timelytask.controller
 
 import me.timelytask.TimelyTask
 import me.timelytask.model.Model
-import me.timelytask.model.settings.{Action, Exit}
+import me.timelytask.model.settings.{Action, Exit, ViewType}
+import me.timelytask.util.Publisher
 import me.timelytask.view.viewmodel.ViewModel
 
-class PersistenceController(viewModelPublisher: ViewModelPublisher,
-                            modelPublisher: ModelPublisher,
-                            activeViewPublisher: ActiveViewPublisher) 
+class PersistenceController(viewModelPublisher: Publisher[ViewModel],
+                            modelPublisher: Publisher[Model],
+                            activeViewPublisher: Publisher[ViewType]) 
   extends Controller {
   override def handleAction(action: Action): Option[ViewModel] = {
     action match {
@@ -17,11 +18,11 @@ class PersistenceController(viewModelPublisher: ViewModelPublisher,
         //        viewModelPublisher.getCurrentViewModel
         TimelyTask.exit()
         None
-      case _ => Some(viewModelPublisher.getCurrentViewModel)
+      case _ => Some(viewModelPublisher.getValue)
     }
   }
 
-  override def onModelChange(newModel: Model): Unit = {
+  override def onChange(newModel: Model): Unit = {
     // TODO: save model
   }
 

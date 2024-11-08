@@ -1,15 +1,16 @@
 package me.timelytask.view
 
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatestplus.mockito.MockitoSugar
+import me.timelytask.controller.*
+import me.timelytask.model.settings.*
+import me.timelytask.model.utility.*
+import me.timelytask.util.Publisher
+import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
-import me.timelytask.controller.*
-import me.timelytask.view.viewmodel.CalendarViewModel
-import me.timelytask.model.utility.*
-import me.timelytask.model.settings.*
 import org.scalatest.matchers.should.Matchers.shouldEqual
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.mockito.MockitoSugar
 
 class InputHandlerSpec extends AnyWordSpec with MockitoSugar {
   "The InputHandler" should {
@@ -25,7 +26,7 @@ class InputHandlerSpec extends AnyWordSpec with MockitoSugar {
       val calendarController: CalendarController = mock[CalendarController]
       when(calendarController.handleAction(NextDay)).thenReturn(Some(returnViewModel))
       
-      val viewModelPublisher: ViewModelPublisher = mock[ViewModelPublisher]
+      val viewModelPublisher = mock[Publisher[ViewModel]]
       val controllerMap: Map[Action, Controller] = Map(Exit -> persistenceController, NextDay -> calendarController)
       val inputHandler = new InputHandler(keyMapManager, controllerMap, viewModelPublisher)
 
@@ -41,7 +42,7 @@ class InputHandlerSpec extends AnyWordSpec with MockitoSugar {
       actionCaptor.getValue shouldEqual NextDay
 
       val key3 = A
-      inputHandler.handleInput(key3) shouldEqual None
+      inputHandler.handleInput(key3).shouldEqual(None)
     }
 
     "create controller map" in {

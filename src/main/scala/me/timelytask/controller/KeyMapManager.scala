@@ -2,14 +2,15 @@ package me.timelytask.controller
 
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.*
+import me.timelytask.util.Observer
 import org.jline.keymap.KeyMap
 
-class KeyMapManager extends ActiveViewObserver {
+class KeyMapManager extends Observer[ViewType] {
   private var actionKeyMaps: Map[ViewType, Map[Keyboard, Action]] = KeyMapManager.defaultActionKeymaps
   private var globalActionKeymap: Map[Keyboard, Action] = KeyMapManager.globalKeymap
   private var activeView: ViewType = ViewType.CALENDAR
 
-  def onActiveViewChange(viewType: ViewType): Unit = {
+  def onChange(viewType: ViewType): Unit = {
     activeView = viewType
   }
 

@@ -1,20 +1,16 @@
 package me.timelytask.controller
 
 import com.github.nscala_time.time.Imports.*
-import io.circe.generic.auto.*
 import me.timelytask.model.Model
-import me.timelytask.model.settings.{Action, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek, ShowLessDays, ShowMoreDays, ShowWholeWeek}
+import me.timelytask.model.settings.*
+import me.timelytask.util.{Observer, Publisher}
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
-import java.awt.Color
-import java.util.UUID
-import scala.collection.immutable.{HashMap, HashSet}
-import scala.collection.mutable
-
-class CalendarController(modelPublisher: ModelPublisher, viewModelPublisher: ViewModelPublisher) extends Controller {
+class CalendarController(modelPublisher: Publisher[Model], viewModelPublisher: Publisher[ViewModel]) 
+  extends Controller {
   def handleAction(action: Action): Option[ViewModel] = {
     //handleCalendarAction(action, viewModelPublisher.getCurrentViewModel.asInstanceOf[CalendarViewModel])
-    viewModelPublisher.getCurrentViewModel match
+    viewModelPublisher.getValue match
       case model: CalendarViewModel =>
         handleCalendarAction(action, model)
       case _ =>
@@ -45,7 +41,7 @@ class CalendarController(modelPublisher: ModelPublisher, viewModelPublisher: Vie
     }
   }
 
-  def onModelChange(model: Model): Unit = {
+  def onChange(model: Model): Unit = {
     
   }
 }
