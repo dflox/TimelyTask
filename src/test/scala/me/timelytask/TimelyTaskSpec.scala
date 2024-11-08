@@ -1,7 +1,7 @@
 package me.timelytask
 
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.matchers.should.Matchers._
 
 class TimelyTaskSpec extends AnyWordSpec {
 

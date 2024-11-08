@@ -1,17 +1,17 @@
 package me.timelytask
 
-import controller.*
-import model.*
-import model.settings.ViewType
-import model.utility.*
+import me.timelytask.controller.*
+import me.timelytask.model.*
+import me.timelytask.model.settings.ViewType
+import me.timelytask.model.settings.ViewType.CALENDAR
+import me.timelytask.model.utility.*
+import me.timelytask.util.Publisher
+import me.timelytask.view.*
+import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 import org.jline.keymap.BindingReader
 import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.{Terminal, TerminalBuilder}
-import view.*
-import view.viewmodel.CalendarViewModel
-
-import scala.collection.immutable.HashSet
 
 object TimelyTask {
   def exit(): Unit = {
@@ -38,18 +38,19 @@ object TimelyTask {
     
     val keyMapManager = new KeyMapManager()
     val model = Model.default;
-    val viewModelPublisher = new ViewModelPublisher(new CalendarViewModel(model, TimeSelection.defaultTimeSelection))
-    val modelPublisher = new ModelPublisher(model)
-    val activeViewPublisher = new ActiveViewPublisher()
+    val viewModelPublisher = new Publisher[ViewModel](new CalendarViewModel(model, TimeSelection.defaultTimeSelection))
+    val modelPublisher = new Publisher[Model](model)
+    val activeViewPublisher = new Publisher[ViewType](CALENDAR)
     val persistenceController = new PersistenceController(viewModelPublisher, modelPublisher, activeViewPublisher)
     val controller = new CalendarController(modelPublisher, viewModelPublisher)
-    val inputHandler = new InputHandler(keyMapManager, InputHandler.getControllerMap(controller, persistenceController), viewModelPublisher)
+    val inputHandler = new InputHandler(keyMapManager,
+      InputHandler.getControllerMap(controller, persistenceController), viewModelPublisher)
     val viewManager = new ViewManager(viewModelPublisher)
     
     
     val window = new Window(terminal, inputHandler, viewManager)
 
-    activeViewPublisher.updateActiveView(ViewType.CALENDAR)
+    activeViewPublisher.update(ViewType.CALENDAR)
     viewModelPublisher.subscribe(window)
     modelPublisher.subscribe(controller)
     activeViewPublisher.subscribe(keyMapManager)

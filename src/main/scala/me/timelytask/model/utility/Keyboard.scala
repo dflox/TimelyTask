@@ -219,6 +219,10 @@ case object Colon extends Keyboard
 
 case object Semicolon extends Keyboard
 
+case object Plus extends Keyboard
+
+case object Minus extends Keyboard
+
 case object Slash extends Keyboard
 
 case object Backslash extends Keyboard

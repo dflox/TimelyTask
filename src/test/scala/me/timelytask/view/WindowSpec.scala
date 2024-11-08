@@ -1,13 +1,9 @@
 package me.timelytask.view
 
-import me.timelytask.controller.ViewModelPublisher
-import me.timelytask.model.Model
 import me.timelytask.model.utility.{A, Keyboard}
-import me.timelytask.view.viewmodel.{CalendarViewModel, TUIModel, ViewModel}
-import me.timelytask.view.{InputHandler, ViewManager, Window}
+import me.timelytask.view.viewmodel.{TUIModel, ViewModel}
 import org.jline.terminal.Terminal
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -45,7 +41,7 @@ class WindowSpec extends AnyWordSpec with MockitoSugar {
       val viewModel = mock[ViewModel]
 
       val window = new Window(terminal, inputHandler, viewManager)
-      window.onViewModelChange(viewModel)
+      window.onChange(viewModel)
       val captor = ArgumentCaptor.forClass(classOf[TUIModel])
       verify(viewManager).renderActiveTUIView(captor.capture())
       captor.getValue shouldEqual new TUIModel(terminal.getHeight, terminal.getWidth)

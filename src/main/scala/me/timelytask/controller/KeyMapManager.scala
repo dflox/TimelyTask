@@ -2,14 +2,15 @@ package me.timelytask.controller
 
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.*
+import me.timelytask.util.Observer
 import org.jline.keymap.KeyMap
 
-class KeyMapManager extends ActiveViewObserver {
+class KeyMapManager extends Observer[ViewType] {
   private var actionKeyMaps: Map[ViewType, Map[Keyboard, Action]] = KeyMapManager.defaultActionKeymaps
   private var globalActionKeymap: Map[Keyboard, Action] = KeyMapManager.globalKeymap
   private var activeView: ViewType = ViewType.CALENDAR
 
-  def onActiveViewChange(viewType: ViewType): Unit = {
+  def onChange(viewType: ViewType): Unit = {
     activeView = viewType
   }
 
@@ -44,7 +45,9 @@ object KeyMapManager {
         CtrlRight -> NextWeek,
         CtrlLeft -> PreviousWeek,
         T -> GoToToday,
-        W -> ShowWholeWeek
+        W -> ShowWholeWeek,
+        Plus -> ShowMoreDays,
+        Minus -> ShowLessDays
       )
     },
     ViewType.TABLE -> Map(),
@@ -182,6 +185,8 @@ object KeyMapManager {
     keyMap.bind(Dot, ".")
     keyMap.bind(Comma, ",")
     keyMap.bind(Colon, ":")
+    keyMap.bind(Plus, "+")
+    keyMap.bind(Minus, "-")
     keyMap.bind(Semicolon, ";")
     keyMap.bind(Slash, "/")
     keyMap.bind(Backslash, "\\")   
