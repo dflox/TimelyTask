@@ -24,7 +24,7 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
       val result = controller.handleAction(mock[Action])
 
-      result shouldEqual viewModel
+      result shouldEqual None
     }
 
     "handle default action correctly" in {
@@ -37,7 +37,7 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
       val result = controller.handleAction(mock[Action])
 
-      result shouldEqual calendarViewModel
+      result shouldEqual None
     }
 
     "handle NextDay action correctly" in {
@@ -48,7 +48,7 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getCurrentViewModel).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(NextDay).asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(NextDay).get.asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.day shouldEqual (timeSelection.day + 1.days)
     }
@@ -60,7 +60,7 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getCurrentViewModel).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(PreviousDay).asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(PreviousDay).get.asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.day shouldEqual (timeSelection.day - 1.days)
     }
@@ -72,7 +72,7 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getCurrentViewModel).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(NextWeek).asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(NextWeek).get.asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.day shouldEqual (timeSelection.day + 7.days)
     }
@@ -84,7 +84,7 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getCurrentViewModel).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(PreviousWeek).asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(PreviousWeek).get.asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.day shouldEqual (timeSelection.day - 7.days)
     }
@@ -96,7 +96,7 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getCurrentViewModel).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(GoToToday).asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(GoToToday).get.asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.day shouldEqual (DateTime.now().withTime(timeSelection.day.toLocalTime))
     }
@@ -108,9 +108,16 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getCurrentViewModel).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(ShowWholeWeek).asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(ShowWholeWeek).get.asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.day shouldEqual (timeSelection.getFirstDayOfWeek)
+    }
+    
+    "should have a onModelChange method" in {
+      val modelPublisher = mock[ModelPublisher]
+      val viewModelPublisher = mock[ViewModelPublisher]
+      val controller = new CalendarController(modelPublisher, viewModelPublisher)
+      controller.onModelChange(Model.default)
     }
   }
 }

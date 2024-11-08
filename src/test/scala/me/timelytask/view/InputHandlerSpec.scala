@@ -20,10 +20,10 @@ class InputHandlerSpec extends AnyWordSpec with MockitoSugar {
       
       val returnViewModel: CalendarViewModel = mock[CalendarViewModel]
       val persistenceController: PersistenceController = mock[PersistenceController]
-      when(persistenceController.handleAction(Exit)).thenReturn(returnViewModel)
+      when(persistenceController.handleAction(Exit)).thenReturn(None)
       
       val calendarController: CalendarController = mock[CalendarController]
-      when(calendarController.handleAction(NextDay)).thenReturn(returnViewModel)
+      when(calendarController.handleAction(NextDay)).thenReturn(Some(returnViewModel))
       
       val viewModelPublisher: ViewModelPublisher = mock[ViewModelPublisher]
       val controllerMap: Map[Action, Controller] = Map(Exit -> persistenceController, NextDay -> calendarController)
@@ -41,8 +41,7 @@ class InputHandlerSpec extends AnyWordSpec with MockitoSugar {
       actionCaptor.getValue shouldEqual NextDay
 
       val key3 = A
-      inputHandler.handleInput(key3)
-      verify(viewModelPublisher).getCurrentViewModel
+      inputHandler.handleInput(key3) shouldEqual None
     }
 
     "create controller map" in {

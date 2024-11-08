@@ -7,14 +7,15 @@ import me.timelytask.view.viewmodel.ViewModel
 
 class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Controller], viewModelPublisher: ViewModelPublisher) {
   
-  def handleInput(key: Keyboard): ViewModel = {
+  def handleInput(key: Keyboard): Option[ViewModel] = {
     val action: Action = keyMapManager.getActiveActionKeymap.getOrElse(key,
       keyMapManager.getGlobalActionKeymap.getOrElse(key, NoAction))
     val viewModel = controllerMap.get(action).orElse(controllerMap.get(action)) match {
       case Some(controller) => controller.handleAction(action)
-      case None => viewModelPublisher.getCurrentViewModel
+      case None => None
     }
-    viewModelPublisher.updateViewModel(viewModel)
+    if viewModel.isDefined then
+      viewModelPublisher.updateViewModel(viewModel.get)
     viewModel
   }
 }
