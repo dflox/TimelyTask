@@ -11,12 +11,12 @@ object CalendarTUI extends TUIView {
   override def update(viewModel: ViewModel): String = {
     update(viewModel, TUIModel.default)
   }
-  
+
   override def update(viewModel: ViewModel, TUIModel: TUIModel): String = {
     val calendarViewModel: CalendarViewModel = viewModel.asInstanceOf[CalendarViewModel]
     import TUIModel.*
     import calendarViewModel.*
-    
+
     // Variables
     val heightAvailable: Int = terminalHeight - headerHeight - footerHeight
     val width: Int = terminalWidth
@@ -27,9 +27,12 @@ object CalendarTUI extends TUIView {
     table = table :+ timeColumn
     daysList.foreach(day => table = table :+ day.toString(dayFormat) + "|") // dayList toString
 
-    // Calculate the possible Space that each day has (subtract the timeColumn and the seperator for the days)
-    val spacePerColumn = (width - table.head.length - timeSelection.dayCount) / timeSelection.dayCount
-    val actualWidth = timeColumnLength + timeSelection.dayCount + (timeSelection.dayCount * spacePerColumn)
+    // Calculate the possible Space that each day has (subtract the timeColumn and the seperator 
+    // for the days)
+    val spacePerColumn = (width - table.head.length - timeSelection.dayCount) /
+      timeSelection.dayCount
+    val actualWidth = timeColumnLength + timeSelection.dayCount +
+      (timeSelection.dayCount * spacePerColumn)
 
     // Start Building Output
     val builder = new StringBuilder()
@@ -38,7 +41,8 @@ object CalendarTUI extends TUIView {
     builder.append(header(actualWidth, timeSelection))
     // Create the TopRow
     builder.append(timeColumn)
-    daysList.foreach(day => builder.append(columnSpacer(day.toString(dayFormat), spacePerColumn, format) + "|")) // print the days
+    daysList.foreach(day => builder.append(columnSpacer(day.toString(dayFormat), spacePerColumn,
+      format) + "|")) // print the days
     builder.append("\n")
     builder.append(createLine(actualWidth) + "\n")
 
@@ -50,6 +54,7 @@ object CalendarTUI extends TUIView {
 
     builder.toString()
   }
+
   // Align the text (by adding spaces) to the left, right or middle
   def columnSpacer(text: String, totalSpace: Int, format: String): String = {
     cutText(text, totalSpace)
@@ -58,24 +63,36 @@ object CalendarTUI extends TUIView {
 
     format match {
       case "l" => text + createSpace(space) // left
-      case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
+      case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else
+                                                                                               createSpace(
+                                                                                                 space /
+                                                                                                   2) +
+                                                                                                 text +
+                                                                                                 createSpace(
+                                                                                                   space /
+                                                                                                     2 +
+                                                                                                     1) // middle
       case "r" => createSpace(math.max(space, 0)) + text // right
     }
   }
+
   def header(actualWidth: Int, timeSelection: TimeSelection): String = {
     val title = "Calendar"
     val dateformat = "dd. - dd. MMM. yyyy"
-    val headerLetterCount: Int = (title+dateformat).length // the amount of space(letters) the period String takes
+    val headerLetterCount: Int = (title + dateformat)
+      .length // the amount of space(letters) the period String takes
     val builder = new StringBuilder()
     // Create the header
     builder.append(createLine(actualWidth) + "\n")
-    builder.append(title + createSpace(actualWidth - headerLetterCount) + timeSelection.toString("dd.", "dd. MMM yyyy", " - ") + "\n")
+    builder.append(title + createSpace(actualWidth - headerLetterCount) + timeSelection.toString(
+      "dd.", "dd. MMM yyyy", " - ") + "\n")
     builder.append(createLine(actualWidth) + "\n")
     builder.toString()
   }
 
   // Create the rows with time and tasks
-  def createRows(timeSlice: Period, lines: Int, timeSelection: TimeSelection, tasks: List[Task], spacePerColumn: Int): String = {
+  def createRows(timeSlice: Period, lines: Int, timeSelection: TimeSelection, tasks: List[Task], 
+                 spacePerColumn: Int): String = {
     val builder = new StringBuilder()
 
     val format = "| HH:mm |"
@@ -100,12 +117,15 @@ object CalendarTUI extends TUIView {
 
   // Calculate the intervals between the hours and the amount of lines
   def calculatePeriod(linesAvailable: Int, timeFrame: Interval): (Period, Int) = {
-    val possibleIntervalsMinutes = List(24.0, 12.0, 10.0, 8.0, 6.0, 4.0, 2.0, 1.0, 0.5, 0.25).map(_ * 60)
+    val possibleIntervalsMinutes = List(24.0, 12.0, 10.0, 8.0, 6.0, 4.0, 2.0, 1.0, 0.5, 0.25).map(
+      _ * 60)
 
     val optimalIntervalMinutes: Double = timeFrame.toDurationMillis / linesAvailable / 1000.0 / 60.0
 
-    val chosenIntervalMinutes: Double = possibleIntervalsMinutes.filter(_ >= optimalIntervalMinutes).min
-    val countOfChosenIntervals = (timeFrame.toDurationMillis / chosenIntervalMinutes / 1000.0 / 60.0).toInt
+    val chosenIntervalMinutes: Double = possibleIntervalsMinutes.filter(_ >= optimalIntervalMinutes)
+      .min
+    val countOfChosenIntervals = (timeFrame.toDurationMillis / chosenIntervalMinutes / 1000.0 /
+      60.0).toInt
 
     val chosenLines = math.min(linesAvailable, countOfChosenIntervals)
     val timeSlice: Period = chosenIntervalMinutes.toInt.minutes.normalizedStandard()

@@ -8,7 +8,7 @@ import me.timelytask.view.viewmodel.ViewModel
 
 class PersistenceController(viewModelPublisher: Publisher[ViewModel],
                             modelPublisher: Publisher[Model],
-                            activeViewPublisher: Publisher[ViewType]) 
+                            activeViewPublisher: Publisher[ViewType])
   extends Controller {
   override def handleAction(action: Action): Option[ViewModel] = {
     action match {

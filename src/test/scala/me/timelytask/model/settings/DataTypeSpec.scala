@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
 
-class DataTypeSpec extends AnyWordSpec{
+class DataTypeSpec extends AnyWordSpec {
   "The DataType" should {
     "print the correct data type" in {
       DataType.TAG.toString should be("tag")

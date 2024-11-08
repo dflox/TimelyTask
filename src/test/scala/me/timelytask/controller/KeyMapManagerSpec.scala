@@ -5,7 +5,7 @@ import me.timelytask.model.utility.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
-class KeyMapManagerSpec extends AnyWordSpec{
+class KeyMapManagerSpec extends AnyWordSpec {
   "The KeyMapManager" should {
     "set global action keymap" in {
       val keyMapManager = new KeyMapManager

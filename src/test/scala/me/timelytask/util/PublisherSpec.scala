@@ -8,7 +8,8 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.mockito.MockitoSugar.mock
 
-class PublisherSpec extends AnyWordSpec with MockitoSugar{
+class PublisherSpec extends AnyWordSpec
+                    with MockitoSugar {
   "The ViewModelPublisher" should {
     "update the view model" in {
       val viewModel1 = mock[ViewModel]
@@ -22,9 +23,9 @@ class PublisherSpec extends AnyWordSpec with MockitoSugar{
       val captor = ArgumentCaptor.forClass(classOf[ViewModel])
       verify(mocObserver).onChange(captor.capture())
       captor.getValue shouldEqual viewModel2
-      
+
       viewModelPublisher.getValue shouldEqual viewModel2
     }
-    }
+  }
 
 }

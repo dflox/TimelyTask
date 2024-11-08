@@ -11,7 +11,8 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
-class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
+class CalendarControllerSpec extends AnyWordSpec
+                             with MockitoSugar {
 
   "The CalendarController" should {
 
@@ -61,7 +62,8 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getValue).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(PreviousDay).get.asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(PreviousDay).get
+        .asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.day shouldEqual (timeSelection.day - 1.days)
     }
@@ -85,7 +87,8 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getValue).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(PreviousWeek).get.asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(PreviousWeek).get
+        .asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.day shouldEqual (timeSelection.day - 7.days)
     }
@@ -99,7 +102,8 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
       val updatedViewModel = controller.handleAction(GoToToday).get.asInstanceOf[CalendarViewModel]
 
-      updatedViewModel.timeSelection.day shouldEqual (DateTime.now().withTime(timeSelection.day.toLocalTime))
+      updatedViewModel.timeSelection.day shouldEqual (DateTime.now().withTime(
+        timeSelection.day.toLocalTime))
     }
     "handle ShowWholeWeek action correctly" in {
       val modelPublisher = mock[Publisher[Model]]
@@ -109,7 +113,8 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getValue).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(ShowWholeWeek).get.asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(ShowWholeWeek).get
+        .asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.day shouldEqual (timeSelection.getFirstDayOfWeek)
     }
@@ -122,7 +127,8 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getValue).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(ShowLessDays).get.asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(ShowLessDays).get
+        .asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.dayCount shouldEqual (timeSelection.dayCount - 1)
     }
@@ -135,7 +141,8 @@ class CalendarControllerSpec extends AnyWordSpec with MockitoSugar {
       when(viewModelPublisher.getValue).thenReturn(calendarViewModel)
 
       val controller = new CalendarController(modelPublisher, viewModelPublisher)
-      val updatedViewModel = controller.handleAction(ShowMoreDays).get.asInstanceOf[CalendarViewModel]
+      val updatedViewModel = controller.handleAction(ShowMoreDays).get
+        .asInstanceOf[CalendarViewModel]
 
       updatedViewModel.timeSelection.dayCount shouldEqual (timeSelection.dayCount + 1)
     }

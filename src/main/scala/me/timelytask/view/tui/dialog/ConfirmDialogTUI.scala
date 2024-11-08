@@ -1,10 +1,10 @@
 package me.timelytask.view.tui.dialog
 
 import me.timelytask.view.tui.UtilTUI.createLine
-import org.jline.terminal.Terminal
 import me.timelytask.view.viewmodel.dialogmodel.{ConfirmDialogModel, DialogModel}
+import org.jline.terminal.Terminal
 
-class ConfirmDialogTUI(val dialogModel: DialogModel,val terminal: Terminal) extends TUIDialog {
+class ConfirmDialogTUI(val dialogModel: DialogModel, val terminal: Terminal) extends TUIDialog {
 
 
   override def getUserInput: Boolean = {
@@ -45,7 +45,8 @@ class ConfirmDialogTUI(val dialogModel: DialogModel,val terminal: Terminal) exte
 
   private def createInvalidInputString(viewWithDialog: String, terminalWidth: Int): String = {
     val viewWithDialogLines = viewWithDialog.split("\n")
-    viewWithDialogLines(viewWithDialogLines.length-2) = "Invalid input. Please confirm ('y') or deny ('n')"
+    viewWithDialogLines(
+      viewWithDialogLines.length - 2) = "Invalid input. Please confirm ('y') or deny ('n')"
     viewWithDialogLines.mkString("\n")
   }
 

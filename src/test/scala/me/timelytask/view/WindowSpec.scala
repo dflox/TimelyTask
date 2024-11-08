@@ -11,7 +11,8 @@ import org.scalatestplus.mockito.MockitoSugar
 
 import java.io.PrintWriter
 
-class WindowSpec extends AnyWordSpec with MockitoSugar {
+class WindowSpec extends AnyWordSpec
+                 with MockitoSugar {
 
   "The Window" should {
 
@@ -20,11 +21,11 @@ class WindowSpec extends AnyWordSpec with MockitoSugar {
       val terminal = mock[Terminal]
       val inputHandler = mock[InputHandler]
       val viewManager = mock[ViewManager]
-      
+
       val window = new Window(terminal, inputHandler, viewManager)
       val key = A
       window.onUserInput(key)
-      
+
       val captor = ArgumentCaptor.forClass(classOf[Keyboard])
       verify(inputHandler).handleInput(captor.capture())
       captor.getValue shouldEqual key

@@ -5,7 +5,7 @@ import me.timelytask.view.tui.CalendarTUI
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
-class ViewTypeSpec extends AnyWordSpec{
+class ViewTypeSpec extends AnyWordSpec {
   "The StartView" should {
     "print the correct start view" in {
       ViewType.CALENDAR.toString should be("calendar")

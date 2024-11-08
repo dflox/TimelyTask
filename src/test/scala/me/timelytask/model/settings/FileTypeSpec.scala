@@ -4,7 +4,7 @@ import me.timelytask.model.settings.FileType
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
-class FileTypeSpec extends AnyWordSpec{
+class FileTypeSpec extends AnyWordSpec {
   "The FileType" should {
     "print the correct file type" in {
       FileType.XML.toString should be("xml")

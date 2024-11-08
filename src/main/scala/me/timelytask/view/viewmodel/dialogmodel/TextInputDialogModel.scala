@@ -1,5 +1,5 @@
 package me.timelytask.view.viewmodel.dialogmodel
 
-case class TextInputDialogModel(description: String, currentView: String) extends DialogModel{
-  
+case class TextInputDialogModel(description: String, currentView: String) extends DialogModel {
+
 }

@@ -9,6 +9,7 @@ enum AppType {
   }
 
 }
+
 object AppType {
   def fromString(s: String): AppType = s match {
     case "gui" => GUI

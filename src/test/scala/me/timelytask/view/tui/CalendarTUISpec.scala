@@ -19,7 +19,8 @@ class CalendarTUISpec extends AnyWordSpec {
       val viewModel: ViewModel = calendarViewModel
       val output = CalendarTUI.update(viewModel)
 
-      output should include("-------------------------------------------------------------------------------\nCalendar                                                    06. - 12. Nov. 2024\n-------------------------------------------------------------------------------\n| Time  | Mi. 06  | Do. 07  | Fr. 08  | Sa. 09  | So. 10  | Mo. 11  | Di. 12  |\n-------------------------------------------------------------------------------\n| 16:55 |         |         |         |         |         |         |         |\n| 17:10 |         |         |         |         |         |         |         |\n| 17:25 |         |         |         |         |         |         |         |\n| 17:40 |         |         |         |         |         |         |         |\n-------------------------------------------------------------------------------\n\n\n\n\n\n\n\n\n\n\n\n\n")
+      output should include(
+        "-------------------------------------------------------------------------------\nCalendar                                                    06. - 12. Nov. 2024\n-------------------------------------------------------------------------------\n| Time  | Mi. 06  | Do. 07  | Fr. 08  | Sa. 09  | So. 10  | Mo. 11  | Di. 12  |\n-------------------------------------------------------------------------------\n| 16:55 |         |         |         |         |         |         |         |\n| 17:10 |         |         |         |         |         |         |         |\n| 17:25 |         |         |         |         |         |         |         |\n| 17:40 |         |         |         |         |         |         |         |\n-------------------------------------------------------------------------------\n\n\n\n\n\n\n\n\n\n\n\n\n")
     }
 
     "update the view correctly again" in {
@@ -30,7 +31,8 @@ class CalendarTUISpec extends AnyWordSpec {
       val tuiModel = TUIModel.default
       val output = CalendarTUI.update(viewModel, tuiModel)
 
-      output should include ("-------------------------------------------------------------------------------\nCalendar                                                    06. - 12. Nov. 2024\n-------------------------------------------------------------------------------\n| Time  | Mi. 06  | Do. 07  | Fr. 08  | Sa. 09  | So. 10  | Mo. 11  | Di. 12  |\n-------------------------------------------------------------------------------\n| 16:55 |         |         |         |         |         |         |         |\n| 17:10 |         |         |         |         |         |         |         |\n| 17:25 |         |         |         |         |         |         |         |\n| 17:40 |         |         |         |         |         |         |         |\n-------------------------------------------------------------------------------\n\n\n\n\n\n\n\n\n\n\n\n\n")
+      output should include(
+        "-------------------------------------------------------------------------------\nCalendar                                                    06. - 12. Nov. 2024\n-------------------------------------------------------------------------------\n| Time  | Mi. 06  | Do. 07  | Fr. 08  | Sa. 09  | So. 10  | Mo. 11  | Di. 12  |\n-------------------------------------------------------------------------------\n| 16:55 |         |         |         |         |         |         |         |\n| 17:10 |         |         |         |         |         |         |         |\n| 17:25 |         |         |         |         |         |         |         |\n| 17:40 |         |         |         |         |         |         |         |\n-------------------------------------------------------------------------------\n\n\n\n\n\n\n\n\n\n\n\n\n")
     }
 
     "align the text to the left" in {
@@ -54,8 +56,9 @@ class CalendarTUISpec extends AnyWordSpec {
     "header should be correct" in {
       val timeSelection = TimeSelection.defaultTimeSelection
       val header = CalendarTUI.header(80, timeSelection)
-      header should include ("Calendar")
-      header should include (DateTime.now().withPeriodAdded((timeSelection.dayCount-1).days, 1).toString("dd. MMM yyyy"))
+      header should include("Calendar")
+      header should include(DateTime.now().withPeriodAdded((timeSelection.dayCount - 1).days, 1)
+        .toString("dd. MMM yyyy"))
     }
 
     // New test case for time wrapping (covers line 80)
@@ -64,19 +67,20 @@ class CalendarTUISpec extends AnyWordSpec {
       val tasks = List(Task.exampleTask)
       val spacePerColumn = Task.exampleTask.name.length + 2
       val rows = CalendarTUI.createRows(1.hour, 5, timeSelection, tasks, spacePerColumn)
-      rows should include ("22:00")  // First row
-      rows should include ("23:00")  // Second row
-      rows should include ("00:00")  // Time wrapping after midnight
-      rows should include ("01:00")  // Time after midnight
+      rows should include("22:00") // First row
+      rows should include("23:00") // Second row
+      rows should include("00:00") // Time wrapping after midnight
+      rows should include("01:00") // Time after midnight
       rows should not include Task.exampleTask.name
 
       val timeSelection2 = TimeSelection(DateTime.now().withPeriodAdded(2.hour, -1), 2, 5.hour)
       val rows2 = CalendarTUI.createRows(1.hour, 5, timeSelection2, tasks, spacePerColumn)
-      rows2 should include (Task.exampleTask.name)
+      rows2 should include(Task.exampleTask.name)
     }
 
     "calculate the intervals that can be displayed with regard to the provided time frame" in {
-      val (timeSlice, lines) = CalendarTUI.calculatePeriod(22, new Interval(new DateTime(2024, 10, 14, 7, 0), new DateTime(2024, 10, 14, 19, 0)))
+      val (timeSlice, lines) = CalendarTUI.calculatePeriod(22, new Interval(new DateTime(2024, 10,
+        14, 7, 0), new DateTime(2024, 10, 14, 19, 0)))
       lines should be(12)
       timeSlice.toString should be("PT1H")
     }

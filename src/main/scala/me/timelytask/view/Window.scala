@@ -8,9 +8,10 @@ import org.jline.terminal.Terminal
 import java.io.PrintWriter
 
 
-class Window (terminal: Terminal, inputHandler: InputHandler, viewManager: ViewManager) extends Observer[ViewModel] {
+class Window(terminal: Terminal, inputHandler: InputHandler, viewManager: ViewManager)
+  extends Observer[ViewModel] {
   val writer: PrintWriter = terminal.writer()
-  
+
   def onUserInput(key: Keyboard): Unit = {
     inputHandler.handleInput(key)
   }
@@ -20,7 +21,7 @@ class Window (terminal: Terminal, inputHandler: InputHandler, viewManager: ViewM
     //writer.println("ViewModel updated")
     updateView()
   }
-  
+
   def updateView(): Unit = {
     val tuiModel: TUIModel = new TUIModel(terminal.getHeight, terminal.getWidth)
     // Render the current view

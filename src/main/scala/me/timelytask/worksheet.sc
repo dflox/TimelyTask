@@ -1,7 +1,7 @@
 import com.github.nscala_time.time.Imports.*
+import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
 import me.timelytask.view.tui.CalendarTUI
-import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.viewmodel.CalendarViewModel
 
 val processStart: DateTime = DateTime.now()
@@ -25,7 +25,7 @@ days.foreach(day => println(day.dayOfWeek.getAsText))
 //FileLoader.save[Config](JSON, "./", List(config))
 //
 
-new Period(0,0,0,0,0,121,0,0).normalizedStandard()
+new Period(0, 0, 0, 0, 0, 121, 0, 0).normalizedStandard()
 
 
 val timeSelection = TimeSelection(new DateTime(2024, 10, 14, 22, 0), 2, 5.hour)
@@ -41,9 +41,11 @@ DateTime.now().toString("EEEE dd")
 
 TimeSelection.defaultTimeSelection.getFirstDayOfWeek
 
-val viewModel: CalendarViewModel = new CalendarViewModel(Model.default, TimeSelection.defaultTimeSelection)
+val viewModel: CalendarViewModel = new CalendarViewModel(Model.default,
+  TimeSelection.defaultTimeSelection)
 
-val viewModel2: CalendarViewModel = viewModel.copy(timeSelection = viewModel.timeSelection.copy(day = viewModel.timeSelection.getFirstDayOfWeek, dayCount = 7))
+val viewModel2: CalendarViewModel = viewModel.copy(timeSelection = viewModel.timeSelection.copy(
+  day = viewModel.timeSelection.getFirstDayOfWeek, dayCount = 7))
 
 val i = 0
 s"($i)"

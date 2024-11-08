@@ -6,7 +6,8 @@ import me.timelytask.util.Observer
 import org.jline.keymap.KeyMap
 
 class KeyMapManager extends Observer[ViewType] {
-  private var actionKeyMaps: Map[ViewType, Map[Keyboard, Action]] = KeyMapManager.defaultActionKeymaps
+  private var actionKeyMaps: Map[ViewType, Map[Keyboard, Action]] = KeyMapManager
+    .defaultActionKeymaps
   private var globalActionKeymap: Map[Keyboard, Action] = KeyMapManager.globalKeymap
   private var activeView: ViewType = ViewType.CALENDAR
 
@@ -36,7 +37,7 @@ object KeyMapManager {
   private val globalKeymap: Map[Keyboard, Action] = Map(
     CtrlQ -> Exit,
   )
-  
+
   private val defaultActionKeymaps: Map[ViewType, Map[Keyboard, Action]] = Map(
     ViewType.CALENDAR -> {
       Map(
@@ -99,7 +100,7 @@ object KeyMapManager {
     keyMap.bind(CtrlDown, "\u001b[1;5B")
     keyMap.bind(CtrlLeft, "\u001b[1;5D")
     keyMap.bind(CtrlRight, "\u001b[1;5C")
-    
+
     keyMap.bind(CtrlA, "\u0001")
     keyMap.bind(CtrlB, "\u0002")
     keyMap.bind(CtrlC, "\u0003")
@@ -138,7 +139,7 @@ object KeyMapManager {
     keyMap.bind(AltDown, "\u001b[1;3B")
     keyMap.bind(AltLeft, "\u001b[1;3D")
     keyMap.bind(AltRight, "\u001b[1;3C")
-    
+
     // Letter keys
     keyMap.bind(A, "a")
     keyMap.bind(B, "b")
@@ -166,7 +167,7 @@ object KeyMapManager {
     keyMap.bind(X, "x")
     keyMap.bind(Y, "y")
     keyMap.bind(Z, "z")
-    
+
     // Number keys
     keyMap.bind(Num0, "0")
     keyMap.bind(Num1, "1")
@@ -178,7 +179,7 @@ object KeyMapManager {
     keyMap.bind(Num7, "7")
     keyMap.bind(Num8, "8")
     keyMap.bind(Num9, "9")
-    
+
     // Other bindings
     keyMap.bind(Space, " ")
     keyMap.bind(Enter, "\n")
@@ -189,8 +190,8 @@ object KeyMapManager {
     keyMap.bind(Minus, "-")
     keyMap.bind(Semicolon, ";")
     keyMap.bind(Slash, "/")
-    keyMap.bind(Backslash, "\\")   
-    
+    keyMap.bind(Backslash, "\\")
+
     keyMap
   }
 }

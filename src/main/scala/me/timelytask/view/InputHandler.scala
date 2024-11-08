@@ -6,8 +6,9 @@ import me.timelytask.model.utility.Keyboard
 import me.timelytask.util.Publisher
 import me.timelytask.view.viewmodel.ViewModel
 
-class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Controller], viewModelPublisher: Publisher[ViewModel]) {
-  
+class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Controller], 
+                   viewModelPublisher: Publisher[ViewModel]) {
+
   def handleInput(key: Keyboard): Option[ViewModel] = {
     val action: Action = keyMapManager.getActiveActionKeymap.getOrElse(key,
       keyMapManager.getGlobalActionKeymap.getOrElse(key, NoAction))
@@ -22,7 +23,8 @@ class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Cont
 }
 
 object InputHandler {
-  def getControllerMap(calendarController: CalendarController, persistenceController: PersistenceController): Map[Action, Controller] = Map(
+  def getControllerMap(calendarController: CalendarController, 
+                       persistenceController: PersistenceController): Map[Action, Controller] = Map(
     NextDay -> calendarController,
     PreviousDay -> calendarController,
     NextWeek -> calendarController,

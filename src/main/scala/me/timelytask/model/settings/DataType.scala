@@ -11,6 +11,7 @@ enum DataType {
     case STATE => "state"
   }
 }
+
 object DataType {
   def fromString(fileName: String): DataType = fileName match {
     case "config" => DataType.CONFIG

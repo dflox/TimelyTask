@@ -11,7 +11,8 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.mockito.MockitoSugar.mock
 
-class ViewManagerSpec extends AnyWordSpec with MockitoSugar {
+class ViewManagerSpec extends AnyWordSpec
+                      with MockitoSugar {
   "The ViewManager" should {
     "render the active TUI view with and without a TUIModel" in {
       val viewModelPublisher = mock[Publisher[ViewModel]]
@@ -20,8 +21,8 @@ class ViewManagerSpec extends AnyWordSpec with MockitoSugar {
       val calendarTUI = mock[TUIView]
       val model = mock[CalendarViewModel]
       when(viewModelPublisher.getValue).thenReturn(model)
-      when(calendarTUI.update(model,tuiModel)).thenReturn("new calendar view")
-      when(calendarTUI.update(model,TUIModel.default)).thenReturn("default calendar view")
+      when(calendarTUI.update(model, tuiModel)).thenReturn("new calendar view")
+      when(calendarTUI.update(model, TUIModel.default)).thenReturn("default calendar view")
       val viewType = mock[ViewType]
       when(viewType.getTUIView).thenReturn(calendarTUI)
       viewManager.onChange(viewType)

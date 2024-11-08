@@ -7,7 +7,7 @@ import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.Terminal
 
 class TextInputDialogTUI(val dialogModel: DialogModel, val terminal: Terminal) extends TUIDialog {
-  
+
   def getUserInput: String = {
     val textInputDialogModel = dialogModel.asInstanceOf[TextInputDialogModel]
     val dialogString = createDialogString(textInputDialogModel.description, terminalWidth)
@@ -26,7 +26,7 @@ class TextInputDialogTUI(val dialogModel: DialogModel, val terminal: Terminal) e
     history.purge() // Clear the history after input
     input
   }
-  
+
   private def createDialogString(description: String, terminalWidth: Int): String = {
     val stringBuilder = new StringBuilder()
     stringBuilder.append(createLine(terminalWidth) + "\n")

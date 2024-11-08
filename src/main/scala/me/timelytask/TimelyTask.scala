@@ -17,8 +17,9 @@ object TimelyTask {
   def exit(): Unit = {
     running = false
   }
+
   var running = true
-  
+
   def main(args: Array[String]): Unit = {
     val terminal: Terminal = TerminalBuilder.builder()
       .system(true)
@@ -32,32 +33,34 @@ object TimelyTask {
       .history(history) // Attach the history
       .variable(LineReader.HISTORY_SIZE, 0) // Disable history size
       .build()
-    
+
     // Create a binding reader for handling key sequences
     val bindingReader = new BindingReader(terminal.reader())
-    
+
     val keyMapManager = new KeyMapManager()
     val model = Model.default;
-    val viewModelPublisher = new Publisher[ViewModel](new CalendarViewModel(model, TimeSelection.defaultTimeSelection))
+    val viewModelPublisher = new Publisher[ViewModel](new CalendarViewModel(model,
+      TimeSelection.defaultTimeSelection))
     val modelPublisher = new Publisher[Model](model)
     val activeViewPublisher = new Publisher[ViewType](CALENDAR)
-    val persistenceController = new PersistenceController(viewModelPublisher, modelPublisher, activeViewPublisher)
+    val persistenceController = new PersistenceController(viewModelPublisher, modelPublisher,
+      activeViewPublisher)
     val controller = new CalendarController(modelPublisher, viewModelPublisher)
     val inputHandler = new InputHandler(keyMapManager,
       InputHandler.getControllerMap(controller, persistenceController), viewModelPublisher)
     val viewManager = new ViewManager(viewModelPublisher)
-    
-    
+
+
     val window = new Window(terminal, inputHandler, viewManager)
 
     activeViewPublisher.update(ViewType.CALENDAR)
     viewModelPublisher.subscribe(window)
     modelPublisher.subscribe(controller)
     activeViewPublisher.subscribe(keyMapManager)
-        
+
     // Enter raw mode to process input immediately
     terminal.enterRawMode()
-    
+
     terminal.writer().println("starting")
     window.updateView()
     while (running) {
@@ -72,6 +75,6 @@ object TimelyTask {
       }
       window.onUserInput(key)
     }
-    
+
   }
 }

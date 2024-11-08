@@ -2,7 +2,7 @@ package me.timelytask.model.settings
 
 enum FileType {
   case JSON, XML, YAML
-  
+
   override def toString: String = this match {
     case JSON => "json"
     case XML => "xml"

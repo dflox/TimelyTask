@@ -9,7 +9,8 @@ import org.scalatest.matchers.should.Matchers.shouldEqual
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
-class PersistenceControllerSpec extends AnyWordSpec with MockitoSugar {
+class PersistenceControllerSpec extends AnyWordSpec
+                                with MockitoSugar {
   "The PersistenceManager" should {
     "handle exit actions correctly" in {
       val viewModel = mock[ViewModel]
@@ -19,7 +20,8 @@ class PersistenceControllerSpec extends AnyWordSpec with MockitoSugar {
 
       val activeViewPublisher = mock[Publisher[ViewType]]
 
-      val persistenceController = new PersistenceController(viewModelPublisher, modelPublisher, activeViewPublisher)
+      val persistenceController = new PersistenceController(viewModelPublisher, modelPublisher,
+        activeViewPublisher)
 
       persistenceController.onChange(mock[Model])
       persistenceController.handleAction(Exit) shouldEqual None

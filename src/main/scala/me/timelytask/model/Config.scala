@@ -4,11 +4,11 @@ import io.circe.generic.auto.*
 import me.timelytask.model.settings.*
 import org.jline.keymap.KeyMap
 
-case class Config (keymaps: Map[ViewType, KeyMap[Action]],
-                   globalKeymap: KeyMap[Action],
-                   defaultStartView: ViewType,
-                   defaultDataFileType: FileType,
-                   defaultTheme: Theme) {
+case class Config(keymaps: Map[ViewType, KeyMap[Action]],
+                  globalKeymap: KeyMap[Action],
+                  defaultStartView: ViewType,
+                  defaultDataFileType: FileType,
+                  defaultTheme: Theme) {
 }
 
 object Config {
