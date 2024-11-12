@@ -1,9 +1,17 @@
+![Static Badge](https://img.shields.io/badge/Scala-sbt-red?style=for-the-badge&logo=Scala&logoColor=%23dc322f&color=%23dc322f)
+
 # TimelyTask
 
 TimelyTask is a Scala-based application designed to help users manage their tasks and schedules efficiently. The application provides a terminal-based user interface (TUI) for viewing and organizing tasks within a calendar format.
 
 This is an educational project for the Software Engineering module at HTWG Konstanz written in Scala.
 
+## Table of Contents
+
+- [Features](#Features)
+- [Instalation](#Instalation)
+- [Projekt Structure](#Project)
+- [Additional Information](#License)
 ## Features
 
 - **Task Management**: Add, edit, and delete tasks. (not fully implemented yet)
