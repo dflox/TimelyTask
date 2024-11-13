@@ -1,7 +1,7 @@
 package me.timelytask.view
 
 import me.timelytask.model.utility.{A, Keyboard}
-import me.timelytask.view.viewmodel.{TUIModel, ViewModel}
+import me.timelytask.view.viewmodel.{ModelTUI, ViewModel}
 import org.jline.terminal.Terminal
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.*
@@ -20,7 +20,7 @@ class WindowSpec extends AnyWordSpec
       // Mock dependencies
       val terminal = mock[Terminal]
       val inputHandler = mock[InputHandler]
-      val viewManager = mock[ViewManager]
+      val viewManager = mock[WindowTUI]
 
       val window = new Window(terminal, inputHandler, viewManager)
       val key = A
@@ -38,14 +38,14 @@ class WindowSpec extends AnyWordSpec
       when(terminal.writer()).thenReturn(mockWriter)
 
       val inputHandler = mock[InputHandler]
-      val viewManager = mock[ViewManager]
+      val viewManager = mock[WindowTUI]
       val viewModel = mock[ViewModel]
 
       val window = new Window(terminal, inputHandler, viewManager)
       window.onChange(viewModel)
-      val captor = ArgumentCaptor.forClass(classOf[TUIModel])
-      verify(viewManager).renderActiveTUIView(captor.capture())
-      captor.getValue shouldEqual new TUIModel(terminal.getHeight, terminal.getWidth)
+      val captor = ArgumentCaptor.forClass(classOf[ModelTUI])
+      verify(viewManager).renderActiveView(captor.capture())
+      captor.getValue shouldEqual new ModelTUI(terminal.getHeight, terminal.getWidth)
     }
   }
 }

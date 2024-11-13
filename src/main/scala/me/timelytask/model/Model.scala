@@ -1,5 +1,7 @@
 package me.timelytask.model
 
+import me.timelytask.util.Publisher
+
 import java.util.UUID
 import scala.collection.immutable.HashSet
 
@@ -14,3 +16,5 @@ object Model {
   val default: Model = new Model(List[Task](), HashSet[Tag](), HashSet[Priority](),
     HashSet[State](), Config.default)
 }
+
+given modelPublisher: Publisher[Model] = Publisher[Model](Model.default)

@@ -1,10 +1,10 @@
 package me.timelytask.view.viewmodel
 
-case class TUIModel(terminalHeight: Int,
+case class ModelTUI(terminalHeight: Int,
                     terminalWidth: Int
                    ) {
 }
 
-object TUIModel {
-  val default: TUIModel = TUIModel(24, 80)
+object ModelTUI {
+  val default: ModelTUI = ModelTUI(24, 80)
 }

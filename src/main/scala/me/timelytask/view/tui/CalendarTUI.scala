@@ -4,16 +4,16 @@ import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.Task
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.tui.UtilTUI.*
-import me.timelytask.view.viewmodel.{CalendarViewModel, TUIModel, ViewModel}
+import me.timelytask.view.viewmodel.{CalendarViewModel, ModelTUI, ViewModel}
 import me.timelytask.controller.ThemeManager.{getTerminalBgColor, getTerminalColor}
 import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.{colored, BOLD, ITALIC}
 
 object CalendarTUI extends TUIView {
   override def update(viewModel: ViewModel): String = {
-    update(viewModel, TUIModel.default)
+    update(viewModel, ModelTUI.default)
   }
 
-  override def update(viewModel: ViewModel, tuiModel: TUIModel): String = {
+  override def update(viewModel: ViewModel, tuiModel: ModelTUI): String = {
     val calendarViewModel: CalendarViewModel = viewModel.asInstanceOf[CalendarViewModel]
     import tuiModel.*
     import calendarViewModel.*

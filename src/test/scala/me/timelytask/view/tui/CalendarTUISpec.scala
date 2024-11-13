@@ -4,7 +4,7 @@ import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
 import me.timelytask.view.tui.CalendarTUI
-import me.timelytask.view.viewmodel.{CalendarViewModel, TUIModel, ViewModel}
+import me.timelytask.view.viewmodel.{CalendarViewModel, ModelTUI, ViewModel}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import me.timelytask.controller.ThemeManager.{getTerminalBgColor, getTerminalColor}
@@ -30,7 +30,7 @@ class CalendarTUISpec extends AnyWordSpec {
       val timeSelection = TimeSelection(fixedDateTime, 7, 1.hour)
       val calendarViewModel = CalendarViewModel(Model.default, timeSelection)
       val viewModel: ViewModel = calendarViewModel
-      val tuiModel = TUIModel.default
+      val tuiModel = ModelTUI.default
       val output = CalendarTUI.update(viewModel, tuiModel)
 
       output should include(

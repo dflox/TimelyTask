@@ -1,61 +1,71 @@
 package me.timelytask.controller
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.model.Model
-import me.timelytask.model.settings.*
-import me.timelytask.util.Publisher
-import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
+import me.timelytask.model.{Model, modelPublisher}
+import me.timelytask.model.settings.{ViewType, activeViewPublisher, *}
+import me.timelytask.model.utility.TimeSelection
+import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel, viewModelPublisher}
 
-class CalendarController(modelPublisher: Publisher[Model],
-                         viewModelPublisher: Publisher[ViewModel])
-  extends Controller {
-  def handleAction(action: Action): Option[ViewModel] = {
-    //handleCalendarAction(action, viewModelPublisher.getCurrentViewModel
-    // .asInstanceOf[CalendarViewModel])
-    viewModelPublisher.getValue match
-      case model: CalendarViewModel => handleCalendarAction(action, model)
-      case _ =>
-        None
-  }
+object CalendarController extends Controller {
 
-  private def handleCalendarAction(action: Action, viewModel: CalendarViewModel)
-  : Option[ViewModel] = {
-    action match {
-      case NextDay =>
-        Some(viewModel.copy(timeSelection = viewModel.timeSelection
-          .copy(day = viewModel.timeSelection.day + 1.days)))
-      case PreviousDay =>
-        Some(viewModel.copy(timeSelection = viewModel.timeSelection
-          .copy(day = viewModel.timeSelection.day - 1.days)))
-      case NextWeek =>
-        Some(viewModel.copy(timeSelection = viewModel.timeSelection
-          .copy(day = viewModel.timeSelection.day + 7.days)))
-      case PreviousWeek =>
-        Some(viewModel.copy(timeSelection = viewModel.timeSelection
-          .copy(day = viewModel.timeSelection.day - 7.days)))
-      case GoToToday =>
-        Some(viewModel.copy(timeSelection = viewModel.timeSelection
-          .copy(day = DateTime.now().withTime(viewModel.timeSelection.day.toLocalTime))))
-      case ShowWholeWeek =>
-        Some(viewModel.copy(timeSelection = viewModel.timeSelection
-          .copy(day = viewModel.timeSelection.getFirstDayOfWeek, dayCount = 7)))
-      case ShowLessDays =>
-        Some(viewModel.copy(timeSelection = viewModel.timeSelection
-          .copy(dayCount = if ((viewModel.timeSelection.dayCount - 1) < 1)
-                             1
-                           else
-                             viewModel.timeSelection.dayCount - 1)))
-      case ShowMoreDays =>
-        Some(viewModel.copy(timeSelection = viewModel.timeSelection
-          .copy(dayCount = if ((viewModel.timeSelection.dayCount + 1) > 14)
-                             14
-                           else
-                             viewModel.timeSelection.dayCount + 1)))
-      case _ => None
+  val viewModel: ()=>CalendarViewModel = ()=>viewModelPublisher.getValue
+    .asInstanceOf[CalendarViewModel]
+
+  given Conversion[Option[ViewModel], Boolean] with {
+    def apply(option: Option[ViewModel]): Boolean = option match {
+       case Some(_) =>
+        viewModelPublisher.update(option.get)
+        true
+      case None => false
     }
   }
 
-  def onChange(model: Model): Unit = {
-
+  observe(activeViewPublisher) { viewType =>
+    if (viewType == ViewType.CALENDAR) {
+      viewModelPublisher.update(CalendarViewModel(viewModel().model, TimeSelection
+        .defaultTimeSelection))
+    } else {
+      None
+    }
   }
+  
+  observe(modelPublisher) { model =>
+    if (activeViewPublisher.getValue == ViewType.CALENDAR) {
+      viewModelPublisher.update(CalendarViewModel(model, viewModel().timeSelection))
+    } else {
+      None
+    }
+  }
+
+  NextDay.setHandler(() => {
+    Some(viewModel().copy(timeSelection = viewModel().timeSelection + 1.days))
+  })
+  
+  PreviousDay.setHandler(() => {
+    Some(viewModel().copy(timeSelection = viewModel().timeSelection - 1.days))
+  })
+  
+  NextWeek.setHandler(() => {
+    Some(viewModel().copy(timeSelection = viewModel().timeSelection + 1.weeks))
+  })
+  
+  PreviousWeek.setHandler(() => {
+    Some(viewModel().copy(timeSelection = viewModel().timeSelection - 1.weeks))
+  })
+
+  GoToToday.setHandler(() => {
+    Some(viewModel().copy(timeSelection = viewModel().timeSelection.startingToday))
+  })
+
+  ShowWholeWeek.setHandler(() => {
+    Some(viewModel().copy(timeSelection = viewModel().timeSelection.currentWeek))
+  })
+
+  ShowMoreDays.setHandler(() => {
+    Some(viewModel().copy(timeSelection = viewModel().timeSelection.addDayCount(1).get))
+  })
+
+  ShowLessDays.setHandler(() => {
+    Some(viewModel().copy(timeSelection = viewModel().timeSelection.subtractDayCount(1).get))
+  })
 }

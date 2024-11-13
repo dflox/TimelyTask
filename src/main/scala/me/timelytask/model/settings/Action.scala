@@ -1,6 +1,19 @@
 package me.timelytask.model.settings
 
-sealed trait Action
+sealed trait Action{
+  private var handler: Option[() => Boolean] = None
+  def setHandler(newHandler: () => Boolean): Unit = {
+    if(handler.isDefined) throw new Exception("Handler already set")
+    handler = Some(newHandler)
+  }
+
+  def call: Boolean = {
+    handler match {
+      case Some(h) => h()
+      case None => false
+    }
+  }
+}
 
 // Focus actions
 case object FocusPrevious extends Action
@@ -82,6 +95,12 @@ case object Undo extends Action
 case object Redo extends Action
 
 case object Exit extends Action
+
+case object SaveAndExit extends Action
+
+case object OpenSettings extends Action
+
+case object StartApp extends Action
 
 case object Help extends Action
 
