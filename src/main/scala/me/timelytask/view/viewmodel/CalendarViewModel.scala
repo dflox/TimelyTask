@@ -22,7 +22,7 @@ case class CalendarViewModel(model: Model, timeSelection: TimeSelection) extends
   val headerHeight = 5
   val footerHeight = 1
   val timeFormat = "HH:mm"
-  val dayFormat = "EEE dd"
+  val dayFormat = "EEEE dd.MM"
 }
 
 //object CalendarViewModel {

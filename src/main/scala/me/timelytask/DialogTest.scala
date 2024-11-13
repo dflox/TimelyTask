@@ -1,6 +1,6 @@
 package me.timelytask
 
-import me.timelytask.controller.DialogFactory
+import me.timelytask.controller.DialogFactoryTUI
 import me.timelytask.view.viewmodel.dialogmodel.{ConfirmDialogModel, OptionDialogModel, TextInputDialogModel}
 import org.jline.terminal.{Terminal, TerminalBuilder}
 
@@ -10,7 +10,7 @@ object DialogTest extends App {
     .system(true)
     .build()
 
-  val dialogFactory = new DialogFactory(terminal)
+  val dialogFactory = new DialogFactoryTUI(terminal)
 
   // create a multiline string without /r
   val exampleViewString =

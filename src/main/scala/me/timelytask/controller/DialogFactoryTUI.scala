@@ -4,7 +4,7 @@ import me.timelytask.view.tui.dialog.*
 import me.timelytask.view.viewmodel.dialogmodel.*
 import org.jline.terminal.Terminal
 
-class DialogFactory(terminal: Terminal) {
+class DialogFactoryTUI(terminal: Terminal) {
   def createDialog(dialogModel: DialogModel): TUIDialog = {
     dialogModel match {
       case dialogModel: OptionDialogModel[_] => new OptionDialogTUI(dialogModel, terminal)

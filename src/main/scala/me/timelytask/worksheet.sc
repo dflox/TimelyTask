@@ -37,15 +37,13 @@ val timeSelection2 = TimeSelection(DateTime.now().withPeriodAdded(2.hour, -1), 2
 val rows2 = CalendarTUI.createRows(1.hour, 5, timeSelection2, tasks, spacePerColumn)
 rows2
 
-DateTime.now().toString("EEEE dd")
-
-TimeSelection.defaultTimeSelection.getFirstDayOfWeek
-
-val viewModel: CalendarViewModel = new CalendarViewModel(Model.default,
-  TimeSelection.defaultTimeSelection)
-
-val viewModel2: CalendarViewModel = viewModel.copy(timeSelection = viewModel.timeSelection.copy(
-  day = viewModel.timeSelection.getFirstDayOfWeek, dayCount = 7))
-
 val i = 0
 s"($i)"
+
+
+  
+  // create array: [[1, 2, 3][4, 5, 6]]
+val array = Array(Array(1, 2, 3), Array(4, 5, 6))
+
+array.flatten
+

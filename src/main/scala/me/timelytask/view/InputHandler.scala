@@ -12,7 +12,8 @@ class InputHandler(keyMapManager: KeyMapManager, controllerMap: Map[Action, Cont
   def handleInput(key: Keyboard): Option[ViewModel] = {
     val action: Action = keyMapManager.getActiveActionKeymap.getOrElse(key,
       keyMapManager.getGlobalActionKeymap.getOrElse(key, NoAction))
-    val viewModel = controllerMap.get(action).orElse(controllerMap.get(action)) match {
+    val viewModel: Option[ViewModel] = controllerMap.get(action).orElse(controllerMap.get(
+      action)) match {
       case Some(controller) => controller.handleAction(action)
       case None => None
     }

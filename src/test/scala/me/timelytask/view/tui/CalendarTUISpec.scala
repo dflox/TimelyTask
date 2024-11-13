@@ -7,6 +7,8 @@ import me.timelytask.view.tui.CalendarTUI
 import me.timelytask.view.viewmodel.{CalendarViewModel, TUIModel, ViewModel}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
+import me.timelytask.controller.ThemeManager.{getTerminalBgColor, getTerminalColor}
+import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.{colored, BOLD, ITALIC}
 
 class CalendarTUISpec extends AnyWordSpec {
 
@@ -66,7 +68,7 @@ class CalendarTUISpec extends AnyWordSpec {
       val timeSelection = TimeSelection(new DateTime(2024, 10, 14, 22, 0), 2, 5.hour)
       val tasks = List(Task.exampleTask)
       val spacePerColumn = Task.exampleTask.name.length + 2
-      val rows = CalendarTUI.createRows(1.hour, 5, timeSelection, tasks, spacePerColumn)
+      val rows = CalendarTUI.createRows(1.hour, 5, timeSelection, tasks, spacePerColumn, getTerminalColor(_.text2))
       rows should include("22:00") // First row
       rows should include("23:00") // Second row
       rows should include("00:00") // Time wrapping after midnight
@@ -74,7 +76,7 @@ class CalendarTUISpec extends AnyWordSpec {
       rows should not include Task.exampleTask.name
 
       val timeSelection2 = TimeSelection(DateTime.now().withPeriodAdded(2.hour, -1), 2, 5.hour)
-      val rows2 = CalendarTUI.createRows(1.hour, 5, timeSelection2, tasks, spacePerColumn)
+      val rows2 = CalendarTUI.createRows(1.hour, 5, timeSelection2, tasks, spacePerColumn, getTerminalColor(_.text2))
       rows2 should include(Task.exampleTask.name)
     }
 
