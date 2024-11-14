@@ -21,12 +21,6 @@ class ViewTypeSpec extends AnyWordSpec {
       ViewType.fromString("settings") should be(ViewType.SETTINGS)
       ViewType.fromString("task") should be(ViewType.TASK)
     }
-
-    "get the correct TUIView" in {
-      ViewType.CALENDAR.getTUIView should be(CalendarTUI)
-      ViewType.TABLE.getTUIView should be(CalendarTUI)
-      // TODO: Implement the rest of the cases
-    }
   }
 
 

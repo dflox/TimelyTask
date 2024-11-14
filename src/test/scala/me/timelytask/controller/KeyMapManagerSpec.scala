@@ -4,20 +4,22 @@ import me.timelytask.model.settings.*
 import me.timelytask.model.utility.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
+import me.timelytask.model.settings.activeViewPublisher
 
 class KeyMapManagerSpec extends AnyWordSpec {
   "The KeyMapManager" should {
     "set global action keymap" in {
-      val keyMapManager = new KeyMapManager
-      keyMapManager.setGlobalActionKeymap(Map(F12 -> Exit))
-      keyMapManager.getGlobalActionKeymap should be(Map(F12 -> Exit))
+      val keyMapManager = KeyMapManager
+      keyMapManager.setGlobalActionKeymap(Map(CtrlQ -> Exit))
+      keyMapManager.getGlobalActionKeymap should be(Map(CtrlQ -> Exit))
     }
+
     "set action keymap" in {
-      val keyMapManager = new KeyMapManager
+      val keyMapManager = KeyMapManager
       keyMapManager.setKeymap(ViewType.KANBAN, Map(MoveRight -> NextDay))
-      keyMapManager.onChange(ViewType.KANBAN)
+      keyMapManager.getActiveActionKeymap should not be Map(MoveRight -> NextDay)
+      activeViewPublisher.update(ViewType.KANBAN)
       keyMapManager.getActiveActionKeymap should be(Map(MoveRight -> NextDay))
     }
   }
-
 }
