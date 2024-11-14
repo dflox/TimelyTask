@@ -27,13 +27,7 @@ object TimelyTask extends App with CoreInitializer {
     .build()
 
   val history = new DefaultHistory()
-
-  val reader: LineReader = LineReaderBuilder.builder()
-    .terminal(terminal)
-    .history(history) // Attach the history
-    .variable(LineReader.HISTORY_SIZE, 0) // Disable history size
-    .build()
-
+  
   // Create a binding reader for handling key sequences
   val bindingReader = new BindingReader(terminal.reader())
 

@@ -44,11 +44,16 @@ object KeyMapManager{
       )
     },
     ViewType.TABLE -> Map(),
-    ViewType.TASK -> Map(),
+    ViewType.TASK -> Map(
+      MoveDown -> NextField,
+      MoveUp -> PreviousField,
+      CtrlS -> SaveTask
+    ),
     ViewType.KANBAN -> Map(),
     ViewType.SETTINGS -> Map()
   )
   private var globalActionKeymap: Map[Keyboard, Action] = Map(
+    CtrlN -> AddTask,
     CtrlQ -> Exit,
   )
 

@@ -10,16 +10,7 @@ object CalendarController extends Controller {
 
   val viewModel: ()=>CalendarViewModel = ()=> viewModelPublisher.getValue
     .asInstanceOf[CalendarViewModel]
-
-  given Conversion[Option[ViewModel], Boolean] with {
-    def apply(option: Option[ViewModel]): Boolean = option match {
-       case Some(_) =>
-        viewModelPublisher.update(option.get)
-        true
-      case None => false
-    }
-  }
-
+  
   observe(activeViewPublisher) { viewType =>
     if (viewType == ViewType.CALENDAR) {
       viewModelPublisher.update(CalendarViewModel(viewModel().model, TimeSelection
