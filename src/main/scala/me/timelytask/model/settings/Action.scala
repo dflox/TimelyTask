@@ -52,6 +52,8 @@ case object NextField extends Action
 
 case object PreviousField extends Action
 
+case object SaveTask extends Action
+
 // Universal Model actions
 case object AddTask extends Action
 

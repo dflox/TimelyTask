@@ -10,5 +10,6 @@ trait CoreInitializer {
   summon[Publisher[ViewModel]]
   summon[Publisher[Model]]
   CalendarController
+  TaskController
   PersistenceController
 }
