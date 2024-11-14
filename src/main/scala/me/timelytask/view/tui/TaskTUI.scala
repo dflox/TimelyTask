@@ -4,13 +4,13 @@ import me.timelytask.model.Task
 import me.timelytask.view.tui.UtilTUI.{alignTop, columnSpacer, createLine, createSpace}
 import me.timelytask.view.viewmodel.*
 
-object TaskViewTUI extends TUIView {
+object TaskTUI extends TUIView {
   override def update(viewModel: ViewModel): String = {
-    update(viewModel, TUIModel.default)
+    update(viewModel, ModelTUI.default)
   }
 
-  override def update(viewModel: ViewModel, TUIModel: TUIModel): String = {
-    val taskViewModel: TaskViewModel = viewModel.asInstanceOf[TaskViewModel]
+  override def update(viewModel: ViewModel, TUIModel: ModelTUI): String = {
+    val taskViewModel: TaskModel = viewModel.asInstanceOf[TaskModel]
     import TUIModel.*
     import taskViewModel.*
 

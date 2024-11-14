@@ -8,7 +8,7 @@ import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel, viewModelPubl
 
 object CalendarController extends Controller {
 
-  val viewModel: ()=>CalendarViewModel = ()=>viewModelPublisher.getValue
+  val viewModel: ()=>CalendarViewModel = ()=> viewModelPublisher.getValue
     .asInstanceOf[CalendarViewModel]
 
   given Conversion[Option[ViewModel], Boolean] with {

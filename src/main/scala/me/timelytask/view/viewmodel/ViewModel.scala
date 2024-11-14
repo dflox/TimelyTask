@@ -16,6 +16,7 @@ def defaultViewModel(using activeViewPublisher: Publisher[ViewType], modelPublis
   activeViewPublisher.getValue match {
     case ViewType.CALENDAR => CalendarViewModel(modelPublisher.getValue,
       TimeSelection.defaultTimeSelection)
+    case ViewType.TASK => TaskModel(modelPublisher.getValue)
   }
 }
 
