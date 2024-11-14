@@ -32,7 +32,7 @@ object CalendarTUI extends TUIView {
     table = table :+ timeColumn
     daySpan.foreach(day => table = table :+ day.toString(dayFormat) + "|") // dayList toString
 
-    // Calculate the possible Space that each day has (subtract the timeColumn and the seperator 
+    // Calculate the possible Space that each day has (subtract the timeColumn and the seperator
     // for the days)
     val spacePerColumn = (width - table.head.length - timeSelection.dayCount) /
       timeSelection.dayCount

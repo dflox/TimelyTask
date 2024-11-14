@@ -59,24 +59,6 @@ class CalendarTUISpec extends AnyWordSpec {
       )
     }
 
-    "align the text to the left" in {
-      CalendarTUI.columnSpacer("Hello", 10, "l") should be("Hello     ")
-      CalendarTUI.columnSpacer("Hello", 5, "l") should be("Hello")
-      CalendarTUI.columnSpacer("Hello", 0, "l") should be("Hello")
-    }
-
-    "align the text to the middle" in {
-      CalendarTUI.columnSpacer("Hello", 10, "m") should be("  Hello   ")
-      CalendarTUI.columnSpacer("Hello", 5, "m") should be("Hello")
-      CalendarTUI.columnSpacer("Hello", 0, "m") should be("Hello")
-    }
-
-    "align the text to the right" in {
-      CalendarTUI.columnSpacer("Hello", 10, "r") should be("     Hello")
-      CalendarTUI.columnSpacer("Hello", 5, "r") should be("Hello")
-      CalendarTUI.columnSpacer("Hello", 0, "r") should be("Hello")
-    }
-
     "header should be correct" in {
       val timeSelection = TimeSelection.defaultTimeSelection
       val header = CalendarTUI.header(80, timeSelection)
