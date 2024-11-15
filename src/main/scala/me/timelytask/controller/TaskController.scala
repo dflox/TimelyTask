@@ -12,24 +12,24 @@ object TaskController extends Controller {
   val viewModel: () => TaskModel = () => viewModelPublisher.getValue
     .asInstanceOf[TaskModel]
 
-  observe(activeViewPublisher) { viewType =>
+  observe(activeViewPublisher) ({ viewType =>
     if (viewType == ViewType.TASK) {
       viewModelPublisher.update(TaskModel(viewModel().model))
     } else {
       None
     }
-  }
+  }, Some(this))
 
-  observe(modelPublisher) { model =>
+  observe(modelPublisher) ({ model =>
     if (activeViewPublisher.getValue == ViewType.TASK) {
       viewModelPublisher.update(TaskModel( model))
     } else {
       None
     }
-  }
+  }, Some(this))
   
   AddTask.setHandler(() => {
     activeViewPublisher.update(ViewType.TASK)
-    Some(new TaskModel(viewModel().model.copy(tasks = List[Task](Task.emptyTask))))
+    Some(TaskModel(viewModel().model.copy(tasks = List[Task](Task.emptyTask))))
   })
 }

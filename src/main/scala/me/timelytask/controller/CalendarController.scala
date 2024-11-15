@@ -12,22 +12,22 @@ object CalendarController extends Controller {
   val viewModel: () => CalendarViewModel = () => viewModelPublisher.getValue
     .asInstanceOf[CalendarViewModel]
 
-  observe(activeViewPublisher) { viewType =>
+  observe(activeViewPublisher) ({ viewType =>
     if (viewType == ViewType.CALENDAR) {
       viewModelPublisher.update(CalendarViewModel(viewModel().model, TimeSelection
         .defaultTimeSelection))
     } else {
       None
     }
-  }
+  } , Some(this))
 
-  observe(modelPublisher) { model =>
+  observe(modelPublisher) ({ model =>
     if (activeViewPublisher.getValue == ViewType.CALENDAR) {
       viewModelPublisher.update(CalendarViewModel(model, viewModel().timeSelection))
     } else {
       None
     }
-  }
+  }, Some(this))
 
   NextDay.setHandler(() => {
     Some(viewModel().copy(timeSelection = viewModel().timeSelection + 1.days))
