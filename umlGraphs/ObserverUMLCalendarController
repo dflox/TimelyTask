@@ -1,7 +1,6 @@
 @startuml
 
-
-class TaskController implements Observer {
+class CalendarController implements Observer {
     + observe(publisher: Publisher, handler: (data: Object) -> Unit, source: Option[Object])
 }
 
@@ -16,25 +15,25 @@ class ModelPublisher implements Publisher {
 
 class ViewModelPublisher implements Publisher {
     - observers: List[Observer]
-    + update(model: TaskModel)
+    + update(model: CalendarModel)
 }
 
-class TaskModel {
+class CalendarModel {
     - model: Object
 }
 
 enum ViewType {
-    TASK
+    CALENDAR
     OTHER
 }
 
-TaskController --> ActiveViewPublisher : observe
-TaskController --> ModelPublisher : observe
-TaskController --> ViewModelPublisher : updates
+CalendarController --> ActiveViewPublisher : observe
+CalendarController --> ModelPublisher : observe
+CalendarController --> ViewModelPublisher : updates
 
 ActiveViewPublisher --> ViewType : getValue()
 
-ViewModelPublisher --> TaskModel : updates
-ModelPublisher --> TaskModel : provides model data
+ViewModelPublisher --> CalendarModel : updates
+ModelPublisher --> CalendarModel : provides model data
 
 @enduml

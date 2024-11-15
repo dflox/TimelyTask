@@ -22,7 +22,7 @@ object TaskController extends Controller {
 
   observe(modelPublisher) ({ model =>
     if (activeViewPublisher.getValue == ViewType.TASK) {
-      viewModelPublisher.update(TaskModel( model))
+      viewModelPublisher.update(TaskModel(model))
     } else {
       None
     }
