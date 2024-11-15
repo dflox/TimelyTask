@@ -3,10 +3,10 @@ name: Scala CI
 on:
   push:
     branches:
-      - main
+      - PipelineDev
   pull_request:
     branches:
-      - main
+      - PipelineDev
 
 jobs:
   build:
