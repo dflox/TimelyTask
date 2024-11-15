@@ -28,4 +28,8 @@ lazy val root = project
       "io.circe" %% "circe-generic",
       "io.circe" %% "circe-parser"
     ).map(_ % circeVersion)
+
   )
+
+coverageEnabled := true
+coverageHighlighting := true
