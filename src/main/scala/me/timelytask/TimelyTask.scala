@@ -42,16 +42,13 @@ object TimelyTask extends App with CoreInitializer {
   terminal.writer().println("starting")
   // ------------- END TUI -------------
 
+  StartApp.call
+  
   while (running) {
-    val key = try {
-      Option(bindingReader.readBinding(keyMapManager.keyMap)) match {
+    val key = Option(bindingReader.readBinding(keyMapManager.keyMap)) match {
         case Some(keyboard) => keyboard
         case None => Unknown
       }
-    } catch {
-      case _: Exception =>
-        Unknown
-    }
     windowTUI.onUserInput(key)
   }
 }
