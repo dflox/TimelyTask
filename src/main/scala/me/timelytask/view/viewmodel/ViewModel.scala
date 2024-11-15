@@ -11,13 +11,3 @@ trait ViewModel {
   val model: Model
   val today: DateTime = DateTime.now()
 }
-
-def defaultViewModel(using activeViewPublisher: Publisher[ViewType], modelPublisher: Publisher[Model]): ViewModel = {
-  activeViewPublisher.getValue match {
-    case ViewType.CALENDAR => CalendarViewModel(modelPublisher.getValue,
-      TimeSelection.defaultTimeSelection)
-    case ViewType.TASK => TaskModel(modelPublisher.getValue)
-  }
-}
-
-given viewModelPublisher: Publisher[ViewModel] = Publisher[ViewModel](defaultViewModel)

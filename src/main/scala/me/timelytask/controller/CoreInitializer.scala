@@ -3,7 +3,7 @@ package me.timelytask.controller
 import me.timelytask.util.Publisher
 import me.timelytask.model.{Model, modelPublisher}
 import me.timelytask.model.settings.{ViewType, activeViewPublisher}
-import me.timelytask.view.viewmodel.{ViewModel, viewModelPublisher}
+import me.timelytask.view.viewmodel.{DefaultViewModelProvider, ViewModel, viewModelPublisher}
 
 trait CoreInitializer {
   summon[Publisher[ViewType]]
@@ -12,4 +12,5 @@ trait CoreInitializer {
   CalendarController
   TaskController
   PersistenceController
+  DefaultViewModelProvider
 }

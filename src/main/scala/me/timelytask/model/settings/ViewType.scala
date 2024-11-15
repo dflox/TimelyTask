@@ -1,5 +1,6 @@
 package me.timelytask.model.settings
 
+import me.timelytask.util.Publisher
 import me.timelytask.view.tui.{CalendarTUI, TUIView}
 
 enum ViewType {
@@ -23,3 +24,5 @@ object ViewType {
     case "task" => TASK
   }
 }
+
+given activeViewPublisher: Publisher[ViewType] = Publisher[ViewType](ViewType.CALENDAR)

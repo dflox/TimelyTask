@@ -19,5 +19,3 @@ object FileType {
     case "yaml" => YAML
   }
 }
-
-given activeViewPublisher: Publisher[ViewType] = Publisher[ViewType](ViewType.CALENDAR)
