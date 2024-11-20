@@ -20,7 +20,7 @@ class Publisher[T](private var value: T) {
     value = newValue
     listeners.foreach { case (listener, listenerSource) =>
       // Execute listener only if it has a different source or no source
-      if (listenerSource != source) listener(value)
+      if (listenerSource != source || listenerSource.isEmpty || source.isEmpty) listener(value)
     }
   }
 

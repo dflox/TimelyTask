@@ -5,7 +5,6 @@ import me.timelytask.model.settings.ViewType
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.util.Publisher
 import me.timelytask.model.settings.activeViewPublisher
-import me.timelytask.model.modelPublisher
 
 object DefaultViewModelProvider {
   def defaultViewModel(using activeViewPublisher: Publisher[ViewType],
@@ -18,5 +17,4 @@ object DefaultViewModelProvider {
   }
 }
 
-given viewModelPublisher: Publisher[ViewModel] = Publisher[ViewModel](DefaultViewModelProvider
-  .defaultViewModel)
+//given viewModelPublisher: Publisher[ViewModel] = Publisher[ViewModel](DefaultViewModelProvider.defaultViewModel)

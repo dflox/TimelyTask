@@ -3,11 +3,13 @@ package me.timelytask.controller
 import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.TimeSelection
-import me.timelytask.model.{Model, modelPublisher}
-import me.timelytask.view.viewmodel.{CalendarViewModel, viewModelPublisher}
-import me.timelytask.model.settings.activeViewPublisher
+import me.timelytask.model.Model
+import me.timelytask.util.Publisher
+import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
-object CalendarController extends Controller {
+class CalendarController(using modelPublisher: Publisher[Model],
+                         activeViewPublisher: Publisher[ViewType],
+                         viewModelPublisher: Publisher[ViewModel]) extends Controller {
 
   val viewModel: () => CalendarViewModel = () => viewModelPublisher.getValue
     .asInstanceOf[CalendarViewModel]

@@ -17,4 +17,4 @@ object Model {
     HashSet[State](), Config.default)
 }
 
-given modelPublisher: Publisher[Model] = Publisher[Model](Model.default)
+//given modelPublisher: Publisher[Model] = Publisher[Model](Model.default)

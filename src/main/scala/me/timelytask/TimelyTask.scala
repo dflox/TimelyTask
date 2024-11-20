@@ -1,16 +1,18 @@
 package me.timelytask
 
-import me.timelytask.controller.{CalendarController, CoreInitializer, KeyMapManager, PersistenceController, keyMapManager}
-import me.timelytask.model.settings.{Exit, StartApp, activeViewPublisher}
+import me.timelytask.controller.{CalendarController, CoreInitializer, KeyMapManager, PersistenceController, TaskController, keyMapManager}
+import me.timelytask.model.Model
+import me.timelytask.model.settings.{Exit, StartApp, ViewType}
 import me.timelytask.model.utility.Unknown
+import me.timelytask.util.Publisher
 import me.timelytask.view.*
-import me.timelytask.view.viewmodel.viewModelPublisher
+import me.timelytask.view.viewmodel.{DefaultViewModelProvider, ViewModel}
 import org.jline.keymap.BindingReader
 import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.{Terminal, TerminalBuilder}
 
-object TimelyTask extends App with CoreInitializer {
+object TimelyTask extends App {
 
   //  ------------- Core -------------
   var running = true
@@ -19,6 +21,23 @@ object TimelyTask extends App with CoreInitializer {
     running = false
     true
   })
+  given modelPublisher: Publisher[Model] = Publisher[Model](Model.default)
+
+  given activeViewPublisher: Publisher[ViewType] = Publisher[ViewType](ViewType.CALENDAR)
+  
+  given viewModelPublisher: Publisher[ViewModel] = Publisher[ViewModel](DefaultViewModelProvider
+    .defaultViewModel)
+
+  given calendarController: CalendarController = new CalendarController()
+
+  given taskController: TaskController = new TaskController()
+  
+  println("CoreInitializer")
+  given persistenceController: PersistenceController = new PersistenceController()
+  
+  summon[CalendarController]
+  summon[TaskController]
+  summon[PersistenceController]
   //  ------------- END Core -------------
 
   //  ------------- TUI -------------

@@ -1,13 +1,9 @@
 package me.timelytask.controller
 
-import me.timelytask.util.MultiTypeObserver
-import me.timelytask.view.viewmodel.{ViewModel, viewModelPublisher}
-  
-  
+import me.timelytask.util.{MultiTypeObserver, Publisher}
+import me.timelytask.view.viewmodel.ViewModel
 
-  
-
-trait Controller extends MultiTypeObserver {
+trait Controller(using viewModelPublisher: Publisher[ViewModel]) extends MultiTypeObserver {
   given Conversion[Option[ViewModel], Boolean] with {
     def apply(option: Option[ViewModel]): Boolean = option match {
       case Some(viewModel) =>

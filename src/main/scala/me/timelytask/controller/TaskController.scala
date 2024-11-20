@@ -1,16 +1,22 @@
 package me.timelytask.controller
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.controller.CalendarController.observe
-import me.timelytask.model.{Task, modelPublisher}
+import me.timelytask.model.{Model, Task}
 import me.timelytask.model.settings.*
-import me.timelytask.model.settings.activeViewPublisher
-import me.timelytask.view.viewmodel.{ViewModel, viewModelPublisher}
+import me.timelytask.util.Publisher
+import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.viewmodel.TaskModel
 
-object TaskController extends Controller {
-  val viewModel: () => TaskModel = () => viewModelPublisher.getValue
-    .asInstanceOf[TaskModel]
+class TaskController(using viewModelPublisher: Publisher[ViewModel], 
+                     activeViewPublisher: Publisher[ViewType],
+                     modelPublisher: Publisher[Model]) 
+  extends Controller {
+  val viewModel: () => TaskModel = () => {
+    viewModelPublisher.getValue match {
+      case vm: TaskModel => vm
+      case vm => TaskModel(vm.model)
+    }
+  }
 
   observe(activeViewPublisher) ({ viewType =>
     if (viewType == ViewType.TASK) {

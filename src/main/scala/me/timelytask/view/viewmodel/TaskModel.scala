@@ -4,7 +4,7 @@ import com.github.nscala_time.time.Imports.LocalTime
 import me.timelytask.model.{Model, Task}
 
 case class TaskModel(model: Model) extends ViewModel {
-  val task: Task = model.tasks.head
+  val task: Task = model.tasks.headOption.getOrElse(Task.emptyTask)
   val properties: List[(String, Any)] = List(
     "Description" -> task.description,
     "Priority" -> task.priority,
