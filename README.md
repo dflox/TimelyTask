@@ -1,5 +1,5 @@
 ![Static Badge](https://img.shields.io/badge/Scala-sbt-red?style=for-the-badge&logo=Scala&logoColor=%23dc322f&color=%23dc322f)
-
+[![Coverage Status](https://coveralls.io/repos/github/dflox/TimelyTask/badge.svg)](https://coveralls.io/github/dflox/TimelyTask)
 # TimelyTask
 
 TimelyTask is a Scala-based application designed to help users manage their tasks and schedules efficiently. The application provides a terminal-based user interface (TUI) for viewing and organizing tasks within a calendar format.
