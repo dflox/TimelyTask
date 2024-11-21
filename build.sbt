@@ -29,3 +29,32 @@ lazy val root = project
       "io.circe" %% "circe-parser"
     ).map(_ % circeVersion)
   )
+
+// sbt-github-actions defaults to using JDK 8 for testing and publishing.
+// The following adds JDK 17 for testing.
+import sbtghactions.GenerativePlugin.autoImport._
+
+ThisBuild / githubWorkflowJavaVersions := List(JavaSpec.temurin("17"))
+ThisBuild / crossScalaVersions := Seq("3.5.1")
+ThisBuild / scalaVersion := "3.5.1"
+
+// Specify the operating systems
+ThisBuild / githubWorkflowOSes := Seq("ubuntu-latest", "windows-latest", "macos-latest")
+
+// Define the CI jobs
+ThisBuild / githubWorkflowGeneratedCI := Seq(
+  WorkflowJob(
+    name = "test",
+    id = "test",
+    steps = List(
+    WorkflowStep.CheckoutFull: WorkflowStep,
+    WorkflowStep.SetupJava(List(JavaSpec.temurin("17"))).head,
+    WorkflowStep.Sbt(List("++${{ env.SCALA_VERSION }}", "clean", "test"),
+      name = Some("Run tests")): WorkflowStep
+  ))
+)
+
+// Specify environment variables
+ThisBuild / githubWorkflowEnv := Map(
+  "SCALA_VERSION" -> "3.5.1"
+)
