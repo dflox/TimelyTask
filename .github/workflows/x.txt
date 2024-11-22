@@ -73,3 +73,16 @@ jobs:
           organization: timelytask # Replace with your organization
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@v3.1.0
+        with:
+          args: >
+            -Dsonar.projectKey=dflox_TimelyTask
+            -Dsonar.organization=timelytask
+            -Dsonar.testExecutionReportPaths=target/test-reports/TESTS-TestSuites.xml
+            -Dsonar.scala.coverage.reportPaths=/target/scala-3.5.1/scoverage-report/scoverage.xml
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

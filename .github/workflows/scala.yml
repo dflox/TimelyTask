@@ -51,25 +51,14 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge test reports
-        if: always()
-        run: |
-          mkdir -p target/test-reports
-          cat target/test-reports/*.xml > target/test-reports/TESTS-TestSuites.xml
+#      - name: Merge test reports
+#        if: always()
+#        run: |
+#          mkdir -p target/test-reports
+#          cat target/test-reports/*.xml > target/test-reports/TESTS-TestSuites.xml
 
       - name: Upload coverage data to Coveralls
         run: sbt coverageReport coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
-
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@v3.1.0
-        with:
-          args: >
-            -Dsonar.projectKey=dflox_TimelyTask
-            -Dsonar.organization=timelytask
-            -Dsonar.testExecutionReportPaths=target/test-reports/TESTS-TestSuites.xml
-            -Dsonar.scala.coverage.reportPaths=/target/scala-3.5.1/scoverage-report/scoverage.xml
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
