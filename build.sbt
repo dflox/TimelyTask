@@ -13,7 +13,14 @@ lazy val root = project
   .in(file("."))
   .settings(
     name := "TimelyTask",
-    version := "0.1.0-SNAPSHOT",
+    version := {
+      try {
+        sys.process.Process("git describe --tags --abbrev=0").!!.stripLineEnd
+      } catch {
+        case _: Throwable => "0.0.0" // Default version if no tags are found
+      }
+    },
+    assembly / assemblyJarName := s"timelytask-${version.value}.jar",
 
     scalaVersion := scala3Version,
     libraryDependencies += "org.scalameta" %% "munit" % scalaMetaVersion % Test,
