@@ -19,9 +19,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.ivy2/cache
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt') }}
+          key: ${{ runner.os }}-sbt-java23-${{ hashFiles('**/*.sbt') }}
           restore-keys: |
-            ${{ runner.os }}-sbt-
+            ${{ runner.os }}-sbt-java23-
 
       - name: Set up JDK 23 (Primary)
         id: setup-java-23
@@ -30,14 +30,19 @@ jobs:
           java-version: 23
           distribution: temurin
 
+      - name: Verify Java version
+        run: java -version
+
       - name: Build project
         id: build_project
         run: |
           set -e
+          java -version
           sbt clean assembly
         env:
           CI_RELEASE: true
           VERSION: ${{ github.ref_name }}
+          JAVA_HOME: ${{ steps.setup-java-23.outputs.java-home }}
 
       - name: Create Release
         id: create_release
