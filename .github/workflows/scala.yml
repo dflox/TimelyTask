@@ -8,7 +8,7 @@ name: Scala CI
 on:
   push:
     branches: [ "main", manual-CICD ]
-    
+
   pull_request:
     branches: [ "main" ]
 
@@ -82,7 +82,7 @@ jobs:
           args: >
             -Dsonar.projectKey=dflox_TimelyTask
             -Dsonar.organization=timelytask
-            -Dsonar.testExecutionReportPaths=target/test-reports/TESTS-TestSuites.xml
-            -Dsonar.scala.coverage.reportPaths=target/scala-3.5.1/scoverage-report/scoverage.xml
+            -Dsonar.testExecutionReportPaths=home/runner/work/TimelyTask/TimelyTask/target/scala-3.5.1/scoverage-report/scoverage.xml
+            -Dsonar.scala.coverage.reportPaths=/home/runner/work/TimelyTask/TimelyTask/target/scala-3.5.1/scoverage-report/scoverage.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
