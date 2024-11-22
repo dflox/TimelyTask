@@ -1,0 +1,66 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: Create Release
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache sbt dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.ivy2/cache
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
+
+      - name: Java setup
+        uses: coursier/setup-action@v1.3.8
+        with:
+          jvm: corretto:11
+          apps: sbt sbtn
+
+      - name: Build project
+        id: build_project
+        run: |
+          set -e
+          sbt clean assembly
+        env:
+          CI_RELEASE: true
+          VERSION: ${{ github.ref_name }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            ## Changes
+            - Automatic release
+            - Commit: ${{ github.sha }}
+            - Triggered by tag: ${{ github.ref_name }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: $(find ./target -name "timelytask-${{ github.ref_name }}.jar")
+          asset_name: timelytask-${{ github.ref_name }}.jar
+          asset_content_type: application/java-archive
