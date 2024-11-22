@@ -1,0 +1,109 @@
+name: Scala CI
+
+on:
+  push:
+    branches: [ "main", "manual-CICD" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.key }}
+    steps:
+      - name: Generate Cache Key
+        id: cache-key
+        run: echo "key=$(echo ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }})" >> $GITHUB_ENV
+
+      - name: Cache SBT Dependencies
+        uses: actions/cache@v3
+        id: cache-sbt
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.coursier
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
+
+  test:
+    needs: [ cache ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.ref_name }}
+
+      - name: Set up JDK 23 (Primary)
+        id: setup-java-23
+        uses: actions/setup-java@v4
+        with:
+          java-version: 23
+          distribution: temurin
+        continue-on-error: true
+
+      - name: Set up JDK 11 (Fallback)
+        if: steps.setup-java-23.outcome == 'failure'
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+          distribution: temurin
+
+      - name: Check Java Version
+        run: java -version
+
+      - name: Restore Cached Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.coursier
+          key: ${{ needs.cache.outputs.cache-key }}
+
+      - name: Run Tests
+        run: sbt clean test
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  coverage:
+    needs: [ cache, test ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.ref_name }}
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+          distribution: temurin
+
+      - name: Restore Cached Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.coursier
+          key: ${{ needs.cache.outputs.cache-key }}
+
+      - name: Generate Coverage Report and Upload to Coveralls
+        run: |
+          sbt coverage test coverageReport
+          sbt coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
