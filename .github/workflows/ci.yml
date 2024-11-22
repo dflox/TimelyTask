@@ -11,28 +11,19 @@ permissions:
   security-events: write
 
 jobs:
-  build:
+  # Step 1: Dependency caching
+  cache:
     runs-on: ubuntu-latest
-
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.key }}
     steps:
-      # Checkout code
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha || github.ref_name }}
+      - name: Generate Cache Key
+        id: cache-key
+        run: echo "key=$(echo ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }})" >> $GITHUB_ENV
 
-      # Set up Java
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: 11
-          distribution: temurin
-          cache: sbt
-
-      # Cache dependencies
       - name: Cache SBT Dependencies
         uses: actions/cache@v3
+        id: cache-sbt
         with:
           path: |
             ~/.ivy2/cache
@@ -42,13 +33,68 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-sbt-
 
-      # Run tests and generate reports
-      - name: Run Tests and Generate Reports
-        run: |
-          sbt clean coverage test coverageReport
+  # Step 2: Run tests in parallel
+  test:
+    needs: [cache]
+    runs-on: ubuntu-latest
 
-      # Upload coverage data to Coveralls
-      - name: Upload Coverage Data to Coveralls
-        run: sbt coverageReport coveralls
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.ref_name }}
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+          distribution: temurin
+
+      - name: Restore Cached Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.coursier
+          key: ${{ needs.cache.outputs.cache-key }}
+
+      - name: Run Tests
+        run: sbt clean test
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Step 3: Generate and upload coverage reports
+  coverage:
+    needs: [cache, test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.ref_name }}
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+          distribution: temurin
+
+      - name: Restore Cached Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.coursier
+          key: ${{ needs.cache.outputs.cache-key }}
+
+      - name: Generate Coverage Report and Upload to Coveralls
+        run: |
+          sbt coverage test coverageReport
+          sbt coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
