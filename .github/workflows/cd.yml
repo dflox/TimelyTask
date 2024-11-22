@@ -1,72 +1,40 @@
+name: Release Pipeline
+
 on:
   push:
     tags:
-      - 'v*'
-
-name: Release
+      - 'v*'  # Triggers on tags like v1.0.0, v1.2.3, etc.
 
 jobs:
   build:
-    name: Create Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Cache sbt dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.ivy2/cache
-          key: ${{ runner.os }}-sbt-java23-${{ hashFiles('**/*.sbt') }}
-          restore-keys: |
-            ${{ runner.os }}-sbt-java23-
-
-      - name: Set up JDK 23 (Primary)
-        id: setup-java-23
+      - name: Set up JDK 23
         uses: actions/setup-java@v4
         with:
-          java-version: 23
-          distribution: temurin
+          java-version: '23'
+          distribution: 'temurin'
 
-      - name: Verify Java version
-        run: java -version
+      - name: Set up sbt
+        uses: coursier/setup-action@v1
+        with:
+          apps: sbt
 
-      - name: Build project
-        id: build_project
+      - name: Build the project and generate the .jar
         run: |
-          set -e
-          java -version
-          sbt clean assembly
-        env:
-          CI_RELEASE: true
-          VERSION: ${{ github.ref_name }}
-          JAVA_HOME: ${{ steps.setup-java-23.outputs.java-home }}
+          sbt clean assembly  
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Get the tag version
+        id: get_version
+        run: echo "VERSION=$(echo ${GITHUB_REF#refs/tags/})" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/scala-*/timelytask-${{ env.VERSION }}.jar  # Adjust the path as needed
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          body: |
-            ## Changes
-            - Automatic release
-            - Commit: ${{ github.sha }}
-            - Triggered by tag: ${{ github.ref_name }}
-          draft: false
-          prerelease: ${{ contains(github.ref_name, '-') }}
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: $(find ./target -name "timelytask-${{ github.ref_name }}.jar")
-          asset_name: timelytask-${{ github.ref_name }}.jar
-          asset_content_type: application/java-archive
