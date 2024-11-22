@@ -19,8 +19,7 @@ class CalendarTUISpec extends AnyWordSpec {
       val viewModel: ViewModel = calendarViewModel
       val output = CalendarTUI.update(viewModel)
 
-      output should include
-      ("-------------------------------------------------------------------------------\nCalendar" +
+      output should include ("-------------------------------------------------------------------------------\nCalendar" +
         "                                                    06. - 12. Nov. " +
         "2024\n-------------------------------------------------------------------------------\n|" +
         " Time  | Mi. 06  | Do. 07  | Fr. 08  | Sa. 09  | So. 10  | Mo. 11  | Di. 12  " +
@@ -35,11 +34,10 @@ class CalendarTUISpec extends AnyWordSpec {
       val tuiModel = TUIModel.default
       val output = CalendarTUI.update(viewModel, tuiModel)
 
-      output should include
-      ("-------------------------------------------------------------------------------\nCalendar" +
+      output should include ("-------------------------------------------------------------------------------\nCalendar" +
         "                                                    06. - 12. Nov. " +
         "2024\n-------------------------------------------------------------------------------\n|" +
-        " Time  | Mi. 06  | Do. 07  | Fr. 08  | Sa. 09  | So. 10  | Mo. 11  | Di. 12  " +
+        " Time  | Mi. xxx06  | Do. 07  | Fr. 08  | Sa. 09  | So. 10  | Mo. 11  | Di. 12  " +
         "|\n-------------------------------------------------------------------------------\n| 16:55 |         |         |         |         |         |         |         |\n| 17:10 |         |         |         |         |         |         |         |\n| 17:25 |         |         |         |         |         |         |         |\n| 17:40 |         |         |         |         |         |         |         |\n-------------------------------------------------------------------------------\n\n\n\n\n\n\n\n\n\n\n\n\n")
     }
 
