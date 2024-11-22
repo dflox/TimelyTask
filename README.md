@@ -1,4 +1,8 @@
 ![Static Badge](https://img.shields.io/badge/Scala-sbt-red?style=for-the-badge&logo=Scala&logoColor=%23dc322f&color=%23dc322f)
+[![Coverage Status](https://coveralls.io/repos/github/dflox/TimelyTask/badge.svg)](https://coveralls.io/github/dflox/TimelyTask)
+![Tests](https://github.com/dflox/TimelyTask/actions/workflows/ci.yml/badge.svg)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/dflox/TimelyTask)
+
 
 # TimelyTask
 
