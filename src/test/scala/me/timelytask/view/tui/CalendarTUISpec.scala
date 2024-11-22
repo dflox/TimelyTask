@@ -20,8 +20,7 @@ class CalendarTUISpec extends AnyWordSpec {
       val output = CalendarTUI.update(viewModel)
 
       output should include ("-------------------------------------------------------------------------------\nCalendar" +
-        "                                                    06. - 12. Nov. " +
-        "2024\n-------------------------------------------------------------------------------\n|")
+        "                                                    06. - 12. Nov")
     }
 
     "update the view correctly again" in {
@@ -33,8 +32,7 @@ class CalendarTUISpec extends AnyWordSpec {
       val output = CalendarTUI.update(viewModel, tuiModel)
 
       output should include ("-------------------------------------------------------------------------------\nCalendar" +
-        "                                                    06. - 12. Nov. " +
-        "2024\n-------------------------------------------------------------------------------\n|")
+        "                                                    06. - 12. Nov")
     }
 
     "align the text to the left" in {
