@@ -15,7 +15,7 @@ class InputHandlerSpec extends AnyWordSpec with MockitoSugar {
     "handle input and call the correct action" in {
       val inputHandler = new InputHandler
 
-      val key = mock[Keyboard]
+      val key = mock[Key]
       val action = mock[Action]
 
       when(keyMapManager.getActiveActionKeymap).thenReturn(Map(key -> action))
@@ -31,7 +31,7 @@ class InputHandlerSpec extends AnyWordSpec with MockitoSugar {
     "handle input and return NoAction if no action is found" in {
       val inputHandler = new InputHandler
 
-      val key = mock[Keyboard]
+      val key = mock[Key]
 
       when(keyMapManager.getActiveActionKeymap).thenReturn(Map())
       when(keyMapManager.getGlobalActionKeymap).thenReturn(Map())

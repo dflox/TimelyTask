@@ -2,7 +2,7 @@ package me.timelytask.view
 
 import me.timelytask.model.settings.ViewType
 import me.timelytask.model.settings.ViewType.{CALENDAR, TASK}
-import me.timelytask.model.utility.Keyboard
+import me.timelytask.model.utility.Key
 import me.timelytask.util.Publisher
 import me.timelytask.view.tui.{CalendarTUI, TUIView, TaskTUI}
 import me.timelytask.view.viewmodel.{ModelTUI, ViewModel}
@@ -18,7 +18,7 @@ class WindowTUI(using viewModelPublisher: Publisher[ViewModel], terminal: Termin
   
   val writer: PrintWriter = terminal.writer()
 
-  def onUserInput(key: Keyboard): Unit = {
+  def onUserInput(key: Key): Unit = {
     inputHandler.handleInput(key)
   }
 

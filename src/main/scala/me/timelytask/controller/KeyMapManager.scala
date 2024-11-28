@@ -13,24 +13,24 @@ given keyMapManager: KeyMapManager.type = KeyMapManager
 object KeyMapManager{
   val activeView: () => ViewType = () => activeViewPublisher.getValue
 
-  def getActiveActionKeymap: Map[Keyboard, Action] = {
+  def getActiveActionKeymap: Map[Key, Action] = {
     actionKeyMaps(activeView())
   }
 
-  def getGlobalActionKeymap: Map[Keyboard, Action] = {
+  def getGlobalActionKeymap: Map[Key, Action] = {
     globalActionKeymap
   }
 
-  def setGlobalActionKeymap(actionKeyMap: Map[Keyboard, Action]): Unit = {
+  def setGlobalActionKeymap(actionKeyMap: Map[Key, Action]): Unit = {
     globalActionKeymap = actionKeyMap
   }
 
-  def setKeymap(name: ViewType, actionKeyMap: Map[Keyboard, Action]): Unit = {
+  def setKeymap(name: ViewType, actionKeyMap: Map[Key, Action]): Unit = {
     actionKeyMaps = actionKeyMaps + (name -> actionKeyMap)
   }
 
 
-  private var actionKeyMaps: Map[ViewType, Map[Keyboard, Action]]  = Map(
+  private var actionKeyMaps: Map[ViewType, Map[Key, Action]]  = Map(
     ViewType.CALENDAR -> {
       Map(
         MoveRight -> NextDay,
@@ -52,13 +52,13 @@ object KeyMapManager{
     ViewType.KANBAN -> Map(),
     ViewType.SETTINGS -> Map()
   )
-  private var globalActionKeymap: Map[Keyboard, Action] = Map(
+  private var globalActionKeymap: Map[Key, Action] = Map(
     CtrlN -> AddTask,
     CtrlQ -> Exit,
   )
 
-  val keyMap: KeyMap[Keyboard] = {
-    val keyMap = new KeyMap[Keyboard]()
+  val keyMap: KeyMap[Key] = {
+    val keyMap = new KeyMap[Key]()
     // Arrow keys (with both common variants)
     keyMap.bind(MoveUp, "\u001b[A")
     keyMap.bind(MoveDown, "\u001b[B")
