@@ -1,6 +1,7 @@
 package me.timelytask.model
 
 import com.github.nscala_time.time.Imports.*
+import me.timelytask.model.state.{TaskState, InProgressState}
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
@@ -11,7 +12,7 @@ case class Task(name: String,
                 tags: HashSet[UUID] = new HashSet[UUID](),
                 deadline: Deadline,
                 scheduleDate: DateTime,
-                state: UUID,
+                state: TaskState = new InProgressState,
                 tedDuration: Period,
                 dependentOn: HashSet[UUID] = new HashSet[UUID](),
                 reoccurring: Boolean,
@@ -20,12 +21,16 @@ case class Task(name: String,
   val uuid: UUID = UUID.randomUUID()
   val realDuration: Option[Period] = None
   val completionDate: Option[DateTime] = None
+
+  def start(): Unit = state.start(this)
+  def complete(): Unit = state.complete(this)
+  def cancel(): Unit = state.cancel(this)
 }
 
 object Task {
   val exampleTask: Task = Task("ExTask", "This is an example task",
     UUID.randomUUID(), HashSet(UUID.randomUUID()), Deadline(DateTime.now(), None, None),
-    DateTime.now(), UUID.randomUUID(), 1.hour, HashSet(UUID.randomUUID()), false, 1.hour)
+    DateTime.now(), new InProgressState, UUID.randomUUID(), 1.hour, HashSet(UUID.randomUUID()), false, 1.hour)
   val emptyTask: Task = Task("", "", UUID.randomUUID(), new HashSet[UUID](), Deadline(DateTime.now(), None, None),
-    DateTime.now(), UUID.randomUUID(), 1.hour, new HashSet[UUID](), false, 1.hour)
+    DateTime.now(), new InProgressState, UUID.randomUUID(), 1.hour, new HashSet[UUID](), false, 1.hour)
 }
