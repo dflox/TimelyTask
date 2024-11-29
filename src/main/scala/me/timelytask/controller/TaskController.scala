@@ -1,6 +1,7 @@
 package me.timelytask.controller
 
 import com.github.nscala_time.time.Imports.*
+import me.timelytask.controller.mediator.Mediator
 import me.timelytask.model.{Model, Task}
 import me.timelytask.model.settings.*
 import me.timelytask.util.Publisher
@@ -9,7 +10,7 @@ import me.timelytask.view.viewmodel.TaskModel
 
 class TaskController(using viewModelPublisher: Publisher[ViewModel], 
                      activeViewPublisher: Publisher[ViewType],
-                     modelPublisher: Publisher[Model]) 
+                     modelPublisher: Publisher[Model], mediator: Mediator) 
   extends Controller {
   val viewModel: () => TaskModel = () => {
     viewModelPublisher.getValue match {

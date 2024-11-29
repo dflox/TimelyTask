@@ -1,6 +1,7 @@
 package me.timelytask.controller
 
 import com.github.nscala_time.time.Imports.*
+import me.timelytask.controller.mediator.Mediator
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.Model
@@ -9,7 +10,8 @@ import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
 class CalendarController(using modelPublisher: Publisher[Model],
                          activeViewPublisher: Publisher[ViewType],
-                         viewModelPublisher: Publisher[ViewModel]) extends Controller {
+                         viewModelPublisher: Publisher[ViewModel],
+                         mediator: Mediator) extends Controller {
 
   val viewModel: () => CalendarViewModel = () => viewModelPublisher.getValue
     .asInstanceOf[CalendarViewModel]

@@ -11,6 +11,7 @@ import org.jline.keymap.BindingReader
 import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.{Terminal, TerminalBuilder}
+import me.timelytask.model.defaultMediator
 
 object TimelyTask extends App {
 
