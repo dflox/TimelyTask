@@ -10,7 +10,7 @@ import me.timelytask.view.viewmodel.TaskModel
 
 class TaskController(using viewModelPublisher: Publisher[ViewModel], 
                      activeViewPublisher: Publisher[ViewType],
-                     modelPublisher: Publisher[Model], mediator: Mediator) 
+                     modelPublisher: Publisher[Model]) 
   extends Controller {
   val viewModel: () => TaskModel = () => {
     viewModelPublisher.getValue match {

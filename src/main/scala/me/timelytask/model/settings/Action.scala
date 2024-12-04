@@ -1,6 +1,6 @@
 package me.timelytask.model.settings
 
-sealed trait Action{
+trait Action{
   private var handler: Option[() => Boolean] = None
   def setHandler(newHandler: () => Boolean): Unit = {
     if(handler.isDefined) throw new Exception("Handler already set")

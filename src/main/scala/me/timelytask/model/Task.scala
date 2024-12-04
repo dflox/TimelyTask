@@ -1,7 +1,6 @@
 // src/main/scala/me/timelytask/model/Task.scala
 package me.timelytask.model
 
-import me.timelytask.controller.mediator.{Mediator, TaskMediator}
 import com.github.nscala_time.time.Imports.*
 import me.timelytask.controller.TaskController
 import me.timelytask.model.state.{OpenState, TaskState}
@@ -14,8 +13,6 @@ import me.timelytask.model.builder.TaskBuilder
 import java.util.UUID
 import scala.collection.immutable.HashSet
 
-implicit val defaultMediator: Mediator = new TaskMediator(new TaskController, new ViewModelStatus)
-
 case class Task(name: String,
                 description: String,
                 priority: UUID,
@@ -26,28 +23,22 @@ case class Task(name: String,
                 tedDuration: Period,
                 dependentOn: HashSet[UUID] = new HashSet[UUID](),
                 reoccurring: Boolean,
-                recurrenceInterval: Period,
-                mediator: Mediator = defaultMediator) {
+                recurrenceInterval: Period) {
 
   val uuid: UUID = UUID.randomUUID()
   val realDuration: Option[Period] = None
   val completionDate: Option[DateTime] = None
 
   def start(): Task = {
-
-    // notify the mediator that the task has started (Mediator Pattern)
-    mediator.notify(this, "TaskStarted")
     // change the state of the task to started (State Pattern)
     state.start(this)
   }
 
   def complete(): Task = {
-    mediator.notify(this, "TaskCompleted")
     state.complete(this)
   }
 
   def cancel(): Task = {
-    mediator.notify(this, "TaskCancelled")
     state.cancel(this)
   }
   def extendDeadline(extension: Period): Task = state.extendDeadline(this, extension)

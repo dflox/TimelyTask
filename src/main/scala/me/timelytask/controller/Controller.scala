@@ -5,7 +5,7 @@ import me.timelytask.controller.mediator.Mediator
 import me.timelytask.util.{MultiTypeObserver, Publisher}
 import me.timelytask.view.viewmodel.ViewModel
 
-trait Controller(using viewModelPublisher: Publisher[ViewModel], mediator: Mediator) extends MultiTypeObserver {
+trait Controller(using viewModelPublisher: Publisher[ViewModel]) extends MultiTypeObserver {
   given Conversion[Option[ViewModel], Boolean] with {
     def apply(option: Option[ViewModel]): Boolean = option match {
       case Some(viewModel) =>

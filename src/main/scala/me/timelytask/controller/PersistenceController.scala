@@ -8,7 +8,7 @@ import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.util.Publisher
 
 class PersistenceController(using modelPublisher: Publisher[Model], 
-                            viewModelPublisher: Publisher[ViewModel], mediator: Mediator) 
+                            viewModelPublisher: Publisher[ViewModel]) 
   extends Controller {
   
   println("PersistenceController created")

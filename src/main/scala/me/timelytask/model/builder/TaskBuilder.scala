@@ -3,7 +3,7 @@ package me.timelytask.model.builder
 
 import com.github.nscala_time.time.Imports.*
 import me.timelytask.controller.TaskController
-import me.timelytask.controller.mediator.{Mediator, TaskMediator}
+import me.timelytask.controller.mediator.Mediator
 import me.timelytask.model.{Deadline, Task}
 import me.timelytask.view.viewmodel.ViewModelStatus
 import me.timelytask.model.state.*
@@ -15,7 +15,6 @@ import java.util.UUID
 import scala.collection.immutable.HashSet
 
 class TaskBuilder {
-  implicit val defaultMediator: Mediator = new TaskMediator(new TaskController, new ViewModelStatus)
   private var name: String = ""
   private var description: String = ""
   private var priority: UUID = UUID.randomUUID()
@@ -27,7 +26,6 @@ class TaskBuilder {
   private var dependentOn: HashSet[UUID] = HashSet()
   private var reoccurring: Boolean = false
   private var recurrenceInterval: Period = 0.seconds.toPeriod
-  private var mediator: Mediator = defaultMediator
 
   def setName(name: String): TaskBuilder = {
     this.name = name
@@ -84,12 +82,7 @@ class TaskBuilder {
     this
   }
 
-  def setMediator(mediator: Mediator): TaskBuilder = {
-    this.mediator = mediator
-    this
-  }
-
   def build(): Task = {
-    Task(name, description, priority, tags, deadline, scheduleDate, state, tedDuration, dependentOn, reoccurring, recurrenceInterval, mediator)
+    Task(name, description, priority, tags, deadline, scheduleDate, state, tedDuration, dependentOn, reoccurring, recurrenceInterval)
   }
 }

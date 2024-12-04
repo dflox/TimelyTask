@@ -10,8 +10,7 @@ import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
 class CalendarController(using modelPublisher: Publisher[Model],
                          activeViewPublisher: Publisher[ViewType],
-                         viewModelPublisher: Publisher[ViewModel],
-                         mediator: Mediator) extends Controller {
+                         viewModelPublisher: Publisher[ViewModel]) extends Controller {
 
   val viewModel: () => CalendarViewModel = () => viewModelPublisher.getValue
     .asInstanceOf[CalendarViewModel]
