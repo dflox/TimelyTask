@@ -1,6 +1,5 @@
 package me.timelytask.controller
 
-import me.timelytask.TimelyTask
 import me.timelytask.model.Model
 import me.timelytask.model.settings.{Exit, SaveAndExit, StartApp, ViewType}
 import me.timelytask.view.viewmodel.ViewModel

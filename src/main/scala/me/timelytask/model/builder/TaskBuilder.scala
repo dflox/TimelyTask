@@ -7,8 +7,6 @@ import me.timelytask.model.{Deadline, Task}
 import me.timelytask.view.viewmodel.ViewModelStatus
 import me.timelytask.model.state.*
 import me.timelytask.model.settings.activeViewPublisher
-import me.timelytask.TimelyTask.viewModelPublisher
-import me.timelytask.TimelyTask.modelPublisher
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
