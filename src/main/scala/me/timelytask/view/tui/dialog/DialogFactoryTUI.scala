@@ -1,4 +1,4 @@
-package me.timelytask.controller
+package me.timelytask.view.tui.dialog
 
 import me.timelytask.view.tui.dialog.*
 import me.timelytask.view.viewmodel.dialogmodel.*

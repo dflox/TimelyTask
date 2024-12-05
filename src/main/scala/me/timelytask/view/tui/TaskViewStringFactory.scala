@@ -1,10 +1,10 @@
 package me.timelytask.view.tui
 
 import me.timelytask.model.Task
-import me.timelytask.view.tui.UtilTUI.{alignTop, columnSpacer, createLine, createSpace}
+import me.timelytask.view.tui.TuiUtils.{alignTop, columnSpacer, createLine, createSpace}
 import me.timelytask.view.viewmodel.*
 
-object TaskTUI extends TUIView {
+object TaskViewStringFactory extends StringFactory {
   override def update(viewModel: ViewModel): String = {
     update(viewModel, ModelTUI.default)
   }

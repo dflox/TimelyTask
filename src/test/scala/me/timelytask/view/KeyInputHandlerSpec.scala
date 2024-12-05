@@ -9,14 +9,15 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import me.timelytask.controller.keyMapManager
+import me.timelytask.view.events.Event
 
-class InputHandlerSpec extends AnyWordSpec with MockitoSugar {
+class KeyInputHandlerSpec extends AnyWordSpec with MockitoSugar {
   "The InputHandler" should {
     "handle input and call the correct action" in {
-      val inputHandler = new InputHandler
+      val inputHandler = new KeyInputHandler
 
       val key = mock[Key]
-      val action = mock[Action]
+      val action = mock[Event]
 
       when(keyMapManager.getActiveActionKeymap).thenReturn(Map(key -> action))
       when(keyMapManager.getGlobalActionKeymap).thenReturn(Map())
@@ -29,7 +30,7 @@ class InputHandlerSpec extends AnyWordSpec with MockitoSugar {
     }
 
     "handle input and return NoAction if no action is found" in {
-      val inputHandler = new InputHandler
+      val inputHandler = new KeyInputHandler
 
       val key = mock[Key]
 

@@ -3,14 +3,14 @@ package me.timelytask.view.tui
 import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
-import me.timelytask.view.tui.CalendarTUI
+import me.timelytask.view.tui.CalendarViewStringFactory
 import me.timelytask.view.viewmodel.{CalendarViewModel, ModelTUI, ViewModel}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import me.timelytask.controller.ThemeManager.{getTerminalBgColor, getTerminalColor}
 import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.{colored, BOLD, ITALIC}
 
-class CalendarTUISpec extends AnyWordSpec {
+class CalendarViewStringFactorySpec extends AnyWordSpec {
 
   "The CalendarTUI" should {
 
@@ -19,7 +19,7 @@ class CalendarTUISpec extends AnyWordSpec {
       val timeSelection = TimeSelection(fixedDateTime, 7, 1.hour)
       val calendarViewModel = CalendarViewModel(Model.default, timeSelection)
       val viewModel: ViewModel = calendarViewModel
-      val output = CalendarTUI.update(viewModel)
+      val output = CalendarViewStringFactory.update(viewModel)
 
       output should include(
         "-------------------------------------------------------------------------------\n" +
@@ -42,7 +42,7 @@ class CalendarTUISpec extends AnyWordSpec {
       val calendarViewModel = CalendarViewModel(Model.default, timeSelection)
       val viewModel: ViewModel = calendarViewModel
       val tuiModel = ModelTUI.default
-      val output = CalendarTUI.update(viewModel, tuiModel)
+      val output = CalendarViewStringFactory.update(viewModel, tuiModel)
 
       output should include(
         "-------------------------------------------------------------------------------\n" +
@@ -61,7 +61,7 @@ class CalendarTUISpec extends AnyWordSpec {
 
     "header should be correct" in {
       val timeSelection = TimeSelection.defaultTimeSelection
-      val header = CalendarTUI.header(80, timeSelection)
+      val header = CalendarViewStringFactory.header(80, timeSelection)
       header should include("Calendar")
       header should include(DateTime.now().withPeriodAdded((timeSelection.dayCount - 1).days, 1)
         .toString("dd. MMM yyyy"))
@@ -72,7 +72,7 @@ class CalendarTUISpec extends AnyWordSpec {
       val timeSelection = TimeSelection(new DateTime(2024, 10, 14, 22, 0), 2, 5.hour)
       val tasks = List(Task.exampleTask)
       val spacePerColumn = Task.exampleTask.name.length + 2
-      val rows = CalendarTUI.createRows(1.hour, 5, timeSelection, tasks, spacePerColumn, getTerminalColor(_.text2))
+      val rows = CalendarViewStringFactory.createRows(1.hour, 5, timeSelection, tasks, spacePerColumn, getTerminalColor(_.text2))
       rows should include("22:00") // First row
       rows should include("23:00") // Second row
       rows should include("00:00") // Time wrapping after midnight
@@ -80,12 +80,12 @@ class CalendarTUISpec extends AnyWordSpec {
       rows should not include Task.exampleTask.name
 
       val timeSelection2 = TimeSelection(DateTime.now().withPeriodAdded(2.hour, -1), 2, 5.hour)
-      val rows2 = CalendarTUI.createRows(1.hour, 5, timeSelection2, tasks, spacePerColumn, getTerminalColor(_.text2))
+      val rows2 = CalendarViewStringFactory.createRows(1.hour, 5, timeSelection2, tasks, spacePerColumn, getTerminalColor(_.text2))
       rows2 should include(Task.exampleTask.name)
     }
 
     "calculate the intervals that can be displayed with regard to the provided time frame" in {
-      val (timeSlice, lines) = CalendarTUI.calculatePeriod(22, new Interval(new DateTime(2024, 10,
+      val (timeSlice, lines) = CalendarViewStringFactory.calculatePeriod(22, new Interval(new DateTime(2024, 10,
         14, 7, 0), new DateTime(2024, 10, 14, 19, 0)))
       lines should be(12)
       timeSlice.toString should be("PT1H")

@@ -1,11 +1,11 @@
 package me.timelytask.view.tui
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.view.tui.UtilTUI.*
+import me.timelytask.view.tui.TuiUtils.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
-class UtilTUISpec extends AnyWordSpec {
+class TuiUtilsSpec extends AnyWordSpec {
 
   "The UtilTUI" should {
     "return a string with the specified number of dashes" in {
@@ -19,21 +19,21 @@ class UtilTUISpec extends AnyWordSpec {
         createLine(-1)
       }
       "align the text to the left" in {
-        UtilTUI.columnSpacer("Hello", 10, "l") should be("Hello     ")
-        UtilTUI.columnSpacer("Hello", 5, "l") should be("Hello")
-        UtilTUI.columnSpacer("Hello", 0, "l") should be("Hello")
+        TuiUtils.columnSpacer("Hello", 10, "l") should be("Hello     ")
+        TuiUtils.columnSpacer("Hello", 5, "l") should be("Hello")
+        TuiUtils.columnSpacer("Hello", 0, "l") should be("Hello")
       }
 
       "align the text to the middle" in {
-        UtilTUI.columnSpacer("Hello", 10, "m") should be("  Hello   ")
-        UtilTUI.columnSpacer("Hello", 5, "m") should be("Hello")
-        UtilTUI.columnSpacer("Hello", 0, "m") should be("Hello")
+        TuiUtils.columnSpacer("Hello", 10, "m") should be("  Hello   ")
+        TuiUtils.columnSpacer("Hello", 5, "m") should be("Hello")
+        TuiUtils.columnSpacer("Hello", 0, "m") should be("Hello")
       }
 
       "align the text to the right" in {
-        UtilTUI.columnSpacer("Hello", 10, "r") should be("     Hello")
-        UtilTUI.columnSpacer("Hello", 5, "r") should be("Hello")
-        UtilTUI.columnSpacer("Hello", 0, "r") should be("Hello")
+        TuiUtils.columnSpacer("Hello", 10, "r") should be("     Hello")
+        TuiUtils.columnSpacer("Hello", 5, "r") should be("Hello")
+        TuiUtils.columnSpacer("Hello", 0, "r") should be("Hello")
       }
     }
 

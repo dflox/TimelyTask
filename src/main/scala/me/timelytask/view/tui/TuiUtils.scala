@@ -2,7 +2,7 @@ package me.timelytask.view.tui
 
 import com.github.nscala_time.time.Imports.*
 
-object UtilTUI {
+object TuiUtils {
   // write a given amount of dashes
   def createLine(length: Int): String = {
     require(length >= 0, "Length cannot be negative")

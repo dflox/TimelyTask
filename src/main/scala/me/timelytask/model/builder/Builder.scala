@@ -2,7 +2,6 @@
 package me.timelytask.model.builder
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.controller.mediator.Mediator
 import me.timelytask.model.{Deadline, Task}
 import me.timelytask.model.state.*
 
@@ -21,6 +20,5 @@ trait Builder {
   def setDependentOn(dependentOn: HashSet[UUID]): Builder
   def setReoccurring(reoccurring: Boolean): Builder
   def setRecurrenceInterval(recurrenceInterval: Period): Builder
-  def setMediator(mediator: Mediator): Builder
   def build(): Task
 }

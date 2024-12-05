@@ -1,6 +1,6 @@
 package me.timelytask.view.tui.dialog
 
-import me.timelytask.view.tui.UtilTUI.createLine
+import me.timelytask.view.tui.TuiUtils.createLine
 import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, TextInputDialogModel}
 import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}

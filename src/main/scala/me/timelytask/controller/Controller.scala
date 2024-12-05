@@ -1,7 +1,6 @@
 // src/main/scala/me/timelytask/controller/Controller.scala
 package me.timelytask.controller
 
-import me.timelytask.controller.mediator.Mediator
 import me.timelytask.util.{MultiTypeObserver, Publisher}
 import me.timelytask.view.viewmodel.ViewModel
 

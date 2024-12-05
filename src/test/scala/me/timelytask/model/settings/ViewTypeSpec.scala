@@ -1,7 +1,7 @@
 package me.timelytask.model.settings
 
 import me.timelytask.model.settings.ViewType
-import me.timelytask.view.tui.CalendarTUI
+import me.timelytask.view.tui.CalendarViewStringFactory
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 

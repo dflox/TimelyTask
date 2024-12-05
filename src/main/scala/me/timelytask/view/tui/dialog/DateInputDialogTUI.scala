@@ -1,7 +1,7 @@
 package me.timelytask.view.tui.dialog
 
 import com.github.nscala_time.time.Imports.DateTime
-import me.timelytask.view.tui.UtilTUI.createLine
+import me.timelytask.view.tui.TuiUtils.createLine
 import me.timelytask.view.viewmodel.dialogmodel.{DateInputDialogModel, DialogModel}
 import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}

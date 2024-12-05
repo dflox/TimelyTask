@@ -4,14 +4,14 @@ import me.timelytask.model.settings.ViewType
 import me.timelytask.model.settings.ViewType.{CALENDAR, TASK}
 import me.timelytask.model.utility.Key
 import me.timelytask.util.Publisher
-import me.timelytask.view.tui.{CalendarTUI, TUIView, TaskTUI}
+import me.timelytask.view.tui.{CalendarViewStringFactory, StringFactory, TaskViewStringFactory}
 import me.timelytask.view.viewmodel.{ModelTUI, ViewModel}
 import org.jline.terminal.Terminal
 
 import java.io.PrintWriter
 
 class WindowTUI(using viewModelPublisher: Publisher[ViewModel], terminal: Terminal,
-                inputHandler: InputHandler, activeViewPublisher: Publisher[ViewType]) {
+                inputHandler: KeyInputHandler, activeViewPublisher: Publisher[ViewType]) {
   private val activeView: () => ViewType = () => activeViewPublisher.getValue
 
   println("WindowTUI")
@@ -27,15 +27,15 @@ class WindowTUI(using viewModelPublisher: Publisher[ViewModel], terminal: Termin
   }
 
   def renderActiveView(viewModel: ViewModel): Unit = {
-    val tuiView: TUIView = activeView()
+    val tuiView: StringFactory = activeView()
     writer.print(tuiView.update(viewModel, new ModelTUI(terminal.getHeight, terminal.getWidth)))
   }
 }
 
-given Conversion[ViewType, TUIView] with {
-  def apply(viewType: ViewType): TUIView = viewType match {
-    case CALENDAR => CalendarTUI
-    case TASK => TaskTUI
+given Conversion[ViewType, StringFactory] with {
+  def apply(viewType: ViewType): StringFactory = viewType match {
+    case CALENDAR => CalendarViewStringFactory
+    case TASK => TaskViewStringFactory
     //case _ => CalendarTUI
     //    case TABLE => ???
     //    case KANBAN => ???

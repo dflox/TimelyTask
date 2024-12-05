@@ -3,7 +3,6 @@ package me.timelytask.model.builder
 
 import com.github.nscala_time.time.Imports.*
 import me.timelytask.controller.TaskController
-import me.timelytask.controller.mediator.Mediator
 import me.timelytask.model.{Deadline, Task}
 import me.timelytask.view.viewmodel.ViewModelStatus
 import me.timelytask.model.state.*

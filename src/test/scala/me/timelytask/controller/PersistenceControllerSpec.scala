@@ -1,9 +1,10 @@
 package me.timelytask.controller
 
 import me.timelytask.model.Model
-import me.timelytask.model.settings.{Action, Exit, SaveAndExit, StartApp, ViewType}
+import me.timelytask.model.settings.{Exit, SaveAndExit, StartApp, ViewType}
 import me.timelytask.model.modelPublisher
 import me.timelytask.controller.PersistenceController
+import me.timelytask.view.events.Event
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar

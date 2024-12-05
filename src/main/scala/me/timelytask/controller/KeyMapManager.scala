@@ -6,6 +6,7 @@ import me.timelytask.model.settings.*
 import me.timelytask.model.utility.*
 import me.timelytask.util.Publisher
 import me.timelytask.model.settings.activeViewPublisher
+import me.timelytask.view.events.Event
 import org.jline.keymap.KeyMap
 
 given keyMapManager: KeyMapManager.type = KeyMapManager
@@ -13,24 +14,24 @@ given keyMapManager: KeyMapManager.type = KeyMapManager
 object KeyMapManager{
   val activeView: () => ViewType = () => activeViewPublisher.getValue
 
-  def getActiveActionKeymap: Map[Key, Action] = {
+  def getActiveActionKeymap: Map[Key, Event] = {
     actionKeyMaps(activeView())
   }
 
-  def getGlobalActionKeymap: Map[Key, Action] = {
+  def getGlobalActionKeymap: Map[Key, Event] = {
     globalActionKeymap
   }
 
-  def setGlobalActionKeymap(actionKeyMap: Map[Key, Action]): Unit = {
+  def setGlobalActionKeymap(actionKeyMap: Map[Key, Event]): Unit = {
     globalActionKeymap = actionKeyMap
   }
 
-  def setKeymap(name: ViewType, actionKeyMap: Map[Key, Action]): Unit = {
+  def setKeymap(name: ViewType, actionKeyMap: Map[Key, Event]): Unit = {
     actionKeyMaps = actionKeyMaps + (name -> actionKeyMap)
   }
 
 
-  private var actionKeyMaps: Map[ViewType, Map[Key, Action]]  = Map(
+  private var actionKeyMaps: Map[ViewType, Map[Key, Event]]  = Map(
     ViewType.CALENDAR -> {
       Map(
         MoveRight -> NextDay,
@@ -52,7 +53,7 @@ object KeyMapManager{
     ViewType.KANBAN -> Map(),
     ViewType.SETTINGS -> Map()
   )
-  private var globalActionKeymap: Map[Key, Action] = Map(
+  private var globalActionKeymap: Map[Key, Event] = Map(
     CtrlN -> AddTask,
     CtrlQ -> Exit,
   )

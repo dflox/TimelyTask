@@ -1,7 +1,6 @@
 package me.timelytask.controller
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.controller.mediator.Mediator
 import me.timelytask.model.{Model, Task}
 import me.timelytask.model.settings.*
 import me.timelytask.util.Publisher

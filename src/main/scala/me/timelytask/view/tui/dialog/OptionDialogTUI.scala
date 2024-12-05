@@ -1,6 +1,6 @@
 package me.timelytask.view.tui.dialog
 
-import me.timelytask.view.tui.UtilTUI.{createLine, cutText}
+import me.timelytask.view.tui.TuiUtils.{createLine, cutText}
 import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, OptionDialogModel}
 import org.jline.terminal.Terminal
 

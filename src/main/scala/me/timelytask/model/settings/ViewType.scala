@@ -1,7 +1,7 @@
 package me.timelytask.model.settings
 
 import me.timelytask.util.Publisher
-import me.timelytask.view.tui.{CalendarTUI, TUIView}
+import me.timelytask.view.tui.{CalendarViewStringFactory, StringFactory}
 
 enum ViewType {
   case CALENDAR, TABLE, KANBAN, SETTINGS, TASK

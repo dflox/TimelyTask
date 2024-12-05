@@ -50,7 +50,7 @@ object TimelyTask extends App {
   // Create a binding reader for handling key sequences
   val bindingReader = new BindingReader(terminal.reader())
 
-  given inputHandler: InputHandler = new InputHandler
+  given inputHandler: KeyInputHandler = new KeyInputHandler
 
   val windowTUI = new WindowTUI()
 
