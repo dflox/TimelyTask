@@ -2,11 +2,8 @@
 package me.timelytask.model.builder
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.controller.ModelController
 import me.timelytask.model.{Deadline, Task}
-import me.timelytask.view.viewmodel.ViewModelStatus
 import me.timelytask.model.state.*
-import me.timelytask.model.settings.activeViewPublisher
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
