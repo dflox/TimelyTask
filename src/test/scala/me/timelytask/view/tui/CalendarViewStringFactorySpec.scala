@@ -14,12 +14,12 @@ class CalendarViewStringFactorySpec extends AnyWordSpec {
 
   "The CalendarTUI" should {
 
-    "update the view correctly" in {
+    "buildString the view correctly" in {
       val fixedDateTime = new DateTime(2024, 11, 6, 16, 55)
       val timeSelection = TimeSelection(fixedDateTime, 7, 1.hour)
       val calendarViewModel = CalendarViewModel(Model.default, timeSelection)
       val viewModel: ViewModel = calendarViewModel
-      val output = CalendarViewStringFactory.update(viewModel)
+      val output = CalendarViewStringFactory.buildString(viewModel)
 
       output should include(
         "-------------------------------------------------------------------------------\n" +
@@ -36,13 +36,13 @@ class CalendarViewStringFactorySpec extends AnyWordSpec {
       )
     }
 
-    "update the view correctly again" in {
+    "buildString the view correctly again" in {
       val fixedDateTime = new DateTime(2024, 11, 6, 16, 55)
       val timeSelection = TimeSelection(fixedDateTime, 7, 1.hour)
       val calendarViewModel = CalendarViewModel(Model.default, timeSelection)
       val viewModel: ViewModel = calendarViewModel
       val tuiModel = ModelTUI.default
-      val output = CalendarViewStringFactory.update(viewModel, tuiModel)
+      val output = CalendarViewStringFactory.buildString(viewModel, tuiModel)
 
       output should include(
         "-------------------------------------------------------------------------------\n" +

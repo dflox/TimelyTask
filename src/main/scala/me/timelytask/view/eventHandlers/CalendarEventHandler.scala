@@ -1,6 +1,10 @@
-package me.timelytask.view.EventHandlers
+package me.timelytask.view.eventHandlers
 
-class CalendarEventHandler extends EventHandler {
+import me.timelytask.view.events.{GoToDate, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek, ShowLessDays, ShowMoreDays, ShowWholeWeek}
+import me.timelytask.view.viewmodel.CalendarViewModel
+
+class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarViewModel]) extends
+                                                                 EventHandler[CalendarViewModel] {
   NextDay.setHandler(() => {
     Some(viewModel().copy(timeSelection = viewModel().timeSelection + 1.days))
   })

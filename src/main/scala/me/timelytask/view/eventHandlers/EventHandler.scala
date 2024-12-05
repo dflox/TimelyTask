@@ -1,4 +1,4 @@
-package me.timelytask.view.EventHandlers
+package me.timelytask.view.eventHandlers
 
 import me.timelytask.util.Publisher
 import me.timelytask.view.viewmodel.ViewModel

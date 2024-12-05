@@ -28,7 +28,7 @@ class WindowTUI(using viewModelPublisher: Publisher[ViewModel], terminal: Termin
 
   def renderActiveView(viewModel: ViewModel): Unit = {
     val tuiView: StringFactory = activeView()
-    writer.print(tuiView.update(viewModel, new ModelTUI(terminal.getHeight, terminal.getWidth)))
+    writer.print(tuiView.buildString(viewModel, new ModelTUI(terminal.getHeight, terminal.getWidth)))
   }
 }
 

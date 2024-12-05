@@ -2,10 +2,9 @@ package me.timelytask.view
 
 import me.timelytask.view.events.NextDay
 import me.timelytask.view.viewmodel.ViewModel
+import me.timelytask.view.view.CalendarView
 
-trait ViewManager {
-  def update(viewModel: ViewModel): Boolean
-  
-  val nextDay: NextDay = NextDay.createEvent()
+trait UIManager {
+  val calendarView: CalendarView
   
 }

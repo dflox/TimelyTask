@@ -9,11 +9,11 @@ import me.timelytask.controller.ThemeManager.{getTerminalBgColor, getTerminalCol
 import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.{colored, BOLD, ITALIC}
 
 object CalendarViewStringFactory extends StringFactory {
-  override def update(viewModel: ViewModel): String = {
-    update(viewModel, ModelTUI.default)
+  override def buildString(viewModel: ViewModel): String = {
+    buildString(viewModel, ModelTUI.default)
   }
 
-  override def update(viewModel: ViewModel, tuiModel: ModelTUI): String = {
+  override def buildString(viewModel: ViewModel, tuiModel: ModelTUI): String = {
     val calendarViewModel: CalendarViewModel = viewModel.asInstanceOf[CalendarViewModel]
     import tuiModel.*
     import calendarViewModel.*

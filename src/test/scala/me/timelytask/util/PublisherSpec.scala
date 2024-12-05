@@ -7,7 +7,7 @@ import org.mockito.Mockito.*
 
 class PublisherSpec extends AnyWordSpec with MockitoSugar {
   "The Publisher" should {
-    "add a listener and notify it on update" in {
+    "add a listener and notify it on buildString" in {
       val publisher = new Publisher[Int](0)
       val listener = mock[Int => Unit]
 
@@ -17,7 +17,7 @@ class PublisherSpec extends AnyWordSpec with MockitoSugar {
       verify(listener).apply(1)
     }
 
-    "update the value and notify all listeners" in {
+    "buildString the value and notify all listeners" in {
       val publisher = new Publisher[String]("initial")
       val listener1 = mock[String => Unit]
       val listener2 = mock[String => Unit]

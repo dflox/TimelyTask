@@ -5,11 +5,11 @@ import me.timelytask.view.tui.TuiUtils.{alignTop, columnSpacer, createLine, crea
 import me.timelytask.view.viewmodel.*
 
 object TaskViewStringFactory extends StringFactory {
-  override def update(viewModel: ViewModel): String = {
-    update(viewModel, ModelTUI.default)
+  override def buildString(viewModel: ViewModel): String = {
+    buildString(viewModel, ModelTUI.default)
   }
 
-  override def update(viewModel: ViewModel, TUIModel: ModelTUI): String = {
+  override def buildString(viewModel: ViewModel, TUIModel: ModelTUI): String = {
     val taskViewModel: TaskModel = viewModel.asInstanceOf[TaskModel]
     import TUIModel.*
     import taskViewModel.*
