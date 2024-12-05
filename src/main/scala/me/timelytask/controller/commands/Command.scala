@@ -12,12 +12,14 @@ trait Command[Args] {
     handler = Some(newHandler)
   }
 
-  def call(args: Args): Boolean = {
+  def doStep(args: Args): Boolean = {
     handler match {
       case Some(h) => h(args)
       case None => false
     }
   }
+
+  def undoStep: Boolean
 }
 
 trait CommandCompanion[T <: Command[Args], Args] {
@@ -27,22 +29,24 @@ trait CommandCompanion[T <: Command[Args], Args] {
     handler = Some(newHandler)
   }
 
-  def createCommand(): T = {
+  def createCommand(args: Args): T = {
     if (handler.isEmpty) throw new Exception("Handler not set for companion object")
-    val cmd = create()
+    val cmd = create(args)
     cmd.setHandler(handler.get)
     cmd
   }
 
-  protected def create(): T = {
+  protected def create(args: Args): T = {
     val constructor = getClass.getDeclaringClass.getDeclaredConstructor()
-    constructor.newInstance().asInstanceOf[T]
+    constructor.newInstance(args).asInstanceOf[T]
   }
 }
 
 
 case class StartApp() extends Command[Unit]
-object StartApp extends CommandCompanion[StartApp, Unit]
+object StartApp extends CommandCompanion[StartApp, Unit] {
+  def create(): StartApp = StartApp()
+}
 
 case class SaveFile() extends Command[String] // String represents the file path
 object SaveFile extends CommandCompanion[SaveFile, String]
