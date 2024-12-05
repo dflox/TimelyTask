@@ -1,10 +1,15 @@
 package me.timelytask.view.viewmodel
 
 import com.github.nscala_time.time.Imports.LocalTime
+import me.timelytask.model.settings.ViewType
 import me.timelytask.model.{Model, Task}
+import me.timelytask.util.Publisher
 
-case class TaskModel(model: Model) extends ViewModel {
-  val task: Task = model.tasks.headOption.getOrElse(Task.emptyTask)
+import java.util.UUID
+
+case class TaskEditViewModel()(using taskID: UUID, modelPublisher: Publisher[Model], 
+                             lastView: ViewType) extends ViewModel {
+  val task: Task = modelPublisher.getValue.tasks.filter(_.id == taskID).head
   val properties: List[(String, Any)] = List(
     "Description" -> task.description,
     "Priority" -> task.priority,
@@ -18,5 +23,4 @@ case class TaskModel(model: Model) extends ViewModel {
     "Recurrence Interval" -> task.recurrenceInterval
   )
   val longestProperty: String = "Recurrence Interval" + ": "
-
 }

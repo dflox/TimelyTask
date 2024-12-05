@@ -1,4 +1,4 @@
-package me.timelytask.view.view
+package me.timelytask.view.views
 
 import me.timelytask.view.viewmodel.ViewModel
 

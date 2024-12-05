@@ -2,7 +2,7 @@
 package me.timelytask.model
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.controller.TaskController
+import me.timelytask.controller.ModelController
 import me.timelytask.model.state.{OpenState, TaskState}
 import me.timelytask.view.viewmodel.{ViewModel, ViewModelStatus}
 import me.timelytask.model.settings.activeViewPublisher

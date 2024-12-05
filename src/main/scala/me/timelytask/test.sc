@@ -1,4 +1,4 @@
-import me.timelytask.controller.{CalendarController, PersistenceController}
+import me.timelytask.controller.PersistenceController
 import me.timelytask.model.Model
 import me.timelytask.model.settings.{NextDay, ViewType}
 import me.timelytask.model.utility.TimeSelection

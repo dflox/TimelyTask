@@ -1,28 +1,18 @@
 package me.timelytask.controller.commands
 
-class UndoManager {
-  private var undoStack: List[Command[_]] = Nil
-  private var redoStack: List[Command[_]] = Nil
+import me.timelytask.controller.commands.Command
 
-  def doStep(command: Command[_]): Boolean = {
-    command match {
-      case cmd: CommandWithSnapshot =>
-        if (cmd.doStep()) {
-          undoStack = cmd :: undoStack
-          redoStack = Nil
-          true
-        } else {
-          false
-        }
-      case cmd: CommandNormal =>
-        if (cmd.doStep()) {
-          undoStack = cmd :: undoStack
-          redoStack = Nil
-          true
-        } else {
-          false
-        }
-      case _ => false
+class UndoManager {
+  private var undoStack: List[Command[?]] = Nil
+  private var redoStack: List[Command[?]] = Nil
+
+  def doStep(command: Command[?]): Boolean = {
+    command.doStep() match {
+      case true =>
+        undoStack = command :: undoStack
+        redoStack = Nil
+        true
+      case false => false
     }
   }
 
@@ -30,24 +20,12 @@ class UndoManager {
     undoStack match {
       case Nil => false
       case head :: stack =>
-        head match {
-          case cmd: CommandWithSnapshot =>
-            if (cmd.undoStep()) {
-              undoStack = stack
-              redoStack = cmd :: redoStack
-              true
-            } else {
-              false
-            }
-          case cmd: CommandNormal =>
-            if (cmd.undoStep()) {
-              undoStack = stack
-              redoStack = cmd :: redoStack
-              true
-            } else {
-              false
-            }
-          case _ => false
+        head.undoStep() match {
+          case true =>
+            undoStack = stack
+            redoStack = head :: redoStack
+            true
+          case false => false
         }
     }
   }
@@ -56,24 +34,12 @@ class UndoManager {
     redoStack match {
       case Nil => false
       case head :: stack =>
-        head match {
-          case cmd: CommandWithSnapshot =>
-            if (cmd.doStep()) {
-              redoStack = stack
-              undoStack = cmd :: undoStack
-              true
-            } else {
-              false
-            }
-          case cmd: CommandNormal =>
-            if (cmd.doStep()) {
-              redoStack = stack
-              undoStack = cmd :: undoStack
-              true
-            } else {
-              false
-            }
-          case _ => false
+        head.doStep() match {
+          case true =>
+            redoStack = stack
+            undoStack = head :: undoStack
+            true
+          case false => false
         }
     }
   }

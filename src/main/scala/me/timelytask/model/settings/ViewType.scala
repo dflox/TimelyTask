@@ -24,5 +24,3 @@ object ViewType {
     case "task" => TASK
   }
 }
-
-given activeViewPublisher: Publisher[ViewType] = Publisher[ViewType](ViewType.CALENDAR)

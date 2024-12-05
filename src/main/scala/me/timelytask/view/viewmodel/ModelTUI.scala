@@ -1,8 +1,7 @@
 package me.timelytask.view.viewmodel
 
 case class ModelTUI(terminalHeight: Int,
-                    terminalWidth: Int
-                   ) {
+                    terminalWidth: Int) {
 }
 
 object ModelTUI {

@@ -1,7 +1,5 @@
 package me.timelytask.model.settings
 
-import me.timelytask.util.Publisher
-
 enum FileType {
   case JSON, XML, YAML
 

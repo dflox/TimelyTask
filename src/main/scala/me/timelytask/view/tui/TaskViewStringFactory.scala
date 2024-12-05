@@ -10,7 +10,7 @@ object TaskViewStringFactory extends StringFactory {
   }
 
   override def buildString(viewModel: ViewModel, TUIModel: ModelTUI): String = {
-    val taskViewModel: TaskModel = viewModel.asInstanceOf[TaskModel]
+    val taskViewModel: TaskEditViewModel = viewModel.asInstanceOf[TaskEditViewModel]
     import TUIModel.*
     import taskViewModel.*
 

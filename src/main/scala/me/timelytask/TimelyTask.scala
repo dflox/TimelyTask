@@ -1,6 +1,6 @@
 package me.timelytask
 
-import me.timelytask.controller.{CalendarController, CoreInitializer, KeyMapManager, PersistenceController, TaskController, keyMapManager}
+import me.timelytask.controller.{CoreInitializer, KeyMapManager, PersistenceController, ModelController, keyMapManager}
 import me.timelytask.model.Model
 import me.timelytask.model.settings.{Exit, StartApp, ViewType}
 import me.timelytask.model.utility.Unknown
@@ -28,15 +28,12 @@ object TimelyTask extends App {
   given viewModelPublisher: Publisher[ViewModel] = Publisher[ViewModel](DefaultViewModelProvider
     .defaultViewModel)
 
-  given calendarController: CalendarController = new CalendarController()
-
-  given taskController: TaskController = new TaskController()
+  given taskController: ModelController = new ModelController()
   
   println("CoreInitializer")
   given persistenceController: PersistenceController = new PersistenceController()
   
-  summon[CalendarController]
-  summon[TaskController]
+  summon[ModelController]
   summon[PersistenceController]
   //  ------------- END Core -------------
 
