@@ -12,9 +12,9 @@ trait Command[Args] {
     handler = Some(newHandler)
   }
 
-  def doStep(args: Args): Boolean = {
+  def doStep(): Boolean = {
     handler match {
-      case Some(h) => h(args)
+      case Some(h) => h()
       case None => false
     }
   }
