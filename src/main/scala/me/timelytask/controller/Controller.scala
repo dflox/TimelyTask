@@ -9,4 +9,13 @@ trait Controller(using modelPublisher: Publisher[Model]) extends MultiTypeObserv
   val model: () => Model = () => {
     modelPublisher.getValue
   }
+
+  given Conversion[Option[Model], Boolean] with {
+    def apply(option: Option[Model]): Boolean = option match {
+      case Some(model) =>
+        modelPublisher.update(model)
+        true
+      case None => false
+    }
+  }
 }

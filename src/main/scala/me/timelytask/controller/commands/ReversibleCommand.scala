@@ -11,7 +11,7 @@ trait RestoreHandler[Args, StateValue] {
   def apply(args: Args, value: StateValue): Boolean
 }
 
-trait ReversibleCommand[Args, StateValue](using handler: Handler[Args], args: Args,
+trait ReversibleCommand[Args, StateValue](handler: Handler[Args], args: Args,
                                           storeHandler: StoreHandler[Args, StateValue],
                                           restoreHandler: RestoreHandler[Args, StateValue])
   extends Command[Args] {
@@ -42,15 +42,16 @@ trait ReversibleCommand[Args, StateValue](using handler: Handler[Args], args: Ar
 }
 
 trait ReversibleCommandCompanion[StateValue, T <: ReversibleCommand[Args, StateValue], Args]{
-  private var handler: Option[Handler[Args]] = None
-  private var storeHandler: Option[StoreHandler[Args, StateValue]] = None
-  private var restoreHandler: Option[RestoreHandler[Args, StateValue]] = None
+  protected var handler: Option[Handler[Args]] = None
+  protected var storeHandler: Option[StoreHandler[Args, StateValue]] = None
+  protected var restoreHandler: Option[RestoreHandler[Args, StateValue]] = None
 
   def setHandler(newHandler: Handler[Args], newStoreHandler: StoreHandler[Args, StateValue],
                  newRestoreHandler: RestoreHandler[Args, StateValue]): Boolean = {
     handler = Some(newHandler)
     storeHandler = Some(newStoreHandler)
     restoreHandler = Some(newRestoreHandler)
+    true
   }
 
   def createCommand(args: Args): T = {
@@ -61,52 +62,45 @@ trait ReversibleCommandCompanion[StateValue, T <: ReversibleCommand[Args, StateV
   protected def create(args: Args): T
 }
 
-case class ChangeDataFilePath()(using handler: Handler[String], args: String,
+case class ChangeDataFilePath(handler: Handler[String], args: String,
                                 storeHandler: StoreHandler[String, String],
                                 restoreHandler: RestoreHandler[String, String])
-  extends ReversibleCommand[String, String]
+  extends ReversibleCommand[String, String](handler, args, storeHandler, restoreHandler)
 object ChangeDataFilePath extends ReversibleCommandCompanion[String, ChangeDataFilePath, String]{
-  protected def create(using handler: Handler[String], args: String,
-                       storeHandler: StoreHandler[String, String],
-                       restoreHandler: RestoreHandler[String, String]): ChangeDataFilePath = ChangeDataFilePath()
+  protected def create(args: String): ChangeDataFilePath = ChangeDataFilePath(handler.get, args, 
+    storeHandler.get, restoreHandler.get)
 }
 
-case class EditTask()(using handler: Handler[Task], args: Task,
+case class EditTask( handler: Handler[Task], args: Task,
                       storeHandler: StoreHandler[Task, Task], 
                       restoreHandler: RestoreHandler[Task, Task]) 
-  extends ReversibleCommand[Task, Task]
+  extends ReversibleCommand[Task, Task](handler, args, storeHandler, restoreHandler)
 object EditTask extends ReversibleCommandCompanion[Task, EditTask, Task]{
-  protected def create(using handler: Handler[Task], args: Task,
-                       storeHandler: StoreHandler[Task, Task],
-                       restoreHandler: RestoreHandler[Task, Task]): EditTask = EditTask()
+  protected def create(args: Task): EditTask = EditTask(handler.get, args, storeHandler.get, restoreHandler.get)
 }
 
-case class EditTag()(using handler: Handler[Tag], args: Tag,
+case class EditTag( handler: Handler[Tag], args: Tag,
                      storeHandler: StoreHandler[Tag, Tag],
                      restoreHandler: RestoreHandler[Tag, Tag])
-  extends ReversibleCommand[Tag, Tag]
+  extends ReversibleCommand[Tag, Tag](handler, args, storeHandler, restoreHandler)
 object EditTag extends ReversibleCommandCompanion[Tag, EditTag, Tag]{
-  protected def create(using handler: Handler[Tag], args: Tag,
-                       storeHandler: StoreHandler[Tag, Tag],
-                       restoreHandler: RestoreHandler[Tag, Tag]): EditTag = EditTag()
+  protected def create(args: Tag): EditTag = EditTag(handler.get, args, storeHandler.get, restoreHandler.get)
 }
 
-case class EditPriority()(using handler: Handler[Priority], args: Priority,
+case class EditPriority( handler: Handler[Priority], args: Priority,
                           storeHandler: StoreHandler[Priority, Priority],
                           restoreHandler: RestoreHandler[Priority, Priority])
-  extends ReversibleCommand[Priority, Priority]
+  extends ReversibleCommand[Priority, Priority](handler, args, storeHandler, restoreHandler)
 object EditPriority extends ReversibleCommandCompanion[Priority, EditPriority, Priority]{
-  protected def create(using handler: Handler[Priority], args: Priority,
-                       storeHandler: StoreHandler[Priority, Priority],
-                       restoreHandler: RestoreHandler[Priority, Priority]): EditPriority = EditPriority()
+  protected def create(args: Priority): EditPriority = EditPriority(handler.get, args, storeHandler.get, 
+    restoreHandler.get)
 }
 
-case class EditState()(using handler: Handler[State], args: State,
+case class EditState(handler: Handler[State], args: State,
                        storeHandler: StoreHandler[State, State],
                         restoreHandler: RestoreHandler[State, State])
-  extends ReversibleCommand[State, State] 
+  extends ReversibleCommand[State, State] (handler, args, storeHandler, restoreHandler)
 object EditState extends ReversibleCommandCompanion[State, EditState, State]{
-  protected def create(using handler: Handler[State], args: State,
-                       storeHandler: StoreHandler[State, State],
-                       restoreHandler: RestoreHandler[State, State]): EditState = EditState()
+  protected def create(args: State): EditState = EditState(handler.get, args, storeHandler.get, 
+    restoreHandler.get)
 }

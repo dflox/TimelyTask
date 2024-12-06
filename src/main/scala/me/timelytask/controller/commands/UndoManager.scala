@@ -7,26 +7,24 @@ class UndoManager {
   private var redoStack: List[Command[?]] = Nil
 
   def doStep(command: Command[?]): Boolean = {
-    command.doStep() match {
-      case true =>
-        undoStack = command :: undoStack
-        redoStack = Nil
-        true
-      case false => false
-    }
+    if command.doStep then
+      undoStack = command :: undoStack
+      redoStack = Nil
+      true
+    else
+      false
   }
 
   def undoStep(): Boolean = {
     undoStack match {
       case Nil => false
       case head :: stack =>
-        head.undoStep() match {
-          case true =>
-            undoStack = stack
-            redoStack = head :: redoStack
-            true
-          case false => false
-        }
+        if head.undoStep then
+          undoStack = stack
+          redoStack = head :: redoStack
+          true
+        else
+          false
     }
   }
 
@@ -34,13 +32,12 @@ class UndoManager {
     redoStack match {
       case Nil => false
       case head :: stack =>
-        head.doStep() match {
-          case true =>
-            redoStack = stack
-            undoStack = head :: undoStack
-            true
-          case false => false
-        }
+        if head.doStep then
+          redoStack = stack
+          undoStack = head :: undoStack
+          true
+        else
+          false
     }
   }
 }

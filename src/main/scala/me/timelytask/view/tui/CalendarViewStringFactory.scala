@@ -57,7 +57,7 @@ object CalendarViewStringFactory extends StringFactory {
 
     // Create the time and task rows
     val (timeSlice, lines) = calculatePeriod(heightAvailable, timeSelection.timeFrameInterval)
-    builder.append(createRows(timeSlice, lines, timeSelection, model.tasks, spacePerColumn,
+    builder.append(createRows(timeSlice, lines, timeSelection, model().tasks, spacePerColumn,
       colorText1))
     builder.append(createLine(actualWidth) + "\n")
     builder.append(alignTop(terminalHeight, lines + headerHeight + footerHeight) + "\n")

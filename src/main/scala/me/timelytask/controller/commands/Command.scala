@@ -7,20 +7,34 @@ trait Handler[Args] {
   def apply(args: Args): Boolean
 }
 
-trait Command[Args](using handler: Handler[Args], args: Args) {
-  def doStep(): Boolean = {
-    handler(args)
-  }
+trait Command[Args] {
+  def doStep: Boolean
 
   def redo: Boolean
 
   def undoStep: Boolean
 }
 
+trait UndoableCommand[Args](handler: Handler[Args], args: Args) extends Command[Args] {
+  private var done: Boolean = false
+
+  override def doStep(): Boolean = {
+    if (!done) {
+      done = handler.apply(args)
+      done
+    } else false
+  }
+
+  override def undoStep: Boolean = {
+    false
+  }
+  
+  override def redo: Boolean = doStep()
+}
 
 
 trait CommandCompanion[T <: Command[Args], Args] {
-  private var handler: Option[Handler[Args]] = None
+  protected var handler: Option[Handler[Args]] = None
 
   def setHandler(newHandler: Handler[Args]): Boolean = {
     handler = Some(newHandler)
@@ -35,26 +49,27 @@ trait CommandCompanion[T <: Command[Args], Args] {
   protected def create(args: Args): T
 }
 
-case class StartApp()(using handler: Handler[Unit], args: Unit) extends Command[Unit] {
-  def redo: Boolean = false
-  def undoStep: Boolean = false
-}
+case class StartApp(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
 object StartApp extends CommandCompanion[StartApp, Unit] {
-  protected def create(using args: Unit, handler: Handler[Unit]): StartApp = StartApp()
+  protected def create(args: Unit): StartApp = StartApp(handler.get, args)
 }
 
-case class SaveData()(using handler: Handler[Unit], args: Unit) extends Command[Unit]{
-  def redo: Boolean = false
-  def undoStep: Boolean = false
-}
+case class SaveData(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
 object SaveData extends CommandCompanion[SaveData, Unit]{
-  protected def create(using args: Unit, handler: Handler[Unit]): SaveData = SaveData()
+  protected def create(args: Unit): SaveData = SaveData(handler.get, args)
 }
 
-case class LoadData()(using handler: Handler[Unit], args: Unit) extends Command[Unit]{
-  def redo: Boolean = false
-  def undoStep: Boolean = false
-}
+case class LoadData(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
 object LoadData extends CommandCompanion[LoadData, Unit]{
-  protected def create(using args: Unit, handler: Handler[Unit]): LoadData = LoadData()
+  protected def create(args: Unit): LoadData = LoadData(handler.get, args)
+}
+
+case class Exit(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
+object Exit extends CommandCompanion[Exit, Unit]{
+  protected def create(args: Unit): Exit = Exit(handler.get, args)
+}
+
+case class SaveAndExit(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
+object SaveAndExit extends CommandCompanion[SaveAndExit, Unit]{
+  protected def create(args: Unit): SaveAndExit = SaveAndExit(handler.get, args)
 }

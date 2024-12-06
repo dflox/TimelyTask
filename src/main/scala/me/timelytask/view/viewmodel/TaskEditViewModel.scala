@@ -9,7 +9,7 @@ import java.util.UUID
 
 case class TaskEditViewModel()(using taskID: UUID, modelPublisher: Publisher[Model], 
                              lastView: ViewType) extends ViewModel {
-  val task: Task = modelPublisher.getValue.tasks.filter(_.id == taskID).head
+  val task: Task = modelPublisher.getValue.tasks.filter(_.uuid.equals(taskID)).head
   val properties: List[(String, Any)] = List(
     "Description" -> task.description,
     "Priority" -> task.priority,
