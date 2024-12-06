@@ -1,4 +1,4 @@
-package me.timelytask.controller
+package me.timelytask.view.keymaps
 
 import me.timelytask.model
 import me.timelytask.model.settings
@@ -7,8 +7,6 @@ import me.timelytask.model.utility.*
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.Event
 import org.jline.keymap.KeyMap
-
-given keyMapManager: KeyMapManager.type = KeyMapManager
 
 object KeyMapManager{
   val activeView: () => ViewType = () => activeViewPublisher.getValue

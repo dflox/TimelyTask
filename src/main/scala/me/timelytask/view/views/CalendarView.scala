@@ -1,6 +1,7 @@
 package me.timelytask.view.views
 
-import me.timelytask.view.events.{GoToDate, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek, ShowLessDays, ShowMoreDays, ShowWholeWeek}
+import me.timelytask.util.Publisher
+import me.timelytask.view.events.{Event, GoToDate, GoToToday, NextDay, NextWeek, PreviousDay, PreviousWeek, ShowLessDays, ShowMoreDays, ShowWholeWeek}
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
 trait CalendarView extends View{

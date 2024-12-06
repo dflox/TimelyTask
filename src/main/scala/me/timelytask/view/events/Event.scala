@@ -4,38 +4,30 @@ trait Handler[Args] {
   def apply(args: Args): Boolean
 }
 
-trait Event[Args] {
-  private var handler: Option[Handler[Args]] = None
+trait ArgumentProvider[Args] {
+  def getArgs: Args
+}
 
-  def setHandler(newHandler: Handler[Args]): Unit = {
-    if (handler.isDefined) throw new Exception("Handler already set")
-    handler = Some(newHandler)
-  }
-
+trait Event[Args](handler: Handler[Args],
+                  argumentProvider: ArgumentProvider[Args],
+                  isPossible: () => Boolean) {
   def call(args: Args): Boolean = {
-    handler match {
-      case Some(h) => h(args)
-      case None => false
-    }
+    if (isPossible()) handler.apply(argumentProvider.getArgs)
+    else false
   }
 }
 
 trait EventCompanion[T <: Event[Args], Args] {
-  private var handler: Option[Handler[Args]] = None
-
+  protected var handler: Option[Handler[Args]] = None
+  
   def setHandler(newHandler: Handler[Args]): Unit = {
     handler = Some(newHandler)
   }
 
-  def createEvent(): T = {
+  def createEvent(argumentProvider: ArgumentProvider[Args],isPossible: () => Boolean) : T = {
     if (handler.isEmpty) throw new Exception("Handler not set for companion object")
-    val cmd = create()
-    cmd.setHandler(handler.get)
-    cmd
+    create(argumentProvider, isPossible)
   }
 
-  protected def create(): T = {
-    val constructor = getClass.getDeclaringClass.getDeclaredConstructor()
-    constructor.newInstance().asInstanceOf[T]
-  }
+  protected def create(argumentProvider: ArgumentProvider[Args], isPossible: () => Boolean): T
 }

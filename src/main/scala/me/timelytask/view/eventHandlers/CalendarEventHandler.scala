@@ -5,8 +5,12 @@ import me.timelytask.view.events.{GoToDate, GoToToday, NextDay, NextWeek, Previo
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.util.Publisher
 import com.github.nscala_time.time.Imports.richInt
+import me.timelytask.controller.commands.UndoManager
+import me.timelytask.model.Model
 
-class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarViewModel]) extends
+class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarViewModel],
+                           modelPublisher: Publisher[Model],
+                           undoManager: UndoManager) extends
                                                                  EventHandler[CalendarViewModel] {
   val viewModel: () => CalendarViewModel = () => calendarViewModelPublisher.getValue
     .asInstanceOf[CalendarViewModel]
