@@ -8,7 +8,15 @@ import me.timelytask.view.views.CalendarView
 class CalendarKeymap(calendarView: CalendarView) {
   def handleKey(key: Key): Boolean = {
     key match {
-      case ArrowUp => calendarView.nextDay.call(())
+      case ShiftRight => calendarView.nextDay.call(())
+      case ShiftLeft => calendarView.previousDay.call(())
+      case CtrlRight => calendarView.nextWeek.call(())
+      case CtrlLeft => calendarView.previousWeek.call(())
+      case T => calendarView.goToToday.call(())
+      case W => calendarView.showWholeWeek.call(())
+      case CtrlPlus => calendarView.showMoreDays.call(())
+      case CtrlMinus => calendarView.showLessDays.call(())
+      case _ => false
     }
   }
 }

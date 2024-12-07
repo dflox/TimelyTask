@@ -2,12 +2,14 @@ package me.timelytask.view.eventHandlers
 
 import me.timelytask.controller.commands.UndoManager
 import me.timelytask.model.Model
+import me.timelytask.model.settings.ViewType
 import me.timelytask.util.Publisher
 import me.timelytask.view.viewmodel.ViewModel
 
 trait EventHandler[T <: ViewModel](using viewModelPublisher: Publisher[T],
                                    modelPublisher: Publisher[Model],
-                                   undoManager: UndoManager) {
+                                   undoManager: UndoManager,
+                                   activeViewPublisher: Publisher[ViewType]) {
 
   val model: () => Model = () => modelPublisher.getValue
   

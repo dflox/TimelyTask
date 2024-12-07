@@ -1,7 +1,7 @@
 package me.timelytask.view
 
 import me.timelytask.model.settings.ViewType
-import me.timelytask.model.settings.ViewType.{CALENDAR, TASK}
+import me.timelytask.model.settings.ViewType.{CALENDAR, TASKEdit}
 import me.timelytask.model.utility.Key
 import me.timelytask.util.Publisher
 import me.timelytask.view.tui.{CalendarViewStringFactory, StringFactory, TaskViewStringFactory}
@@ -35,7 +35,7 @@ class WindowTUI(using viewModelPublisher: Publisher[ViewModel], terminal: Termin
 given Conversion[ViewType, StringFactory] with {
   def apply(viewType: ViewType): StringFactory = viewType match {
     case CALENDAR => CalendarViewStringFactory
-    case TASK => TaskViewStringFactory
+    case TASKEdit => TaskViewStringFactory
     //case _ => CalendarTUI
     //    case TABLE => ???
     //    case KANBAN => ???

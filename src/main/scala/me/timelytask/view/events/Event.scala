@@ -1,33 +1,31 @@
 package me.timelytask.view.events
 
+import me.timelytask.model.utility.InputError
+
 trait Handler[Args] {
   def apply(args: Args): Boolean
 }
 
-trait ArgumentProvider[Args] {
-  def getArgs: Args
-}
-
-trait Event[Args](handler: Handler[Args],
-                  argumentProvider: ArgumentProvider[Args],
-                  isPossible: () => Boolean) {
+trait Event[Args](protected val handler: Handler[Args],
+                  isPossible: Args => Option[InputError]) {
   def call(args: Args): Boolean = {
-    if (isPossible()) handler.apply(argumentProvider.getArgs)
+    if (isPossible(args).nonEmpty) handler.apply(args)
     else false
   }
 }
 
 trait EventCompanion[T <: Event[Args], Args] {
   protected var handler: Option[Handler[Args]] = None
+  protected var isPossible: Option[ Args => Option[InputError]] = None
   
-  def setHandler(newHandler: Handler[Args]): Unit = {
+  def setHandler(newHandler: Handler[Args], isPossible: Args => Option[InputError]): Unit = {
     handler = Some(newHandler)
   }
 
-  def createEvent(argumentProvider: ArgumentProvider[Args],isPossible: () => Boolean) : T = {
+  def createEvent: T = {
     if (handler.isEmpty) throw new Exception("Handler not set for companion object")
-    create(argumentProvider, isPossible)
+    create
   }
 
-  protected def create(argumentProvider: ArgumentProvider[Args], isPossible: () => Boolean): T
+  protected def create: T
 }

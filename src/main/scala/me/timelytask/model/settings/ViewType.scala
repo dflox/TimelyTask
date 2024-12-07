@@ -1,14 +1,14 @@
 package me.timelytask.model.settings
 
 enum ViewType {
-  case CALENDAR, TABLE, KANBAN, SETTINGS, TASK
+  case CALENDAR, TABLE, KANBAN, SETTINGS, TASKEdit
 
   override def toString: String = this match {
     case CALENDAR => "calendar"
     case TABLE => "table"
     case KANBAN => "kanban"
     case SETTINGS => "settings"
-    case TASK => "task"
+    case TASKEdit => "task"
   }
 }
 
@@ -18,6 +18,6 @@ object ViewType {
     case "table" => TABLE
     case "kanban" => KANBAN
     case "settings" => SETTINGS
-    case "task" => TASK
+    case "task" => TASKEdit
   }
 }

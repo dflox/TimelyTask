@@ -1,15 +1,18 @@
 package me.timelytask.view.viewmodel
 
 import com.github.nscala_time.time.Imports.LocalTime
+import me.timelytask.model.builder.TaskBuilder
 import me.timelytask.model.settings.ViewType
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
 
 import java.util.UUID
 
-case class TaskEditViewModel()(using taskID: UUID, modelPublisher: Publisher[Model], 
-                             lastView: ViewType) extends ViewModel {
-  val task: Task = modelPublisher.getValue.tasks.filter(_.uuid.equals(taskID)).head
+case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
+                             lastView: ViewType, isNewTask: Boolean)
+                            (using modelPublisher: Publisher[Model])
+  extends ViewModel {
+  val taskBuilder: TaskBuilder = TaskBuilder(task)
   val properties: List[(String, Any)] = List(
     "Description" -> task.description,
     "Priority" -> task.priority,

@@ -1,91 +1,66 @@
 package me.timelytask.view.events
 
-case class NextDay(handler: Handler[Unit], 
-                   argumentProvider: ArgumentProvider[Unit],
-                   isPossible: () => Boolean) 
-  extends Event[Unit](handler, argumentProvider, isPossible)
+import me.timelytask.model.utility.InputError
+
+case class NextDay(handler: Handler[Unit],
+                   isPossible: Unit => Option[InputError]) 
+  extends Event[Unit](handler, isPossible)
 case object NextDay extends EventCompanion[NextDay, Unit]{
-  override protected def create(argumentProvider: ArgumentProvider[Unit], 
-                      isPossible: () => Boolean): NextDay = NextDay(handler.get, 
-    argumentProvider, isPossible)
+  override protected def create: NextDay = NextDay(handler.get, isPossible.get)
 }
 
 case class PreviousDay(handler: Handler[Unit],
-                       argumentProvider: ArgumentProvider[Unit],
-                       isPossible: () => Boolean)
-  extends Event[Unit](handler, argumentProvider, isPossible)
+                       isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 case object PreviousDay extends EventCompanion[PreviousDay, Unit]{
-  override protected def create(argumentProvider: ArgumentProvider[Unit],
-                      isPossible: () => Boolean): PreviousDay = PreviousDay(handler.get,
-    argumentProvider, isPossible)
+  override protected def create: PreviousDay = PreviousDay(handler.get, isPossible.get)
 }
 
 case class NextWeek(handler: Handler[Unit],
-                    argumentProvider: ArgumentProvider[Unit],
-                    isPossible: () => Boolean)
-  extends Event[Unit](handler, argumentProvider, isPossible)
+                    isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 case object NextWeek extends EventCompanion[NextWeek, Unit]{
-  override protected def create(argumentProvider: ArgumentProvider[Unit],
-                      isPossible: () => Boolean): NextWeek = NextWeek(handler.get,
-    argumentProvider, isPossible)
+  override protected def create: NextWeek = NextWeek(handler.get, isPossible.get)
 }
 
 case class PreviousWeek(handler: Handler[Unit],
-                        argumentProvider: ArgumentProvider[Unit],
-                        isPossible: () => Boolean)
-  extends Event[Unit](handler, argumentProvider, isPossible)
+                        isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 case object PreviousWeek extends EventCompanion[PreviousWeek, Unit]{
-  override protected def create(argumentProvider: ArgumentProvider[Unit],
-                      isPossible: () => Boolean): PreviousWeek = PreviousWeek(handler.get,
-    argumentProvider, isPossible)
+  override protected def create: PreviousWeek = PreviousWeek(handler.get, isPossible.get)
 }
 
 case class GoToToday(handler: Handler[Unit],
-                     argumentProvider: ArgumentProvider[Unit],
-                     isPossible: () => Boolean)
-  extends Event[Unit](handler, argumentProvider, isPossible)
+                     isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 case object GoToToday extends EventCompanion[GoToToday, Unit]{
-  override protected def create(argumentProvider: ArgumentProvider[Unit],
-                      isPossible: () => Boolean): GoToToday = GoToToday(handler.get,
-    argumentProvider, isPossible)
+  override protected def create: GoToToday = GoToToday(handler.get, isPossible.get)
 }
 
 case class GoToDate(handler: Handler[Unit],
-                    argumentProvider: ArgumentProvider[Unit],
-                    isPossible: () => Boolean)
-  extends Event[Unit](handler, argumentProvider, isPossible)
+                    isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 case object GoToDate extends EventCompanion[GoToDate, Unit]{
-  override protected def create(argumentProvider: ArgumentProvider[Unit],
-                      isPossible: () => Boolean): GoToDate = GoToDate(handler.get,
-    argumentProvider, isPossible)
+  override protected def create: GoToDate = GoToDate(handler.get, isPossible.get)
 }
 
 case class ShowWholeWeek(handler: Handler[Unit],
-                         argumentProvider: ArgumentProvider[Unit],
-                         isPossible: () => Boolean)
-  extends Event[Unit](handler, argumentProvider, isPossible)
+                         isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 case object ShowWholeWeek extends EventCompanion[ShowWholeWeek, Unit]{
-  override protected def create(argumentProvider: ArgumentProvider[Unit],
-                      isPossible: () => Boolean): ShowWholeWeek = ShowWholeWeek(handler.get,
-    argumentProvider, isPossible)
+  override protected def create: ShowWholeWeek = ShowWholeWeek(handler.get, isPossible.get)
 }
 
 case class ShowMoreDays(handler: Handler[Unit],
-                        argumentProvider: ArgumentProvider[Unit],
-                        isPossible: () => Boolean)
-  extends Event[Unit](handler, argumentProvider, isPossible)
+                        isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 case object ShowMoreDays extends EventCompanion[ShowMoreDays, Unit]{
-  override protected def create(argumentProvider: ArgumentProvider[Unit],
-                      isPossible: () => Boolean): ShowMoreDays = ShowMoreDays(handler.get,
-    argumentProvider, isPossible)
+  override protected def create: ShowMoreDays = ShowMoreDays(handler.get, isPossible.get)
 }
 
 case class ShowLessDays(handler: Handler[Unit],
-                        argumentProvider: ArgumentProvider[Unit],
-                        isPossible: () => Boolean)
-  extends Event[Unit](handler, argumentProvider, isPossible)
+                        isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 case object ShowLessDays extends EventCompanion[ShowLessDays, Unit]{
-  override protected def create(argumentProvider: ArgumentProvider[Unit],
-                      isPossible: () => Boolean): ShowLessDays = ShowLessDays(handler.get,
-    argumentProvider, isPossible)
+  override protected def create: ShowLessDays = ShowLessDays(handler.get, isPossible.get)
 }

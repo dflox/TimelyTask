@@ -24,7 +24,7 @@ object Config {
         keymap
       },
       ViewType.TABLE -> new KeyMap[Event](),
-      ViewType.TASK -> new KeyMap[Event](),
+      ViewType.TASKEdit -> new KeyMap[Event](),
       ViewType.KANBAN -> new KeyMap[Event](),
       ViewType.SETTINGS -> new KeyMap[Event]()
     ),

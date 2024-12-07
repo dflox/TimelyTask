@@ -42,7 +42,7 @@ object KeyMapManager{
       )
     },
     ViewType.TABLE -> Map(),
-    ViewType.TASK -> Map(
+    ViewType.TASKEdit -> Map(
       MoveDown -> NextField,
       MoveUp -> PreviousField,
       CtrlS -> SaveTask
