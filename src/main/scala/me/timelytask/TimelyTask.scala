@@ -6,8 +6,8 @@ import me.timelytask.model.settings.{Exit, StartApp, ViewType}
 import me.timelytask.model.utility.Unknown
 import me.timelytask.util.Publisher
 import me.timelytask.view.*
-import me.timelytask.view.keymaps.KeyMapManager
-import me.timelytask.view.viewmodel.{DefaultViewModelProvider, ViewModel}
+import me.timelytask.view.tui.KeyMapManager
+import me.timelytask.view.viewmodel.ViewModel
 import org.jline.keymap.BindingReader
 import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}

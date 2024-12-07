@@ -7,13 +7,13 @@ import me.timelytask.util.Publisher
 import com.github.nscala_time.time.Imports.richInt
 import me.timelytask.controller.commands.UndoManager
 import me.timelytask.model.Model
-import me.timelytask.model.settings.ViewType
+import me.timelytask.model.settings.{CALENDAR, ViewType}
 
 class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarViewModel],
                            modelPublisher: Publisher[Model],
                            undoManager: UndoManager,
                            activeViewPublisher: Publisher[ViewType]) 
-  extends EventHandler[CalendarViewModel] {
+  extends EventHandler[CALENDAR, CalendarViewModel]{
   
   val viewModel: () => CalendarViewModel = () => calendarViewModelPublisher.getValue
     .asInstanceOf[CalendarViewModel]

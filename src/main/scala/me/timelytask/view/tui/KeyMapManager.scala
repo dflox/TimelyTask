@@ -1,4 +1,4 @@
-package me.timelytask.view.keymaps
+package me.timelytask.view.tui
 
 import me.timelytask.model
 import me.timelytask.model.settings
@@ -9,52 +9,6 @@ import me.timelytask.view.events.Event
 import org.jline.keymap.KeyMap
 
 object KeyMapManager{
-  val activeView: () => ViewType = () => activeViewPublisher.getValue
-
-  def getActiveActionKeymap: Map[Key, Event] = {
-    actionKeyMaps(activeView())
-  }
-
-  def getGlobalActionKeymap: Map[Key, Event] = {
-    globalActionKeymap
-  }
-
-  def setGlobalActionKeymap(actionKeyMap: Map[Key, Event]): Unit = {
-    globalActionKeymap = actionKeyMap
-  }
-
-  def setKeymap(name: ViewType, actionKeyMap: Map[Key, Event]): Unit = {
-    actionKeyMaps = actionKeyMaps + (name -> actionKeyMap)
-  }
-
-
-  private var actionKeyMaps: Map[ViewType, Map[Key, Event]]  = Map(
-    ViewType.CALENDAR -> {
-      Map(
-        MoveRight -> NextDay,
-        MoveLeft -> PreviousDay,
-        CtrlRight -> NextWeek,
-        CtrlLeft -> PreviousWeek,
-        T -> GoToToday,
-        W -> ShowWholeWeek,
-        Plus -> ShowMoreDays,
-        Minus -> ShowLessDays
-      )
-    },
-    ViewType.TABLE -> Map(),
-    ViewType.TASKEdit -> Map(
-      MoveDown -> NextField,
-      MoveUp -> PreviousField,
-      CtrlS -> SaveTask
-    ),
-    ViewType.KANBAN -> Map(),
-    ViewType.SETTINGS -> Map()
-  )
-  private var globalActionKeymap: Map[Key, Event] = Map(
-    CtrlN -> AddTask,
-    CtrlQ -> Exit,
-  )
-
   val keyMap: KeyMap[Key] = {
     val keyMap = new KeyMap[Key]()
     // Arrow keys (with both common variants)

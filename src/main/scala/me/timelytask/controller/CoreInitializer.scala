@@ -3,7 +3,7 @@ package me.timelytask.controller
 import me.timelytask.util.Publisher
 import me.timelytask.model.Model
 import me.timelytask.model.settings.ViewType
-import me.timelytask.view.viewmodel.{DefaultViewModelProvider, ViewModel}
+import me.timelytask.view.viewmodel.ViewModel
 
 trait CoreInitializer {
 //  summon[Publisher[ViewType]]

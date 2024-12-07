@@ -1,7 +1,7 @@
 package me.timelytask.view.eventHandlers
 
 import me.timelytask.controller.commands.{AddTask, EditTask, UndoManager}
-import me.timelytask.model.settings.ViewType
+import me.timelytask.model.settings.{TASKEdit, ViewType}
 import me.timelytask.model.utility.InputError
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
@@ -12,7 +12,7 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
                            modelPublisher: Publisher[Model],
                            undoManager: UndoManager,
                            activeViewPublisher: Publisher[ViewType])
-  extends EventHandler[TaskEditViewModel] {
+  extends EventHandler[TASKEdit, TaskEditViewModel] {
 
   val viewModel: () => TaskEditViewModel = () => taskEditViewModelPublisher.getValue
 
