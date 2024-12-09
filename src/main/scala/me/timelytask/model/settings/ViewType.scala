@@ -1,7 +1,15 @@
 package me.timelytask.model.settings
 
-sealed trait ViewType {
-  override def toString: String
+enum ViewType {
+  case CALENDAR, TABLE, KANBAN, SETTINGS, TASK
+
+  override def toString: String = this match {
+    case CALENDAR => "calendar"
+    case TABLE => "table"
+    case KANBAN => "kanban"
+    case SETTINGS => "settings"
+    case TASK => "task"
+  }
 }
 
 object ViewType {
@@ -10,36 +18,6 @@ object ViewType {
     case "table" => TABLE
     case "kanban" => KANBAN
     case "settings" => SETTINGS
-    case "taskedit" => TASKEdit
+    case "task" => TASK
   }
-}
-
-trait CALENDAR extends ViewType
-
-case object CALENDAR extends ViewType {
-  override def toString: String = "calendar"
-}
-
-trait TABLE extends ViewType
-
-case object TABLE extends ViewType {
-  override def toString: String = "table"
-}
-
-trait KANBAN extends ViewType
-
-case object KANBAN extends ViewType {
-  override def toString: String = "kanban"
-}
-
-trait SETTINGS extends ViewType
-
-case object SETTINGS extends ViewType {
-  override def toString: String = "settings"
-}
-
-trait TASKEdit extends ViewType
-
-case object TASKEdit extends ViewType {
-  override def toString: String = "taskedit"
 }

@@ -130,10 +130,6 @@ case object CtrlY extends Key
 
 case object CtrlZ extends Key
 
-case object CtrlPlus extends Key
-
-case object CtrlMinus extends Key
-
 // Letter keys
 case object A extends Key
 

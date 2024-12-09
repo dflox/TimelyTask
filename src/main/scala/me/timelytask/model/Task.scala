@@ -8,17 +8,17 @@ import me.timelytask.model.builder.TaskBuilder
 import java.util.UUID
 import scala.collection.immutable.HashSet
 
-case class Task(name: String = "",
-                description: String = "",
-                priority: UUID = null,
+case class Task(name: String,
+                description: String,
+                priority: UUID,
                 tags: HashSet[UUID] = new HashSet[UUID](),
-                deadline: Deadline = Deadline(DateTime.now() + 1.day, None, None),
-                scheduleDate: DateTime = DateTime.now(),
+                deadline: Deadline,
+                scheduleDate: DateTime,
                 state: TaskState = new OpenState,
-                tedDuration: Period = 1.hour.toPeriod,
+                tedDuration: Period,
                 dependentOn: HashSet[UUID] = new HashSet[UUID](),
-                reoccurring: Boolean = false,
-                recurrenceInterval: Period = 1.week.toPeriod) {
+                reoccurring: Boolean,
+                recurrenceInterval: Period) {
 
   val uuid: UUID = UUID.randomUUID()
   val realDuration: Option[Period] = None
@@ -37,19 +37,10 @@ case class Task(name: String = "",
     state.cancel(this)
   }
   def extendDeadline(extension: Period): Task = state.extendDeadline(this, extension)
-  
-  def isValid: Option[String] = {
-    if (name.isEmpty) {
-      Some("Name cannot be empty.")
-    } else if (priority == null) {
-      Some("Please choose a priority for this task.")
-    } else {
-      None
-    }
-  }
 }
 
 object Task {
+  // wird jetzt mit Builder erstellt (Builder Pattern)
   val exampleTask : Task = TaskBuilder()
     .setName("Example Task")
     .setDescription("This is an example task")
@@ -62,5 +53,19 @@ object Task {
     .setDependentOn(HashSet())
     .setReoccurring(false)
     .setRecurrenceInterval(1.week.toPeriod)
+    .build()
+
+  val emptyTask : Task = TaskBuilder()
+    .setName("")
+    .setDescription("")
+    .setPriority(UUID.randomUUID())
+    .setTags(HashSet())
+    .setDeadline(Deadline(DateTime.now(), None, None))
+    .setScheduleDate(DateTime.now())
+    .setState(new OpenState)
+    .setTedDuration(0.seconds.toPeriod)
+    .setDependentOn(HashSet())
+    .setReoccurring(false)
+    .setRecurrenceInterval(0.seconds.toPeriod)
     .build()
 }

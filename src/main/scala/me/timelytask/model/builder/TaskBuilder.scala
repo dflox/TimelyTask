@@ -8,18 +8,18 @@ import me.timelytask.model.state.*
 import java.util.UUID
 import scala.collection.immutable.HashSet
 
-class TaskBuilder(defaultInstance: Task = Task()) extends Builder[Task](defaultInstance) {
-  private var name: String = defaultInstance.name
-  private var description: String = defaultInstance.description
-  private var priority: UUID = defaultInstance.uuid
-  private var tags: HashSet[UUID] = defaultInstance.tags
-  private var deadline: Deadline = defaultInstance.deadline
-  private var scheduleDate: DateTime = defaultInstance.scheduleDate
-  private var state: TaskState = defaultInstance.state
-  private var tedDuration: Period = defaultInstance.tedDuration
-  private var dependentOn: HashSet[UUID] = defaultInstance.dependentOn
-  private var reoccurring: Boolean = defaultInstance.reoccurring
-  private var recurrenceInterval: Period = defaultInstance.recurrenceInterval
+class TaskBuilder {
+  private var name: String = ""
+  private var description: String = ""
+  private var priority: UUID = UUID.randomUUID()
+  private var tags: HashSet[UUID] = HashSet()
+  private var deadline: Deadline = Deadline(DateTime.now(), None, None)
+  private var scheduleDate: DateTime = DateTime.now()
+  private var state: TaskState = new OpenState
+  private var tedDuration: Period = 0.seconds.toPeriod
+  private var dependentOn: HashSet[UUID] = HashSet()
+  private var reoccurring: Boolean = false
+  private var recurrenceInterval: Period = 0.seconds.toPeriod
 
   def setName(name: String): TaskBuilder = {
     this.name = name
@@ -76,7 +76,7 @@ class TaskBuilder(defaultInstance: Task = Task()) extends Builder[Task](defaultI
     this
   }
 
-  override def build(): Task = {
+  def build(): Task = {
     Task(name, description, priority, tags, deadline, scheduleDate, state, tedDuration, dependentOn, reoccurring, recurrenceInterval)
   }
 }
