@@ -1,9 +1,9 @@
 package me.timelytask.view
 
+import me.timelytask.controller.keyMapManager
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.Key
 import me.timelytask.view.events.Event
-import me.timelytask.view.keymaps.keyMapManager
 
 
 class KeyInputHandler() {

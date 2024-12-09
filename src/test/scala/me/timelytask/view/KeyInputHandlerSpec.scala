@@ -8,8 +8,8 @@ import org.mockito.Mockito.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
+import me.timelytask.controller.keyMapManager
 import me.timelytask.view.events.Event
-import me.timelytask.view.keymaps.keyMapManager
 
 class KeyInputHandlerSpec extends AnyWordSpec with MockitoSugar {
   "The InputHandler" should {

@@ -1,14 +1,14 @@
-package me.timelytask.view.keymaps
+package me.timelytask.controller
 
-import me.timelytask.TimelyTask.activeViewPublisher
 import me.timelytask.model
 import me.timelytask.model.settings
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.*
 import me.timelytask.util.Publisher
-import me.timelytask.view.events.*
+import me.timelytask.view.events.Event
 import org.jline.keymap.KeyMap
 
+given keyMapManager: KeyMapManager.type = KeyMapManager
 
 object KeyMapManager{
   val activeView: () => ViewType = () => activeViewPublisher.getValue
@@ -30,7 +30,7 @@ object KeyMapManager{
   }
 
 
-  private var actionKeyMaps: Map[ViewType, Map[Key, Event[?]]]  = Map(
+  private var actionKeyMaps: Map[ViewType, Map[Key, Event]]  = Map(
     ViewType.CALENDAR -> {
       Map(
         MoveRight -> NextDay,
@@ -45,7 +45,9 @@ object KeyMapManager{
     },
     ViewType.TABLE -> Map(),
     ViewType.TASK -> Map(
-      CtrlS -> SaveTask.createEvent()
+      MoveDown -> NextField,
+      MoveUp -> PreviousField,
+      CtrlS -> SaveTask
     ),
     ViewType.KANBAN -> Map(),
     ViewType.SETTINGS -> Map()
