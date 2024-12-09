@@ -2,10 +2,11 @@ package me.timelytask.model
 
 import io.circe.generic.auto.*
 import me.timelytask.model.settings.*
+import me.timelytask.model.utility.*
 import org.jline.keymap.KeyMap
 
-case class Config(keymaps: Map[ViewType, KeyMap[Event]],
-                  globalKeymap: KeyMap[Event],
+case class Config(keymaps: Map[ViewType, KeymapConfig],
+                  globalKeymap: KeymapConfig,
                   defaultStartView: ViewType,
                   defaultDataFileType: FileType,
                   defaultTheme: Theme) {
@@ -14,22 +15,52 @@ case class Config(keymaps: Map[ViewType, KeyMap[Event]],
 object Config {
   val default: Config = Config(
     keymaps = Map(
-      ViewType.CALENDAR -> {
-        val keymap = new KeyMap[Event]()
-        keymap.bind(NextDay, "\u001B[C")
-        keymap.bind(PreviousDay, "\u001B[D")
-        keymap.bind(NextWeek, "\u001B[1;5C")
-        keymap.bind(PreviousWeek, "\u001B[1;5D")
-        keymap.bind(GoToToday, "t")
-        keymap
+      CALENDAR -> {
+        KeymapConfig(
+          mappings = Map(
+            ShiftRight -> EventTypeId("NextDay"),
+            ShiftLeft -> EventTypeId("PreviousDay"),
+            CtrlRight -> EventTypeId("NextWeek"),
+            CtrlLeft -> EventTypeId("PreviousWeek"),
+            T -> EventTypeId("GoToToday"),
+            W -> EventTypeId("ShowWholeWeek"),
+            CtrlPlus -> EventTypeId("ShowMoreDays"),
+            CtrlMinus -> EventTypeId("ShowLessDays")
+          )
+        )
       },
-      ViewType.TABLE -> new KeyMap[Event](),
-      ViewType.TASK -> new KeyMap[Event](),
-      ViewType.KANBAN -> new KeyMap[Event](),
-      ViewType.SETTINGS -> new KeyMap[Event]()
+      TABLE -> {
+        KeymapConfig(
+          mappings = Map()
+        )
+      },
+      TASKEdit -> {
+        KeymapConfig(
+          mappings = Map(
+            MoveDown -> EventTypeId("NextField"),
+            MoveUp -> EventTypeId("PreviousField"),
+            CtrlS -> EventTypeId("SaveTask")
+          )
+        )
+      },
+      KANBAN -> {
+        KeymapConfig(
+          mappings = Map()
+        )
+      },
+      SETTINGS -> {
+        KeymapConfig(
+          mappings = Map()
+        )
+      }
     ),
-    globalKeymap = new KeyMap[Event](),
-    defaultStartView = ViewType.CALENDAR,
+    globalKeymap = KeymapConfig(
+      mappings = Map(
+        CtrlN -> EventTypeId("AddTask"),
+        CtrlQ -> EventTypeId("Exit")
+      )
+    ),
+    defaultStartView = CALENDAR,
     defaultDataFileType = FileType.JSON,
     defaultTheme = Theme.LIGHT
   )

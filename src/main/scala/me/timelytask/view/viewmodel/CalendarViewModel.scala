@@ -2,10 +2,12 @@ package me.timelytask.view.viewmodel
 
 import com.github.nscala_time.time.Imports.LocalTime
 import me.timelytask.model.Model
+import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.util.Publisher
 
-case class CalendarViewModel(timeSelection: TimeSelection, modelPublisher: Publisher[Model]) extends ViewModel {
+case class CalendarViewModel(timeSelection: TimeSelection, modelPublisher: Publisher[Model]) 
+  extends ViewModel[CALENDAR](modelPublisher) {
 
   import CalendarViewModel.*
 

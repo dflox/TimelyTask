@@ -1,67 +1,135 @@
 package me.timelytask.view.events
 
 import me.timelytask.model.settings.ViewType
-import me.timelytask.model.utility.Key
+import me.timelytask.model.utility.InputError
 
 import java.util.UUID
 
-//App Events
-case class Undo() extends Event[Unit]
-case object Undo extends EventCompanion[Undo, Unit]
+case class Undo(handler: Handler[Unit],
+                isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+case object Undo extends EventCompanion[Undo, Unit] {
+  override protected def create: Undo = Undo(handler.get, isPossible.get)
+}
 
-case class Redo() extends Event[Unit]
-case object Redo extends EventCompanion[Redo, Unit]
+case class Redo(handler: Handler[Unit],
+                isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+case object Redo extends EventCompanion[Redo, Unit] {
+  override protected def create: Redo = Redo(handler.get, isPossible.get)
+}
 
-case class Exit() extends Event[Unit]
-case object Exit extends EventCompanion[Exit, Unit]
+case class Exit(handler: Handler[Unit],
+                isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+case object Exit extends EventCompanion[Exit, Unit] {
+  override protected def create: Exit = Exit(handler.get, isPossible.get)
+}
 
-case class Save() extends Event[Unit]
-case object Save extends EventCompanion[Save, Unit]
+case class Save(handler: Handler[Unit],
+                isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+case object Save extends EventCompanion[Save, Unit] {
+  override protected def create: Save = Save(handler.get, isPossible.get)
+}
 
-case class SaveAndExit() extends Event[Unit]
-case object SaveAndExit extends EventCompanion[SaveAndExit, Unit]
+case class SaveAndExit(handler: Handler[Unit],
+                       isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+case object SaveAndExit extends EventCompanion[SaveAndExit, Unit] {
+  override protected def create: SaveAndExit = SaveAndExit(handler.get, isPossible.get)
+}
 
-// Global Events
+case class AddTask(handler: Handler[Unit],
+                   isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+case object AddTask extends EventCompanion[AddTask, Unit] {
+  override protected def create: AddTask = AddTask(handler.get, isPossible.get)
+}
 
-case class AddTask() extends Event[Unit]
-case object AddTask extends EventCompanion[AddTask, Unit]
+case class RemoveTask(handler: Handler[UUID],
+                      isPossible: UUID => Option[InputError])
+  extends Event[UUID](handler, isPossible)
+case object RemoveTask extends EventCompanion[RemoveTask, UUID] {
+  override protected def create: RemoveTask = RemoveTask(handler.get, isPossible.get)
+}
 
-case class RemoveTask() extends Event[UUID]
-case object RemoveTask extends EventCompanion[RemoveTask, UUID]
+case class EditTask(handler: Handler[UUID],
+                    isPossible: UUID => Option[InputError])
+  extends Event[UUID](handler, isPossible)
+case object EditTask extends EventCompanion[EditTask, UUID] {
+  override protected def create: EditTask = EditTask(handler.get, isPossible.get)
+}
 
-case class EditTask() extends Event[UUID]
-case object EditTask extends EventCompanion[EditTask, UUID]
+case class AddTag(handler: Handler[Unit],
+                  isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+case object AddTag extends EventCompanion[AddTag, Unit] {
+  override protected def create: AddTag = AddTag(handler.get, isPossible.get)
+}
 
-case class AddTag() extends Event[Unit]
-case object AddTag extends EventCompanion[AddTag, Unit]
+case class RemoveTag(handler: Handler[UUID],
+                     isPossible: UUID => Option[InputError])
+  extends Event[UUID](handler, isPossible)
+case object RemoveTag extends EventCompanion[RemoveTag, UUID] {
+  override protected def create: RemoveTag = RemoveTag(handler.get, isPossible.get)
+}
 
-case class RemoveTag() extends Event[UUID]
-case object RemoveTag extends EventCompanion[RemoveTag, UUID]
+case class EditTag(handler: Handler[UUID],
+                   isPossible: UUID => Option[InputError])
+  extends Event[UUID](handler, isPossible)
+case object EditTag extends EventCompanion[EditTag, UUID] {
+  override protected def create: EditTag = EditTag(handler.get, isPossible.get)
+}
 
-case class EditTag() extends Event[UUID]
-case object EditTag extends EventCompanion[EditTag, UUID]
+case class AddPriority(handler: Handler[Unit],
+                       isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+case object AddPriority extends EventCompanion[AddPriority, Unit] {
+  override protected def create: AddPriority = AddPriority(handler.get, isPossible.get)
+}
 
-case class AddPriority() extends Event[Unit]
-case object AddPriority extends EventCompanion[AddPriority, Unit]
+case class RemovePriority(handler: Handler[UUID],
+                          isPossible: UUID => Option[InputError])
+  extends Event[UUID](handler, isPossible)
+case object RemovePriority extends EventCompanion[RemovePriority, UUID] {
+  override protected def create: RemovePriority = RemovePriority(handler.get, isPossible.get)
+}
 
-case class RemovePriority() extends Event[UUID]
-case object RemovePriority extends EventCompanion[RemovePriority, UUID]
+case class EditPriority(handler: Handler[UUID],
+                        isPossible: UUID => Option[InputError])
+  extends Event[UUID](handler, isPossible)
+case object EditPriority extends EventCompanion[EditPriority, UUID] {
+  override protected def create: EditPriority = EditPriority(handler.get, isPossible.get)
+}
 
-case class EditPriority() extends Event[UUID]
-case object EditPriority extends EventCompanion[EditPriority, UUID]
+case class AddState(handler: Handler[Unit],
+                    isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+case object AddState extends EventCompanion[AddState, Unit] {
+  override protected def create: AddState = AddState(handler.get, isPossible.get)
+}
 
-case class AddState() extends Event[Unit]
-case object AddState extends EventCompanion[AddState, Unit]
+case class RemoveState(handler: Handler[UUID],
+                       isPossible: UUID => Option[InputError])
+  extends Event[UUID](handler, isPossible)
+case object RemoveState extends EventCompanion[RemoveState, UUID] {
+  override protected def create: RemoveState = RemoveState(handler.get, isPossible.get)
+}
 
-case class RemoveState() extends Event[UUID]
-case object RemoveState extends EventCompanion[RemoveState, UUID]
+case class EditState(handler: Handler[UUID],
+                     isPossible: UUID => Option[InputError])
+  extends Event[UUID](handler, isPossible)
+case object EditState extends EventCompanion[EditState, UUID] {
+  override protected def create: EditState = EditState(handler.get, isPossible.get)
+}
 
-case class EditState() extends Event[UUID]
-case object EditState extends EventCompanion[EditState, UUID]
-
-case class ChangeView() extends Event[ViewType]
-case object ChangeView extends EventCompanion[ChangeView, ViewType]
-
+case class ChangeView(handler: Handler[ViewType],
+                      isPossible: ViewType => Option[InputError])
+  extends Event[ViewType](handler, isPossible)
+case object ChangeView extends EventCompanion[ChangeView, ViewType] {
+  override protected def create: ChangeView = ChangeView(handler.get, isPossible.get)
+}
 //case class ChangeTheme() extends Event[]
 
 //case class ChangeDataFileType() extends Event

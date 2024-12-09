@@ -1,20 +1,53 @@
 package me.timelytask.view.events
 
+import me.timelytask.model.utility.InputError
+
 // Focus Events
-case class FocusPrevious() extends Event[Unit]
-case object FocusPrevious extends EventCompanion[FocusPrevious, Unit]
 
-case class FocusNext() extends Event[Unit]
-case object FocusNext extends EventCompanion[FocusNext, Unit]
+case class FocusPrevious(handler: Handler[Unit],
+                         isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 
-case class FocusUp() extends Event[Unit]
-case object FocusUp extends EventCompanion[FocusUp, Unit]
+case object FocusPrevious extends EventCompanion[FocusPrevious, Unit] {
+  override protected def create: FocusPrevious = FocusPrevious(handler.get, isPossible.get)
+}
 
-case class FocusDown() extends Event[Unit]
-case object FocusDown extends EventCompanion[FocusDown, Unit]
+case class FocusNext(handler: Handler[Unit],
+                     isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
 
-case class FocusLeft() extends Event[Unit]
-case object FocusLeft extends EventCompanion[FocusLeft, Unit]
+case object FocusNext extends EventCompanion[FocusNext, Unit] {
+  override protected def create: FocusNext = FocusNext(handler.get, isPossible.get)
+}
 
-case class FocusRight() extends Event[Unit]
-case object FocusRight extends EventCompanion[FocusRight, Unit]
+case class FocusUp(handler: Handler[Unit],
+                   isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+
+case object FocusUp extends EventCompanion[FocusUp, Unit] {
+  override protected def create: FocusUp = FocusUp(handler.get, isPossible.get)
+}
+
+case class FocusDown(handler: Handler[Unit],
+                     isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+
+case object FocusDown extends EventCompanion[FocusDown, Unit] {
+  override protected def create: FocusDown = FocusDown(handler.get, isPossible.get)
+}
+
+case class FocusLeft(handler: Handler[Unit],
+                     isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+
+case object FocusLeft extends EventCompanion[FocusLeft, Unit] {
+  override protected def create: FocusLeft = FocusLeft(handler.get, isPossible.get)
+}
+
+case class FocusRight(handler: Handler[Unit],
+                      isPossible: Unit => Option[InputError])
+  extends Event[Unit](handler, isPossible)
+
+case object FocusRight extends EventCompanion[FocusRight, Unit] {
+  override protected def create: FocusRight = FocusRight(handler.get, isPossible.get)
+}
