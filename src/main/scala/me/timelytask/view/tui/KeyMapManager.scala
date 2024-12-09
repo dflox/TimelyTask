@@ -1,8 +1,5 @@
-<<<<<<<< HEAD:src/main/scala/me/timelytask/view/keymaps/KeyMapManager.scala
 package me.timelytask.view.keymaps
-========
 package me.timelytask.view.tui
->>>>>>>> fc9f761f45a6a3e7e887ff45ea4d089588c37fe3:src/main/scala/me/timelytask/view/tui/KeyMapManager.scala
 
 import me.timelytask.TimelyTask.activeViewPublisher
 import me.timelytask.model
@@ -12,8 +9,6 @@ import me.timelytask.model.utility.*
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.*
 import org.jline.keymap.KeyMap
-
-<<<<<<<< HEAD:src/main/scala/me/timelytask/view/keymaps/KeyMapManager.scala
 
 object KeyMapManager{
   val activeView: () => ViewType = () => activeViewPublisher.getValue
@@ -62,7 +57,6 @@ object KeyMapManager{
 
 ========
 object KeyMapManager{
->>>>>>>> fc9f761f45a6a3e7e887ff45ea4d089588c37fe3:src/main/scala/me/timelytask/view/tui/KeyMapManager.scala
   val keyMap: KeyMap[Key] = {
     val keyMap = new KeyMap[Key]()
     // Arrow keys (with both common variants)
