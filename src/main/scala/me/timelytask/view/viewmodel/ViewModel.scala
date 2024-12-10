@@ -4,8 +4,10 @@ import com.github.nscala_time.time.Imports.DateTime
 import me.timelytask.model.Model
 import me.timelytask.util.Publisher
 import me.timelytask.model.settings.ViewType
+import me.timelytask.view.viewmodel.elemts.FocusElementGrid
 
 trait ViewModel[ViewType](modelPublisher: Publisher[Model]) {
+  val focusElementGrid: FocusElementGrid
   val model: ()=>Model = () => {modelPublisher.getValue}
   val today: DateTime = DateTime.now()
 }

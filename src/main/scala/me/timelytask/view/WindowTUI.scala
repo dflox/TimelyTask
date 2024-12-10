@@ -4,8 +4,8 @@ import me.timelytask.model.settings.ViewType
 import me.timelytask.model.settings.ViewType.{CALENDAR, TASKEdit}
 import me.timelytask.model.utility.Key
 import me.timelytask.util.Publisher
-import me.timelytask.view.tui.{CalendarViewStringFactory, StringFactory, TaskViewStringFactory}
-import me.timelytask.view.viewmodel.{ModelTUI, ViewModel}
+import me.timelytask.view.tui.{CalendarViewStringFactory, ModelTUI, StringFactory, TaskViewStringFactory}
+import me.timelytask.view.viewmodel.ViewModel
 import org.jline.terminal.Terminal
 
 import java.io.PrintWriter

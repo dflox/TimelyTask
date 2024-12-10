@@ -1,5 +1,5 @@
 package me.timelytask.view.viewmodel.elemts
 
 enum FocusDirection {
-  case UP, DOWN, LEFT, RIGHT, BEGIN, END
+  case UP, DOWN, LEFT, RIGHT, TOP, END
 }

@@ -2,42 +2,46 @@ package me.timelytask.view.viewmodel.elemts
 
 import me.timelytask.view.viewmodel.elemts.FocusDirection.*
 
-class FocusElementCollection(elements: Array[Array[Focusable]], var focusedElement: Focusable)
+class FocusElementGrid(elements: Vector[Vector[Focusable]], focusedElement: Focusable)
   extends Focusable {
-  def this(width: Int, height: Int) = this(Array.ofDim[Focusable](width, height), null)
+  def this(width: Int, height: Int) = this(Vector.ofDim[Focusable](width, height), null)
 
   val width: Int = elements.length
   val height: Int = elements(0).length
 
-  val elementsList: Array[Focusable] = elements.flatten
+  val elementsList: Vector[Focusable] = elements.flatten
 
-  def setElement(x: Int, y: Int, element: Focusable): Unit = {
-    elements(x)(y) = element
+  def setElement(x: Int, y: Int, element: Focusable): Option[FocusElementGrid] = {
+    if(x < 0 || x >= width || y < 0 || y >= height) return None
+    val newElements = elements.updated(x, elements(x).updated(y, element))
+    if(getFocusedElementPosition == (x, y)) Some(FocusElementGrid(newElements, element))
+    else Some(FocusElementGrid(newElements, focusedElement))
   }
 
-  def setFocusToElement(x: Int, y: Int): FocusElementCollection = {
-    new FocusElementCollection(elements, elements(x)(y))
+  def setFocusToElement(x: Int, y: Int): Option[FocusElementGrid] = {
+    if(x < 0 || x >= width || y < 0 || y >= height) return None
+    Some(FocusElementGrid(elements, elements(x)(y)))
   }
 
-  def setFocusToElement(element: Focusable): Unit = {
-    focusedElement = element
+  def setFocusToElement(element: Focusable): Option[FocusElementGrid] = {
+    if(!elementsList.contains(element)) return None
+    Some(FocusElementGrid(elements, focusedElement = element))
   }
 
-  def moveFocus(direction: FocusDirection): Boolean = {
+  def moveFocus(direction: FocusDirection): Option[FocusElementGrid] = {
     val (x, y) = getFocusedElementPosition
     val newElement = direction match {
       case UP => getNextElementUpwards(x, y)
       case DOWN => getNextElementDownwards(x, y)
       case LEFT => getNearestElement(x - 1, y)
       case RIGHT => getNearestElement(x + 1, y)
-      case BEGIN => getNextElementDownwards(0, 0)
+      case TOP => getNextElementDownwards(0, 0)
       case END => getNextElementUpwards(width - 1, height - 1)
     }
     newElement match {
       case Some(element) =>
-        focusedElement = element
-        true
-      case None => false
+        Some(FocusElementGrid(elements, focusedElement = element))
+      case None => None
     }
   }
 

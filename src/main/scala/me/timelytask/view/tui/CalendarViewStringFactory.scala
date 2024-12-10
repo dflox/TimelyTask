@@ -4,7 +4,7 @@ import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.Task
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.tui.TuiUtils.*
-import me.timelytask.view.viewmodel.{CalendarViewModel, ModelTUI, ViewModel}
+import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 import me.timelytask.controller.ThemeManager.{getTerminalBgColor, getTerminalColor}
 import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.{colored, BOLD, ITALIC}
 
@@ -39,6 +39,10 @@ object CalendarViewStringFactory extends StringFactory {
     val actualWidth = timeColumnLength + timeSelection.dayCount +
       (timeSelection.dayCount * spacePerColumn)
 
+    // Generate Grid
+    val (timeSlice, rowCount) = calculatePeriod(heightAvailable, timeSelection.timeFrameInterval)
+    buildFocusElementGrid(timeSlice, rowCount, timeSelection, model().tasks)
+    
     // Start Building Output
     val builder = new StringBuilder()
 
@@ -50,17 +54,17 @@ object CalendarViewStringFactory extends StringFactory {
       colored(columnSpacer(day.toString(dayFormat), spacePerColumn, format),
         if day.toLocalDate.equals(today.toLocalDate) then colorText2 + BOLD
         else colorText1) + "|")) //
-    // print
-    // the days
+    
     builder.append("\n")
+    
     builder.append(createLine(actualWidth) + "\n")
 
     // Create the time and task rows
-    val (timeSlice, lines) = calculatePeriod(heightAvailable, timeSelection.timeFrameInterval)
-    builder.append(createRows(timeSlice, lines, timeSelection, model().tasks, spacePerColumn,
+    builder.append(createRows(timeSlice, rowCount, timeSelection, spacePerColumn,
       colorText1))
+    
     builder.append(createLine(actualWidth) + "\n")
-    builder.append(alignTop(terminalHeight, lines + headerHeight + footerHeight) + "\n")
+    builder.append(alignTop(terminalHeight, rowCount + headerHeight + footerHeight) + "\n")
 
     builder.toString()
   }
@@ -95,44 +99,24 @@ object CalendarViewStringFactory extends StringFactory {
   }
 
   // Create the rows with time and tasks
-  def createRows(timeSlice: Period, lines: Int, timeSelection: TimeSelection, tasks: List[Task],
-                 spacePerColumn: Int, timeTextColor: String): String = {
+  def createRows(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection, 
+                 spacePerColumn: Int, timeTextColor: String): String
+  = {
     val builder = new StringBuilder()
 
     val format = "| HH:mm |"
 
-    for (line <- 0 until lines) {
-      val startTime = timeSelection.day.withPeriodAdded(timeSlice, line)
-      val timeSlicesPerDay: Seq[Interval] = (0 until timeSelection.dayCount)
-        .map(day => new Interval(startTime.withPeriodAdded(1.day, day), timeSlice))
-
-      builder.append(colored(startTime.toString(format), timeTextColor))
-
-      timeSlicesPerDay.foreach(interval => {
-        val tasksTimeslot = tasks.filter(task => interval.contains(task.deadline.date))
-        val taskString = tasksTimeslot.map(_.name).mkString(", ")
-        builder.append(columnSpacer(taskString, spacePerColumn, "l") + "|")
-      })
-
+    getFocusElementGrid.elements.foreach(column => {
+      builder.append(colored(timeSelection.day.withPeriodAdded(timeSlice, line).toString(format),
+        timeTextColor))
+      column.foreach {
+        case taskCollection: TaskCollection =>
+          builder.append(columnSpacer(taskCollection.toString, spacePerColumn, "l") + "|")
+        case _ => builder.append(columnSpacer("", spacePerColumn, "l") + "|")
+      }
       builder.append("\n")
-    }
+    })
     builder.toString()
   }
-
-  // Calculate the intervals between the hours and the amount of lines
-  def calculatePeriod(linesAvailable: Int, timeFrame: Interval): (Period, Int) = {
-    val possibleIntervalsMinutes = List(24.0, 12.0, 10.0, 8.0, 6.0, 4.0, 2.0, 1.0, 0.5, 0.25).map(
-      _ * 60)
-
-    val optimalIntervalMinutes: Double = timeFrame.toDurationMillis / linesAvailable / 1000.0 / 60.0
-
-    val chosenIntervalMinutes: Double = possibleIntervalsMinutes.filter(_ >= optimalIntervalMinutes)
-      .min
-    val countOfChosenIntervals = (timeFrame.toDurationMillis / chosenIntervalMinutes / 1000.0 /
-      60.0).toInt
-
-    val chosenLines = math.min(linesAvailable, countOfChosenIntervals)
-    val timeSlice: Period = chosenIntervalMinutes.toInt.minutes.normalizedStandard()
-    (timeSlice, chosenLines)
-  }
 }
+
