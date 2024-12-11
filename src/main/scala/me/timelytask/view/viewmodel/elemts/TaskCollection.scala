@@ -5,6 +5,8 @@ import com.github.nscala_time.time.Imports.Interval
 
 class TaskCollection(tasks: List[Task], interval: Interval) extends Focusable {
   
+  def getTasks: List[Task] = tasks
+  
   override def toString: String = {
     tasks.map(_.name).mkString(", ")
   }

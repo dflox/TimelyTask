@@ -7,7 +7,7 @@ import me.timelytask.model.settings.ViewType
 import me.timelytask.view.viewmodel.elemts.FocusElementGrid
 
 trait ViewModel[ViewType](modelPublisher: Publisher[Model]) {
-  val focusElementGrid: FocusElementGrid
+  val focusElementGrid: Option[FocusElementGrid]
   val model: ()=>Model = () => {modelPublisher.getValue}
   val today: DateTime = DateTime.now()
 }

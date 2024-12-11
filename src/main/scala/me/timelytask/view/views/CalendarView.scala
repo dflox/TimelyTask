@@ -15,4 +15,7 @@ trait CalendarView extends View[CALENDAR, CalendarViewModel]{
   val showWholeWeek: ShowWholeWeek = ShowWholeWeek.createEvent
   val showMoreDays: ShowMoreDays = ShowMoreDays.createEvent
   val showLessDays: ShowLessDays = ShowLessDays.createEvent
+  
+  val moveFocus: MoveFocus = MoveFocus.createEvent
+  val setFocusTo: SetFocusTo = SetFocusTo.createEvent
 }

@@ -1,22 +1,24 @@
 package me.timelytask.view.tui
 
 import com.github.nscala_time.time.Imports.*
+import me.timelytask.controller.ThemeManager.{getTerminalBgColor, getTerminalColor}
 import me.timelytask.model.Task
+import me.timelytask.model.settings.CALENDAR
+import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.{BOLD, ITALIC, colored}
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.tui.TuiUtils.*
+import me.timelytask.view.viewmodel.elemts.TaskCollection
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
-import me.timelytask.controller.ThemeManager.{getTerminalBgColor, getTerminalColor}
-import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.{colored, BOLD, ITALIC}
 
 object CalendarViewStringFactory extends StringFactory {
-  override def buildString(viewModel: ViewModel): String = {
+  override def buildString(viewModel: ViewModel[CALENDAR]): String = {
     buildString(viewModel, ModelTUI.default)
   }
 
-  override def buildString(viewModel: ViewModel, tuiModel: ModelTUI): String = {
+  override def buildString(viewModel: ViewModel[CALENDAR], tuiModel: ModelTUI): String = {
     val calendarViewModel: CalendarViewModel = viewModel.asInstanceOf[CalendarViewModel]
-    import tuiModel.*
     import calendarViewModel.*
+    import tuiModel.*
 
     // Variables
     val heightAvailable: Int = terminalHeight - headerHeight - footerHeight
@@ -40,9 +42,13 @@ object CalendarViewStringFactory extends StringFactory {
       (timeSelection.dayCount * spacePerColumn)
 
     // Generate Grid
-    val (timeSlice, rowCount) = calculatePeriod(heightAvailable, timeSelection.timeFrameInterval)
-    buildFocusElementGrid(timeSlice, rowCount, timeSelection, model().tasks)
-    
+    val (timeSlice, rowCount) = calculatePeriod(heightAvailable, 1, timeSelection.timeFrameInterval)
+    getFocusElementGrid match {
+      case None => buildFocusElementGrid(timeSlice, rowCount, timeSelection, model().tasks)
+      case Some(focusElementGrid) => if focusElementGrid.height != rowCount then
+        buildFocusElementGrid(timeSlice, rowCount, timeSelection, model().tasks)
+    }
+
     // Start Building Output
     val builder = new StringBuilder()
 
@@ -54,15 +60,15 @@ object CalendarViewStringFactory extends StringFactory {
       colored(columnSpacer(day.toString(dayFormat), spacePerColumn, format),
         if day.toLocalDate.equals(today.toLocalDate) then colorText2 + BOLD
         else colorText1) + "|")) //
-    
+
     builder.append("\n")
-    
+
     builder.append(createLine(actualWidth) + "\n")
 
     // Create the time and task rows
     builder.append(createRows(timeSlice, rowCount, timeSelection, spacePerColumn,
-      colorText1))
-    
+      colorText1, calendarViewModel))
+
     builder.append(createLine(actualWidth) + "\n")
     builder.append(alignTop(terminalHeight, rowCount + headerHeight + footerHeight) + "\n")
 
@@ -99,23 +105,28 @@ object CalendarViewStringFactory extends StringFactory {
   }
 
   // Create the rows with time and tasks
-  def createRows(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection, 
-                 spacePerColumn: Int, timeTextColor: String): String
+  def createRows(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection,
+                 spacePerColumn: Int, timeTextColor: String,
+                 calendarViewModel: CalendarViewModel): String
   = {
     val builder = new StringBuilder()
 
     val format = "| HH:mm |"
 
-    getFocusElementGrid.elements.foreach(column => {
-      builder.append(colored(timeSelection.day.withPeriodAdded(timeSlice, line).toString(format),
-        timeTextColor))
-      column.foreach {
-        case taskCollection: TaskCollection =>
-          builder.append(columnSpacer(taskCollection.toString, spacePerColumn, "l") + "|")
-        case _ => builder.append(columnSpacer("", spacePerColumn, "l") + "|")
-      }
-      builder.append("\n")
-    })
+    calendarViewModel.getFocusElementGrid match {
+      case Some(focusElementGrid) => focusElementGrid.getElements.transpose.zipWithIndex.foreach( 
+        (row, rowNum) => {
+          builder.append(colored(timeSelection.day.withPeriodAdded(timeSlice, rowNum).toString(
+            format),timeTextColor))
+          row.foreach {
+            case taskCollection: TaskCollection =>
+              builder.append(columnSpacer(taskCollection.toString, spacePerColumn, "l") + "|")
+            case _ => builder.append(columnSpacer("", spacePerColumn, "l") + "|")
+          }
+          builder.append("\n")
+        })
+      case None => throw new Exception("FocusElementGrid not initialized")
+    }
     builder.toString()
   }
 }

@@ -5,17 +5,16 @@ import me.timelytask.model.{Model, Task}
 import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.util.Publisher
-import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, TaskCollection}
+import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, TaskCollection}
 
 case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaultTimeSelection, 
-                             modelPublisher: Publisher[Model]) 
+                             modelPublisher: Publisher[Model], 
+                             protected var focusElementGrid: Option[FocusElementGrid] = None) 
   extends ViewModel[CALENDAR](modelPublisher) {
 
   import CalendarViewModel.*
 
-  protected var focusElementGrid: FocusElementGrid
-  
-  def getFocusElementGrid: FocusElementGrid = focusElementGrid
+  def getFocusElementGrid: Option[FocusElementGrid] = focusElementGrid
   
   // Variables
   val format = "m"
@@ -33,8 +32,10 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
   val timeFormat = "HH:mm"
   val dayFormat = "EEE dd.MM"
   
-  def buildFocusElementGrid(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection, 
-                             tasks: List[Task]): FocusElementGrid = {
+  def buildFocusElementGrid(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection = timeSelection, 
+                             tasks: List[Task] = model().tasks, focusedElement: Option[Focusable] = None)
+  : FocusElementGrid
+  = {
     var newFocusElementGrid = new FocusElementGrid(width = timeSelection.dayCount, height = rowCount)
     for (line <- 0 until rowCount) {
       val startTime = timeSelection.day.withPeriodAdded(timeSlice, line)
@@ -44,12 +45,14 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
           tasks.filter(task => timeSliceInterval.contains(task.scheduleDate)) match {
             case tasksTimeslot if tasksTimeslot.nonEmpty =>
               newFocusElementGrid = newFocusElementGrid.setElement(day, line,
-                TaskCollection(tasksTimeslot, timeSliceInterval))
+                Some(TaskCollection(tasksTimeslot, timeSliceInterval))).getOrElse
+                  (newFocusElementGrid)
           }
         })
     }
-    focusElementGrid = newFocusElementGrid
-    focusElementGrid
+    newFocusElementGrid = newFocusElementGrid.setFocusToElement(focusedElement).getOrElse(newFocusElementGrid)
+    focusElementGrid = Some(newFocusElementGrid)
+    newFocusElementGrid
   }
 
   // Calculate the intervals between the hours and the amount of lines

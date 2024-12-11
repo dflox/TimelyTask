@@ -5,8 +5,9 @@ import me.timelytask.model.settings.{TASKEdit, ViewType}
 import me.timelytask.model.utility.InputError
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
-import me.timelytask.view.events.SaveTask
+import me.timelytask.view.events.{MoveFocus, SaveTask}
 import me.timelytask.view.viewmodel.TaskEditViewModel
+import me.timelytask.view.viewmodel.elemts.FocusDirection
 
 class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditViewModel],
                            modelPublisher: Publisher[Model],
@@ -38,4 +39,14 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
     }
   })
 
+  // Focus Events
+  MoveFocus.setHandler((args: FocusDirection) => {
+    viewModel().getFocusElementGrid match
+      case Some(oldFocusElementGrid) => Some(viewModel().copy(focusElementGrid = oldFocusElementGrid
+        .moveFocus(args)))
+      case None => None
+  }, (args: FocusDirection) => if viewModel().getFocusElementGrid.isEmpty then
+                                 Some(InputError("Fatal Error: No focus element grid defined!"))
+                               else
+                                 None)
 } 
