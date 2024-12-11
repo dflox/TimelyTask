@@ -14,18 +14,15 @@ import com.github.nscala_time.time.Imports._
 
 object GuiLauncher extends JFXApp3 {
 
-  // Today's date and current time
   var today: DateTime = DateTime.now()
-  var daysToShow = 7 // Default to showing one week
+  var daysToShow = 7
 
   override def start(): Unit = {
-    // Main application layout
     stage = new PrimaryStage {
       title = "Calendar View"
       scene = new Scene(800, 600) {
         val rootPane = new BorderPane()
 
-        // Toolbar with buttons at the top
         val toolBar: ToolBar = new ToolBar {
           content = Seq(
             new Button("Day") {
@@ -57,12 +54,16 @@ object GuiLauncher extends JFXApp3 {
                 if (daysToShow > 1) daysToShow -= 1
                 updateCalendar()
               }
-            }
+            },
+//            new Button("View Task") { // New button for task details
+//              onAction = _ => {
+//                stage.scene = TaskDetailsView.createTaskDetailsScene()
+//              }
+//            }
           )
         }
         rootPane.top = toolBar
 
-        // Buttons to navigate days
         val leftButton = new VBox {
           alignment = Pos.Center
           children = new Button("<") {
@@ -85,7 +86,6 @@ object GuiLauncher extends JFXApp3 {
         }
         rootPane.right = rightButton
 
-        // Calendar grid
         val calendarGrid: GridPane = new GridPane {
           hgap = 0
           vgap = 0
@@ -98,7 +98,6 @@ object GuiLauncher extends JFXApp3 {
           calendarGrid.columnConstraints.clear()
           calendarGrid.rowConstraints.clear()
 
-          // Set column and row constraints for resizing
           val timeColumnConstraints = new ColumnConstraints {
             percentWidth = 10
           }
@@ -118,7 +117,6 @@ object GuiLauncher extends JFXApp3 {
             calendarGrid.rowConstraints.add(hourRowConstraints)
           }
 
-          // Adding column for time
           for (hour <- 0 to 23) {
             val hourStack = new StackPane {
               children = new Text(f"$hour%02d:00")
@@ -134,7 +132,6 @@ object GuiLauncher extends JFXApp3 {
           for (i <- 1 to daysToShow) {
             val date = today.plusDays(i - 1)
 
-            // Add date header
             val dateText = new Text(date.toString(dateFormatter))
             val dateHeader = new StackPane {
               style = if (date.withTimeAtStartOfDay() == DateTime.now().withTimeAtStartOfDay()) "-fx-background-color: rgba(255, 0, 0, 0.2);" else "-fx-background-color: rgba(0, 0, 0, 0.1);"
@@ -142,7 +139,6 @@ object GuiLauncher extends JFXApp3 {
             }
             calendarGrid.add(dateHeader, i, 0)
 
-            // Add column for tasks under the date
             for (hour <- 0 to 23) {
               val hourLine = new Line {
                 startX = 0
@@ -151,7 +147,7 @@ object GuiLauncher extends JFXApp3 {
                 strokeWidth = 1
               }
               val taskCell = new StackPane {
-                children = Seq(hourLine) // Single hour line for minimal visual structure
+                children = Seq(hourLine) 
                 maxHeight = Double.MaxValue
                 maxWidth = Double.MaxValue
                 style = if (date.withTimeAtStartOfDay() == DateTime.now().withTimeAtStartOfDay()) "-fx-background-color: rgba(255, 0, 0, 0.05);" else ""
@@ -160,18 +156,16 @@ object GuiLauncher extends JFXApp3 {
             }
           }
 
-          // Add vertical lines separating days
           for (i <- 1 to daysToShow) {
             val separator = new Line {
               startY = 0
-              endY = 600 // Temporary height, adjust dynamically as needed
+              endY = 600
               stroke = Color.DarkGray
               strokeWidth = 1
             }
             calendarGrid.add(separator, i, 0, 1, 24)
           }
 
-          // Add red line for current time
           val currentTime = DateTime.now()
           val currentHour = currentTime.getHourOfDay
           val currentMinute = currentTime.getMinuteOfHour
