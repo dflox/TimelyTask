@@ -55,11 +55,11 @@ object GuiLauncher extends JFXApp3 {
                 updateCalendar()
               }
             },
-//            new Button("View Task") { // New button for task details
-//              onAction = _ => {
-//                stage.scene = TaskDetailsView.createTaskDetailsScene()
-//              }
-//            }
+            new Button("View Task") { // New button for task details
+              onAction = _ => {
+                stage.scene = TaskDetailsView.createTaskDetailsScene()
+              }
+            }
           )
         }
         rootPane.top = toolBar
