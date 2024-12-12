@@ -3,9 +3,10 @@ package me.timelytask.view.views
 import me.timelytask.model.settings.CALENDAR
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.*
+import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
-trait CalendarView extends View[CALENDAR, CalendarViewModel]{
+trait CalendarView[RenderType] extends View[CALENDAR, CalendarViewModel, RenderType]{
   val nextDay: NextDay = NextDay.createEvent
   val previousDay: PreviousDay = PreviousDay.createEvent
   val nextWeek: NextWeek = NextWeek.createEvent

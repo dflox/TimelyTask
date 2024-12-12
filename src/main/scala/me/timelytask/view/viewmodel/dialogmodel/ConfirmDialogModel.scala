@@ -1,5 +1,3 @@
 package me.timelytask.view.viewmodel.dialogmodel
 
-case class ConfirmDialogModel(question: String, currentView: String) extends DialogModel {
-
-}
+case class ConfirmDialogModel(question: String) extends DialogModel[Boolean]

@@ -11,11 +11,11 @@ import scala.collection.immutable.HashSet
 class TaskBuilder(defaultInstance: Task = Task()) extends Builder[Task](defaultInstance) {
   private var name: String = defaultInstance.name
   private var description: String = defaultInstance.description
-  private var priority: UUID = defaultInstance.uuid
+  private var priority: Option[UUID] = defaultInstance.priority
   private var tags: HashSet[UUID] = defaultInstance.tags
   private var deadline: Deadline = defaultInstance.deadline
   private var scheduleDate: DateTime = defaultInstance.scheduleDate
-  private var state: TaskState = defaultInstance.state
+  private var state: Option[UUID] = defaultInstance.state
   private var tedDuration: Period = defaultInstance.tedDuration
   private var dependentOn: HashSet[UUID] = defaultInstance.dependentOn
   private var reoccurring: Boolean = defaultInstance.reoccurring
@@ -32,7 +32,7 @@ class TaskBuilder(defaultInstance: Task = Task()) extends Builder[Task](defaultI
   }
 
   def setPriority(priority: UUID): TaskBuilder = {
-    this.priority = priority
+    this.priority = Some(priority)
     this
   }
 
@@ -51,7 +51,7 @@ class TaskBuilder(defaultInstance: Task = Task()) extends Builder[Task](defaultI
     this
   }
 
-  def setState(state: TaskState): TaskBuilder = {
+  def setState(state: Option[UUID]): TaskBuilder = {
     this.state = state
     this
   }

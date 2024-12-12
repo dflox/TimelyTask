@@ -4,13 +4,15 @@ import me.timelytask.view.tui.TuiUtils.createLine
 import me.timelytask.view.viewmodel.dialogmodel.{ConfirmDialogModel, DialogModel}
 import org.jline.terminal.Terminal
 
-class ConfirmDialogTUI(val dialogModel: DialogModel, val terminal: Terminal) extends TUIDialog {
+class ConfirmDialogTUI(val dialogModel: DialogModel[Boolean], val currentView: String, val 
+terminal: Terminal) 
+extends TUIDialog {
 
 
   override def getUserInput: Boolean = {
     val confirmDialogModel = dialogModel.asInstanceOf[ConfirmDialogModel]
     val dialogString = createDialogString(confirmDialogModel.question, terminalWidth)
-    val viewWithDialog = overlapString(confirmDialogModel.currentView, dialogString)
+    val viewWithDialog = overlapString(currentView, dialogString)
     terminal.writer().println(viewWithDialog)
 
     var result = false

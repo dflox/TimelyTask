@@ -7,7 +7,8 @@ import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.{MoveFocus, SaveTask}
 import me.timelytask.view.viewmodel.TaskEditViewModel
-import me.timelytask.view.viewmodel.elemts.FocusDirection
+import me.timelytask.view.viewmodel.dialogmodel.{OptionDialogModel, InputDialogModel}
+import me.timelytask.view.viewmodel.elemts.{FocusDirection, TaskCollection, InputField}
 
 class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditViewModel],
                            modelPublisher: Publisher[Model],
@@ -18,19 +19,17 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
   val viewModel: () => TaskEditViewModel = () => taskEditViewModelPublisher.getValue
 
   SaveTask.setHandler((taskEditViewModel: TaskEditViewModel) => {
-    val task = taskEditViewModel.taskBuilder.build()
     undoManager.doStep(if taskEditViewModel.isNewTask then
-                         AddTask.createCommand(task)
+                         AddTask.createCommand(taskEditViewModel.task)
                        else
-                         EditTask.createCommand(task))
+                         EditTask.createCommand(taskEditViewModel.task))
     activeViewPublisher.update(taskEditViewModel.lastView)
     true
   }, (taskEditViewModel: TaskEditViewModel) => {
-    val task = taskEditViewModel.taskBuilder.build()
-    task.isValid match {
+    taskEditViewModel.task.isValid match {
       case None =>
         if taskEditViewModel.isNewTask ^ !modelPublisher.getValue.tasks.exists(
-          _.uuid == task.uuid) then
+          _.uuid == taskEditViewModel.task.uuid) then
           None
         else
           Some(InputError("Task with this UUID already exists. It seems somebody " +

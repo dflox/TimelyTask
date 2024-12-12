@@ -2,8 +2,8 @@ package me.timelytask.view.viewmodel.elemts
 
 import me.timelytask.view.viewmodel.elemts.FocusDirection.*
 
-class FocusElementGrid(elements: Vector[Vector[Option[Focusable]]], 
-                       focusedElement: Option[Focusable])
+class FocusElementGrid(elements: Vector[Vector[Option[Focusable[?]]]], 
+                       focusedElement: Option[Focusable[?]])
   extends
                                                                                        FocusShifter {
   def this(width: Int, height: Int) = this(Vector.fill(width, height)(None), None)
@@ -11,11 +11,12 @@ class FocusElementGrid(elements: Vector[Vector[Option[Focusable]]],
   val width: Int = elements.length
   val height: Int = elements(0).length
   
-  def getElements: Vector[Vector[Option[Focusable]]] = elements
+  def getElements: Vector[Vector[Option[Focusable[?]]]] = elements
+  def getFocusedElement: Option[Focusable[?]] = focusedElement
 
-  val elementsList: Vector[Option[Focusable]] = elements.flatten
+  val elementsList: Vector[Option[Focusable[?]]] = elements.flatten
 
-  def setElement(x: Int, y: Int, element: Option[Focusable]): Option[FocusElementGrid] = {
+  def setElement(x: Int, y: Int, element: Option[Focusable[?]]): Option[FocusElementGrid] = {
     if(x < 0 || x >= width || y < 0 || y >= height) return None
     val newElements = elements.updated(x, elements(x).updated(y, element))
     if(getFocusedElementPosition == (x, y)) Some(FocusElementGrid(newElements, element))
@@ -27,12 +28,12 @@ class FocusElementGrid(elements: Vector[Vector[Option[Focusable]]],
     Some(FocusElementGrid(elements, elements(x)(y)))
   }
 
-  def setFocusToElement(element: Option[Focusable]): Option[FocusElementGrid] = {
-    if(!elementsList.contains(element)) return None
+  def setFocusToElement(element: Option[Focusable[?]]): Option[FocusElementGrid] = {
+    if(element.isEmpty | !elementsList.contains(element)) return None
     Some(FocusElementGrid(elements, focusedElement = element))
   }
 
-  def setFocusToElement(selectFunc: Option[Focusable] => Boolean): Option[FocusElementGrid] = {
+  def setFocusToElement(selectFunc: Option[Focusable[?]] => Boolean): Option[FocusElementGrid] = {
     elementsList.find(selectFunc) match {
       case None => None
       case Some(element) => Some(FocusElementGrid(elements, focusedElement = element))
@@ -58,21 +59,21 @@ class FocusElementGrid(elements: Vector[Vector[Option[Focusable]]],
     }
   }
 
-  private def getNextElementDownwards(x: Int, y: Int): Option[Focusable] = {
+  private def getNextElementDownwards(x: Int, y: Int): Option[Focusable[?]] = {
     elementsList.drop(xyToIndex(x, y)).find{
       case Some(_) => true
       case None => false
     }.flatten 
   }
 
-  private def getNextElementUpwards(x: Int, y: Int): Option[Focusable] = {
+  private def getNextElementUpwards(x: Int, y: Int): Option[Focusable[?]] = {
     elementsList.take(xyToIndex(x, y)).findLast{
       case Some(_) => true
       case None => false
     }.flatten
   }
 
-  private def getNearestElement(x: Int, y: Int): Option[Focusable] = {
+  private def getNearestElement(x: Int, y: Int): Option[Focusable[?]] = {
     val pos = xyToIndex(x, y)
     if pos < 0 || pos >= elementsList.length then return None
 
@@ -85,8 +86,8 @@ class FocusElementGrid(elements: Vector[Vector[Option[Focusable]]],
       ).find{
         case Some(_) => true
         case None => false
-      }.flatten // Find the first non-null in this sequence
-    }.headOption // Get the first non-null element found
+      }.flatten // Find the first non-empty in this sequence
+    }.headOption // Get the first non-empty element found
   }
 
   private def xyToIndex(x: Int, y: Int): Int = {

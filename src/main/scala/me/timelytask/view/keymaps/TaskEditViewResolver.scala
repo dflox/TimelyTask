@@ -6,8 +6,8 @@ import me.timelytask.view.keymaps.EventResolver
 import me.timelytask.view.viewmodel.TaskEditViewModel
 import me.timelytask.view.views.TaskEditView
 
-class TaskEditViewResolver extends EventResolver[TASKEdit, TaskEditViewModel, TaskEditView] {
-  override def resolveEvent[Args](eventType: EventTypeId, view: TaskEditView)
+class TaskEditViewResolver extends EventResolver[TASKEdit, TaskEditViewModel, TaskEditView[?]] {
+  override def resolveEvent[Args](eventType: EventTypeId, view: TaskEditView[?])
   : Option[Event[Args]] = {
     // Type-safe casting helper
     def castIfPossible[T](value: Any): Option[T] =

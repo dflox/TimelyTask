@@ -1,10 +1,23 @@
 package me.timelytask.view
 
+import me.timelytask.model.settings.*
+import me.timelytask.util.Publisher
 import me.timelytask.view.events.NextDay
-import me.timelytask.view.viewmodel.ViewModel
-import me.timelytask.view.views.CalendarView
+import me.timelytask.view.keymaps.Keymap
+import me.timelytask.view.viewmodel.*
+import me.timelytask.view.views.{CalendarView, TaskEditView, View}
 
-trait UIManager {
-  val calendarView: CalendarView
-  
+trait UIManager[RenderType] {
+  def activeViewPublisher: Publisher[ViewType]
+  def calendarKeyMapPublisher: Publisher[Keymap[CALENDAR, CalendarViewModel,CalendarView[RenderType]]]
+  def taskEditKeyMapPublisher: Publisher[Keymap[TASKEdit, TaskEditViewModel, TaskEditView[RenderType]]]
+  def calendarViewModelPublisher: Publisher[CalendarViewModel]
+  def taskEditViewModelPublisher: Publisher[TaskEditViewModel]
+
+  val calendarView: CalendarView[RenderType]
+  val taskEditView: TaskEditView[RenderType]
+
+  def render: (RenderType, ViewType) => Unit
+
+  def run(): Unit
 }

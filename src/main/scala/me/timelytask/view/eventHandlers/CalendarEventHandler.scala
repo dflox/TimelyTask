@@ -66,7 +66,7 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
   SetFocusTo.setHandler((args: Task) => {
     viewModel().getFocusElementGrid match
       case Some(focusElementGrid) => Some(viewModel().copy(focusElementGrid = focusElementGrid
-        .setFocusToElement((element: Option[Focusable]) => element match {
+        .setFocusToElement(selectFunc = (element: Option[Focusable[?]]) => element match {
           case Some(element) => element match
             case taskCollection: TaskCollection => taskCollection.getTasks.contains(args)
             case _ => false

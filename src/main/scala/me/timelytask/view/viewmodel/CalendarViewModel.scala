@@ -1,21 +1,21 @@
 package me.timelytask.view.viewmodel
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.model.{Model, Task}
 import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.utility.TimeSelection
+import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, TaskCollection}
 
-case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaultTimeSelection, 
-                             modelPublisher: Publisher[Model], 
-                             protected var focusElementGrid: Option[FocusElementGrid] = None) 
+case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaultTimeSelection,
+                             modelPublisher: Publisher[Model],
+                             protected var focusElementGrid: Option[FocusElementGrid] = None)
   extends ViewModel[CALENDAR](modelPublisher) {
 
   import CalendarViewModel.*
 
   def getFocusElementGrid: Option[FocusElementGrid] = focusElementGrid
-  
+
   // Variables
   val format = "m"
   val timeColumn = "| Time  |"
@@ -31,26 +31,36 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
   val footerHeight = 1
   val timeFormat = "HH:mm"
   val dayFormat = "EEE dd.MM"
-  
-  def buildFocusElementGrid(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection = timeSelection, 
-                             tasks: List[Task] = model().tasks, focusedElement: Option[Focusable] = None)
-  : FocusElementGrid
-  = {
-    var newFocusElementGrid = new FocusElementGrid(width = timeSelection.dayCount, height = rowCount)
-    for (line <- 0 until rowCount) {
-      val startTime = timeSelection.day.withPeriodAdded(timeSlice, line)
+
+  def buildFocusElementGrid(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection = 
+  timeSelection,tasks: List[Task] = model().tasks,focusedElement: Option[Focusable[?]] = None)
+  : FocusElementGrid = {
+    var newFocusElementGrid = new FocusElementGrid(width = timeSelection.dayCount,
+      height = rowCount)
+    for (row <- 0 until rowCount) {
+      val startTime = timeSelection.day.withPeriodAdded(timeSlice, row)
       (0 until timeSelection.dayCount)
         .foreach(day => {
-          val timeSliceInterval = new Interval(startTime.withPeriodAdded(1.day, day),timeSlice)
+          val timeSliceInterval = new Interval(startTime.withPeriodAdded(1.day, day), timeSlice)
           tasks.filter(task => timeSliceInterval.contains(task.scheduleDate)) match {
             case tasksTimeslot if tasksTimeslot.nonEmpty =>
-              newFocusElementGrid = newFocusElementGrid.setElement(day, line,
-                Some(TaskCollection(tasksTimeslot, timeSliceInterval))).getOrElse
-                  (newFocusElementGrid)
+              newFocusElementGrid = newFocusElementGrid.setElement(day, row,
+                  Some(TaskCollection(tasksTimeslot))).getOrElse
+                (newFocusElementGrid)
           }
         })
     }
-    newFocusElementGrid = newFocusElementGrid.setFocusToElement(focusedElement).getOrElse(newFocusElementGrid)
+    
+    if focusedElement.isDefined & focusedElement.isInstanceOf[TaskCollection] then
+      newFocusElementGrid = newFocusElementGrid.setFocusToElement(focusedElement).getOrElse(newFocusElementGrid.setFocusToElement(
+        newFocusElementGrid.elementsList.find(focusable => {
+          focusable match {
+            case Some(taskCollection: TaskCollection) => taskCollection.getTasks.contains(
+              focusedElement
+                .asInstanceOf[TaskCollection].getTasks.head)
+            case _ => false
+          }
+        }).flatten).getOrElse(newFocusElementGrid))
     focusElementGrid = Some(newFocusElementGrid)
     newFocusElementGrid
   }

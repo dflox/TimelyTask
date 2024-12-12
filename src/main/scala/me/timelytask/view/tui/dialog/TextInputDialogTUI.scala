@@ -1,7 +1,7 @@
 package me.timelytask.view.tui.dialog
 
 import me.timelytask.view.tui.TuiUtils.createLine
-import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, TextInputDialogModel}
+import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, InputDialogModel}
 import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.Terminal
@@ -9,7 +9,7 @@ import org.jline.terminal.Terminal
 class TextInputDialogTUI(val dialogModel: DialogModel, val terminal: Terminal) extends TUIDialog {
 
   def getUserInput: String = {
-    val textInputDialogModel = dialogModel.asInstanceOf[TextInputDialogModel]
+    val textInputDialogModel = dialogModel.asInstanceOf[InputDialogModel]
     val dialogString = createDialogString(textInputDialogModel.description, terminalWidth)
     val viewWithDialog = overlapString(textInputDialogModel.currentView, dialogString)
     terminal.writer().println(viewWithDialog)

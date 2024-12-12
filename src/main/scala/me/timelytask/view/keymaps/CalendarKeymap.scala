@@ -5,7 +5,7 @@ import me.timelytask.model.utility.*
 import me.timelytask.util.Publisher
 import me.timelytask.view.views.CalendarView
 
-class CalendarKeymap(calendarView: CalendarView) {
+class CalendarKeymap(calendarView: CalendarView[?]) {
   def handleKey(key: Key): Boolean = {
     key match {
       case ShiftRight => calendarView.nextDay.call(())

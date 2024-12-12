@@ -6,8 +6,8 @@ import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
 import me.timelytask.view.views.{CalendarView, TaskEditView}
 
 object KeymapFactory {
-  def createCalendarKeymap(config: KeymapConfig, view: CalendarView): Keymap[CALENDAR, 
-    CalendarViewModel, CalendarView] =  Keymap(config, CalendarViewResolver())
-  def createTaskEditKeymap(config: KeymapConfig, view: TaskEditView): Keymap[TASKEdit, 
-    TaskEditViewModel, TaskEditView] =  Keymap(config, TaskEditViewResolver())
+  def createCalendarKeymap(config: KeymapConfig, view: CalendarView[?]): Keymap[CALENDAR, 
+    CalendarViewModel, CalendarView[?]] =  Keymap(config, CalendarViewResolver())
+  def createTaskEditKeymap(config: KeymapConfig, view: TaskEditView[?]): Keymap[TASKEdit, 
+    TaskEditViewModel, TaskEditView[?]] =  Keymap(config, TaskEditViewResolver())
 }

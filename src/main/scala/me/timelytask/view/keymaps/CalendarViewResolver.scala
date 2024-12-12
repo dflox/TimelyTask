@@ -5,8 +5,8 @@ import me.timelytask.view.events.Event
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.CalendarView
 
-class CalendarViewResolver extends EventResolver[CALENDAR, CalendarViewModel, CalendarView] {
-  override def resolveEvent[Args](eventType: EventTypeId, view: CalendarView)
+class CalendarViewResolver extends EventResolver[CALENDAR, CalendarViewModel, CalendarView[?]] {
+  override def resolveEvent[Args](eventType: EventTypeId, view: CalendarView[?])
   : Option[Event[Args]] = {
     // Type-safe casting helper
     def castIfPossible[T](value: Any): Option[T] =

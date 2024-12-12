@@ -9,7 +9,7 @@ class DialogFactoryTUI(terminal: Terminal) {
     dialogModel match {
       case dialogModel: OptionDialogModel[_] => new OptionDialogTUI(dialogModel, terminal)
       case dialogModel: ConfirmDialogModel => new ConfirmDialogTUI(dialogModel, terminal)
-      case dialogModel: TextInputDialogModel => new TextInputDialogTUI(dialogModel, terminal)
+      case dialogModel: InputDialogModel => new TextInputDialogTUI(dialogModel, terminal)
       case dialogModel: DateInputDialogModel => new DateInputDialogTUI(dialogModel, terminal)
     }
   }

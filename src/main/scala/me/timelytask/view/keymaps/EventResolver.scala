@@ -6,6 +6,6 @@ import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.views.View
 
 trait EventResolver[VT <: ViewType, ViewModelType <: ViewModel[VT], V <: View[VT, 
-  ViewModelType]] {
+  ViewModelType, ?]] {
   def resolveEvent[Args](eventType: EventTypeId, view: V): Option[Event[Args]]
 }

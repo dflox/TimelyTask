@@ -2,7 +2,7 @@ package me.timelytask.view.events
 
 import me.timelytask.model.Task
 import me.timelytask.model.utility.InputError
-import me.timelytask.view.viewmodel.elemts.FocusDirection
+import me.timelytask.view.viewmodel.elemts.{FocusDirection, Focusable}
 
 // Focus Events
 
