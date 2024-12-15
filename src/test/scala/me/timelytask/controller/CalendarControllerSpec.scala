@@ -69,7 +69,7 @@ class CalendarControllerSpec extends AnyWordSpec
       viewModelPublisher.update(calendarViewModel)
 
       ShowWholeWeek.call shouldEqual true
-      viewModelPublisher.getValue.asInstanceOf[CalendarViewModel].timeSelection.day shouldEqual (timeSelection.currentWeek.day)
+      viewModelPublisher.getValue.asInstanceOf[CalendarViewModel].timeSelection.day shouldEqual (timeSelection.wholeWeek.day)
     }
 
     "handle ShowLessDays action correctly" in {

@@ -1,6 +1,7 @@
 package me.timelytask.view.events
 
 import me.timelytask.model.utility.InputError
+import me.timelytask.view.viewmodel.CalendarViewModel
 
 case class NextDay(handler: Handler[Unit],
                    isPossible: Unit => Option[InputError]) 
@@ -63,4 +64,11 @@ case class ShowLessDays(handler: Handler[Unit],
   extends Event[Unit](handler, isPossible)
 case object ShowLessDays extends EventCompanion[ShowLessDays, Unit]{
   override protected def create: ShowLessDays = ShowLessDays(handler.get, isPossible.get)
+}
+
+case class EditFocusedTask(handler: Handler[Option[CalendarViewModel]],
+                           isPossible: Option[CalendarViewModel] => Option[InputError])
+  extends Event[Option[CalendarViewModel]](handler, isPossible)
+case object EditFocusedTask extends EventCompanion[EditFocusedTask, Option[CalendarViewModel]]{
+  override protected def create: EditFocusedTask = EditFocusedTask(handler.get, isPossible.get)
 }

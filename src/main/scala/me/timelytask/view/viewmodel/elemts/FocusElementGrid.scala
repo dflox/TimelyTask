@@ -2,7 +2,7 @@ package me.timelytask.view.viewmodel.elemts
 
 import me.timelytask.view.viewmodel.elemts.FocusDirection.*
 
-class FocusElementGrid(elements: Vector[Vector[Option[Focusable[?]]]], 
+class FocusElementGrid(elements: Vector[Vector[Option[Focusable[?]]]],
                        focusedElement: Option[Focusable[?]])
   extends
                                                                                        FocusShifter {

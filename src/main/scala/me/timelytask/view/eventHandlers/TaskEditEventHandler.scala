@@ -5,10 +5,14 @@ import me.timelytask.model.settings.{TASKEdit, ViewType}
 import me.timelytask.model.utility.InputError
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
-import me.timelytask.view.events.{MoveFocus, SaveTask}
+import me.timelytask.view.events.argwrapper.ViewChangeArgumentWrapper
+import me.timelytask.view.events.{ChangeView, MoveFocus, SaveTask}
 import me.timelytask.view.viewmodel.TaskEditViewModel
-import me.timelytask.view.viewmodel.dialogmodel.{OptionDialogModel, InputDialogModel}
-import me.timelytask.view.viewmodel.elemts.{FocusDirection, TaskCollection, InputField}
+import me.timelytask.view.viewmodel.dialogmodel.{InputDialogModel, OptionDialogModel}
+import me.timelytask.view.viewmodel.elemts.{FocusDirection, InputField, TaskCollection}
+import me.timelytask.view.viewmodel.viewchanger.{TaskEditViewChangeArg, ViewChangeArgument}
+
+import scala.util.{Failure, Success, Try}
 
 class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditViewModel],
                            modelPublisher: Publisher[Model],
@@ -16,7 +20,7 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
                            activeViewPublisher: Publisher[ViewType])
   extends EventHandler[TASKEdit, TaskEditViewModel] {
 
-  val viewModel: () => TaskEditViewModel = () => taskEditViewModelPublisher.getValue
+  val viewModel: () => Option[TaskEditViewModel] = () => taskEditViewModelPublisher.getValue
 
   SaveTask.setHandler((taskEditViewModel: TaskEditViewModel) => {
     undoManager.doStep(if taskEditViewModel.isNewTask then
@@ -28,8 +32,12 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
   }, (taskEditViewModel: TaskEditViewModel) => {
     taskEditViewModel.task.isValid match {
       case None =>
-        if taskEditViewModel.isNewTask ^ !modelPublisher.getValue.tasks.exists(
-          _.uuid == taskEditViewModel.task.uuid) then
+        if taskEditViewModel.isNewTask ^ !(modelPublisher.getValue match {
+          case Some(model) =>
+            model.tasks.exists(
+              _.uuid == taskEditViewModel.task.uuid)
+          case None => false
+        }) then
           None
         else
           Some(InputError("Task with this UUID already exists. It seems somebody " +
@@ -38,13 +46,27 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
     }
   })
 
+  ChangeView.addHandler({
+    case viewChangeArg: ViewChangeArgument[TASKEdit, TaskEditViewModel] =>
+      taskEditViewModelPublisher.update(viewChangeArg(taskEditViewModelPublisher.getValue))
+      activeViewPublisher.update(Some(TASKEdit))
+      true
+    case _ => false
+  }, (args: ViewChangeArgumentWrapper[ViewType]) => args.arg match
+    case arg: TaskEditViewChangeArg => None
+    case _ => Some(InputError("Cannot change view to calendar view."))
+  )
+  
   // Focus Events
-  MoveFocus.setHandler((args: FocusDirection) => {
-    viewModel().getFocusElementGrid match
-      case Some(oldFocusElementGrid) => Some(viewModel().copy(focusElementGrid = oldFocusElementGrid
-        .moveFocus(args)))
-      case None => None
-  }, (args: FocusDirection) => if viewModel().getFocusElementGrid.isEmpty then
+  MoveFocus.addHandler[TASKEdit]((args: FocusDirection) => {
+    Try[TaskEditViewModel] {
+      viewModel().get.copy(focusElementGrid = viewModel().get.getFocusElementGrid.get.moveFocus
+        (args))
+    } match
+      case Success(value) => Some(value)
+      case Failure(exception) => None
+  }, (args: FocusDirection) => if viewModel().isEmpty | viewModel().get.getFocusElementGrid.isEmpty
+                               then
                                  Some(InputError("Fatal Error: No focus element grid defined!"))
                                else
                                  None)

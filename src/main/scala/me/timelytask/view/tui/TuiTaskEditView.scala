@@ -12,7 +12,7 @@ class TuiTaskEditView(override val render: (String, ViewType) => Unit, tuiModel:
                       val viewModelPublisher: Publisher[TaskEditViewModel]) extends TaskEditView[String] {
   
   override def update(viewModel: TaskEditViewModel): Boolean = {
-    render(TaskViewStringFactory.buildString(viewModel, tuiModel(())), TASKEdit)
+    render(TaskEditViewStringFactory.buildString(viewModel, tuiModel(())), TASKEdit)
     true
   }
 }

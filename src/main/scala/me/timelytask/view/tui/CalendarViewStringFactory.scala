@@ -10,13 +10,12 @@ import me.timelytask.view.tui.TuiUtils.*
 import me.timelytask.view.viewmodel.elemts.TaskCollection
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
-object CalendarViewStringFactory extends StringFactory {
-  override def buildString(viewModel: ViewModel[CALENDAR]): String = {
+object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewModel] {
+  override def buildString(viewModel: CalendarViewModel): String = {
     buildString(viewModel, ModelTUI.default)
   }
 
-  override def buildString(viewModel: ViewModel[CALENDAR], tuiModel: ModelTUI): String = {
-    val calendarViewModel: CalendarViewModel = viewModel.asInstanceOf[CalendarViewModel]
+  override def buildString(calendarViewModel: CalendarViewModel, tuiModel: ModelTUI): String = {
     import calendarViewModel.*
     import tuiModel.*
 

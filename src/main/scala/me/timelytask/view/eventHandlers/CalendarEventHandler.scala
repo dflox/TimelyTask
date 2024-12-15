@@ -1,15 +1,19 @@
 package me.timelytask.view.eventHandlers
 
-import com.github.nscala_time.time.Imports.richInt
+import com.github.nscala_time.time.Imports.{Period, richInt}
 import me.timelytask.controller.commands.UndoManager
 import me.timelytask.model.settings.{CALENDAR, ViewType}
 import me.timelytask.model.utility.{InputError, TimeSelection}
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.*
+import me.timelytask.view.events.argwrapper.ViewChangeArgumentWrapper
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.viewmodel.elemts.FocusDirection.*
 import me.timelytask.view.viewmodel.elemts.{FocusDirection, Focusable, TaskCollection}
+import me.timelytask.view.viewmodel.viewchanger.{CalendarViewChangeArg, ViewChangeArgument}
+
+import scala.util.{Failure, Success, Try}
 
 class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarViewModel],
                            modelPublisher: Publisher[Model],
@@ -17,72 +21,103 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
                            activeViewPublisher: Publisher[ViewType])
   extends EventHandler[CALENDAR, CalendarViewModel] {
 
-  val viewModel: () => CalendarViewModel = () => calendarViewModelPublisher.getValue
-    .asInstanceOf[CalendarViewModel]
+  val viewModel: () => Option[CalendarViewModel] = () => calendarViewModelPublisher.getValue
 
   NextDay.setHandler((args: Unit) => {
-    Some(viewModel().copy(timeSelection = viewModel().timeSelection + 1.days))
+    addPeriodToTimeSelection(1.days)
   }, (args: Unit) => None)
 
   PreviousDay.setHandler((args: Unit) => {
-    Some(viewModel().copy(timeSelection = viewModel().timeSelection - 1.days))
+    addPeriodToTimeSelection(-1.days)
   }, (args: Unit) => None)
 
   NextWeek.setHandler((args: Unit) => {
-    Some(viewModel().copy(timeSelection = viewModel().timeSelection + 1.weeks))
+    addPeriodToTimeSelection(1.weeks)
   }, (args: Unit) => None)
 
   PreviousWeek.setHandler((args: Unit) => {
-    Some(viewModel().copy(timeSelection = viewModel().timeSelection - 1.weeks))
+    addPeriodToTimeSelection(-1.weeks)
   }, (args: Unit) => None)
 
   GoToToday.setHandler((args: Unit) => {
-    Some(viewModel().copy(timeSelection = viewModel().timeSelection.startingToday))
+    Try[CalendarViewModel] {
+      viewModel().get.copy(timeSelection = viewModel().get.timeSelection.startingToday)
+    } match
+      case Success(value) => Some(value)
+      case Failure(exception) => None
   }, (args: Unit) => None)
 
   ShowWholeWeek.setHandler((args: Unit) => {
-    Some(viewModel().copy(timeSelection = viewModel().timeSelection.currentWeek))
+    Try[CalendarViewModel] {
+      viewModel().get.copy(timeSelection = viewModel().get.timeSelection.wholeWeek)
+    } match
+      case Success(value) => Some(value)
+      case Failure(exception) => None
   }, (args: Unit) => None)
 
   ShowMoreDays.setHandler((args: Unit) => {
-    changeTimeSelection(viewModel().timeSelection.addDayCount(1))
+    addDaysToTimeSelection(1)
   }, (args: Unit) => None)
 
   ShowLessDays.setHandler((args: Unit) => {
-    changeTimeSelection(viewModel().timeSelection.subtractDayCount(1))
+    addDaysToTimeSelection(-1)
   }, (args: Unit) => None)
-
+  
   // Focus Events
-  MoveFocus.setHandler((args: FocusDirection) => {
-    viewModel().getFocusElementGrid match
-      case Some(focusElementGrid) => Some(viewModel().copy(focusElementGrid = focusElementGrid
-        .moveFocus(args)))
-      case None => None
-  }, (args: FocusDirection) => if viewModel().getFocusElementGrid.isEmpty then
+  MoveFocus.addHandler[CALENDAR]((args: FocusDirection) => {
+    Try[CalendarViewModel] {
+      viewModel().get.copy(focusElementGrid = viewModel().get.getFocusElementGrid.get.moveFocus
+        (args))
+    } match
+      case Success(value) => Some(value)
+      case Failure(exception) => None
+  }, (args: FocusDirection) => if viewModel().isEmpty | viewModel().get.getFocusElementGrid.isEmpty 
+                                                      then
                                  Some(InputError("Fatal Error: No focus element grid defined!"))
                                else
                                  None)
 
-  SetFocusTo.setHandler((args: Task) => {
-    viewModel().getFocusElementGrid match
-      case Some(focusElementGrid) => Some(viewModel().copy(focusElementGrid = focusElementGrid
-        .setFocusToElement(selectFunc = (element: Option[Focusable[?]]) => element match {
-          case Some(element) => element match
-            case taskCollection: TaskCollection => taskCollection.getTasks.contains(args)
-            case _ => false
-          case None => false
-        })))
-      case None => None
-  }, (args: Task) => if viewModel().getFocusElementGrid.isEmpty then
+  SetFocusTo.addHandler[CALENDAR]((args: Task) => {
+    Try[CalendarViewModel] {
+      viewModel().get.copy(focusElementGrid = viewModel().get.getFocusElementGrid.get.setFocusToElement
+        (selectFunc = {
+          case Some(taskCollection: TaskCollection) => taskCollection.getTasks.contains(args)
+          case _ => false
+        }))
+    } match
+      case Success(value) => Some(value)
+      case Failure(exception) => None
+  }, (args: Task) => if viewModel().isEmpty | viewModel().get.getFocusElementGrid.isEmpty then
                        Some(InputError("Fatal Error: No focus element grid defined!"))
                      else
                        None)
 
-  private def changeTimeSelection(timeSelection: Option[TimeSelection]): Option[CalendarViewModel]
+  ChangeView.addHandler({
+    case viewChangeArg: ViewChangeArgument[CALENDAR, CalendarViewModel] =>
+      calendarViewModelPublisher.update(viewChangeArg(calendarViewModelPublisher.getValue))
+      activeViewPublisher.update(Some(CALENDAR))
+      true
+    case _ => false
+  }, (args: ViewChangeArgumentWrapper[ViewType]) => args.arg match
+    case arg: CalendarViewChangeArg => None
+    case _ => Some(InputError("Cannot change view to calendar view."))
+  )
+  
+  private def addDaysToTimeSelection(daysToAdd: Int): Option[CalendarViewModel]
   = {
-    timeSelection match {
-      case Some(value) => Some(viewModel().copy(timeSelection = value))
-      case None => None
+    Try[CalendarViewModel] {
+      viewModel().get.copy(timeSelection = viewModel().get.timeSelection.addDayCount
+        (daysToAdd).get)
+    } match
+      case Success(value) => Some(value)
+      case Failure(exception) => None
     }
+
+  private def addPeriodToTimeSelection(period: Period): Option[CalendarViewModel] = {
+    Try[CalendarViewModel] {
+      viewModel().get.copy(timeSelection = viewModel().get.timeSelection + period)
+    } match
+      case Success(value) => Some(value)
+      case Failure(exception) => None
   }
 }

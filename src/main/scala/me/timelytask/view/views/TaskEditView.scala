@@ -6,6 +6,4 @@ import me.timelytask.view.viewmodel.{TaskEditViewModel, ViewModel}
 
 trait TaskEditView[RenderType] extends View[TASKEdit, TaskEditViewModel, RenderType] {
   val saveTask: SaveTask = SaveTask.createEvent
-
-  val moveFocus: MoveFocus = MoveFocus.createEvent
 }

@@ -12,14 +12,12 @@ trait EventHandler[T <: ViewType, M <: ViewModel[T]](using
                                                      undoManager: UndoManager,
                                                      activeViewPublisher: Publisher[ViewType]) {
 
-  val model: () => Model = () => modelPublisher.getValue
+  val model: () => Option[Model] = () => modelPublisher.getValue
 
   given Conversion[Option[M], Boolean] with {
-    def apply(option: Option[M]): Boolean = option match {
-      case Some(viewModel) =>
-        viewModelPublisher.update(viewModel)
-        true
-      case None => false
+    def apply(option: Option[M]): Boolean = {
+      viewModelPublisher.update(option)
+      option.isDefined
     }
   }
 }

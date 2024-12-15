@@ -1,7 +1,10 @@
 package me.timelytask.view.events
 
-import me.timelytask.model.settings.ViewType
+import me.timelytask.model.settings.{CALENDAR, ViewType}
 import me.timelytask.model.utility.InputError
+import me.timelytask.view.events.argwrapper.ViewChangeArgumentWrapper
+import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
+import me.timelytask.view.viewmodel.viewchanger.{CalendarViewChangeArg, TaskEditViewChangeArg, ViewChangeArgument}
 
 import java.util.UUID
 
@@ -124,12 +127,16 @@ case object EditState extends EventCompanion[EditState, UUID] {
   override protected def create: EditState = EditState(handler.get, isPossible.get)
 }
 
-case class ChangeView(handler: Handler[ViewType],
-                      isPossible: ViewType => Option[InputError])
-  extends Event[ViewType](handler, isPossible)
-case object ChangeView extends EventCompanion[ChangeView, ViewType] {
-  override protected def create: ChangeView = ChangeView(handler.get, isPossible.get)
+case class ChangeView(handlers: List[TypeSensitiveHandler[?, 
+  ViewChangeArgument[ViewType, ViewModel[ViewType]], ViewChangeArgumentWrapper[ViewType]]],
+                      isPossibles: List[ViewChangeArgumentWrapper[ViewType] => Option[InputError]])
+  extends MultiHandlerEvent[ViewChangeArgument[ViewType, ViewModel[ViewType]], 
+    ViewChangeArgumentWrapper[ViewType]](handlers, isPossibles)
+case object ChangeView extends MultiHandlerEventCompanion[ViewChangeArgument[ViewType, 
+  ViewModel[ViewType]], ViewChangeArgumentWrapper[ViewType], ChangeView] {
+  override protected def create: ChangeView = ChangeView(handlers, isPossibles)
 }
+
 //case class ChangeTheme() extends Event[]
 
 //case class ChangeDataFileType() extends Event

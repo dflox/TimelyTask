@@ -4,7 +4,9 @@ import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 
 trait Focusable[T] {
   val dialogModel: DialogModel[T]
-  def interact(getInput: DialogModel[T] => Option[T]): Option[T] = {
-    getInput(dialogModel)
-  }
+//  def interact[RenderType](getInput: (DialogModel[T], RenderType) => Option[T],
+//                           currentView: RenderType)
+//  : Option[T] = {
+//    getInput(dialogModel, currentView)
+//  }
 }

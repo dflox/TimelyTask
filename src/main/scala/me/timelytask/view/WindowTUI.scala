@@ -4,7 +4,7 @@ import me.timelytask.model.settings.ViewType
 import me.timelytask.model.settings.ViewType.{CALENDAR, TASKEdit}
 import me.timelytask.model.utility.Key
 import me.timelytask.util.Publisher
-import me.timelytask.view.tui.{CalendarViewStringFactory, ModelTUI, StringFactory, TaskViewStringFactory}
+import me.timelytask.view.tui.{CalendarViewStringFactory, ModelTUI, StringFactory, TaskEditViewStringFactory}
 import me.timelytask.view.viewmodel.ViewModel
 import org.jline.terminal.Terminal
 
@@ -27,7 +27,7 @@ class WindowTUI(using viewModelPublisher: Publisher[ViewModel], terminal: Termin
   }
 
   def renderActiveView(viewModel: ViewModel): Unit = {
-    val tuiView: StringFactory = activeView()
+    val tuiView: StringFactory[] = activeView()
     writer.print(tuiView.buildString(viewModel, new ModelTUI(terminal.getHeight, terminal.getWidth)))
   }
 }
@@ -35,7 +35,7 @@ class WindowTUI(using viewModelPublisher: Publisher[ViewModel], terminal: Termin
 given Conversion[ViewType, StringFactory] with {
   def apply(viewType: ViewType): StringFactory = viewType match {
     case CALENDAR => CalendarViewStringFactory
-    case TASKEdit => TaskViewStringFactory
+    case TASKEdit => TaskEditViewStringFactory
     //case _ => CalendarTUI
     //    case TABLE => ???
     //    case KANBAN => ???

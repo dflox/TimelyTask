@@ -13,7 +13,7 @@ class TuiCalendarView(override val render: (String, ViewType) => Unit, tuiModel:
   extends CalendarView[String] {
   
   override def update(viewModel: CalendarViewModel): Boolean = {
-    render(TaskViewStringFactory.buildString(viewModel, tuiModel(())), CALENDAR)
+    render(CalendarViewStringFactory.buildString(viewModel, tuiModel(())), CALENDAR)
     true
   }
   

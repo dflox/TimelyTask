@@ -39,23 +39,15 @@ case class TimeSelection(day: DateTime, dayCount: Int, timeFrame: Period) {
     TimeSelection(day - period, dayCount, timeFrame)
   }
   
-  def currentWeek: TimeSelection = {
+  def wholeWeek: TimeSelection = {
     TimeSelection(getFirstDayOfWeek, 7, timeFrame)
   }
   
   def addDayCount(days: Int): Option[TimeSelection] = {
-    if(dayCount + days > MAX_DAY_COUNT) {
+    if(dayCount + days > MAX_DAY_COUNT | dayCount + days < MIN_DAY_COUNT) {
       None
     } else {
       Some(TimeSelection(day, dayCount + days, timeFrame))
-    }
-  }
-  
-  def subtractDayCount(days: Int): Option[TimeSelection] = {
-    if(dayCount - days < MIN_DAY_COUNT) {
-      None
-    } else {
-      Some(TimeSelection(day, dayCount - days, timeFrame))
     }
   }
   

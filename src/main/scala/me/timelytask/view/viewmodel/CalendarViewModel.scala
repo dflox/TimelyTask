@@ -5,6 +5,7 @@ import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
+import me.timelytask.view.viewmodel.dialogmodel.OptionDialogModel
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, TaskCollection}
 
 case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaultTimeSelection,
@@ -32,8 +33,27 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
   val timeFormat = "HH:mm"
   val dayFormat = "EEE dd.MM"
 
-  def buildFocusElementGrid(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection = 
-  timeSelection,tasks: List[Task] = model().tasks,focusedElement: Option[Focusable[?]] = None)
+  protected var taskToEdit: Option[Task] = None
+
+  def getTaskToEdit: Option[Task] = taskToEdit
+
+
+  def interact[RenderType](currentView: Option[RenderType], optionDialogInputGetter:
+  (Option[OptionDialogModel[Task]], Option[RenderType]) => Option[Task]): Option[CalendarViewModel]
+  = {
+    focusElementGrid match
+      case Some(feg) =>
+        feg.getFocusedElement match
+          case Some(focusedElement) =>
+            focusedElement match
+              case taskCollection: TaskCollection =>
+                taskToEdit = optionDialogInputGetter(Some(taskCollection.dialogModel), currentView)
+    if taskToEdit.isDefined then Some(this)
+    else None
+  }
+
+  def buildFocusElementGrid(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection =
+  timeSelection, tasks: List[Task] = model().tasks, focusedElement: Option[Focusable[?]] = None)
   : FocusElementGrid = {
     var newFocusElementGrid = new FocusElementGrid(width = timeSelection.dayCount,
       height = rowCount)
@@ -50,17 +70,18 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
           }
         })
     }
-    
+
     if focusedElement.isDefined & focusedElement.isInstanceOf[TaskCollection] then
-      newFocusElementGrid = newFocusElementGrid.setFocusToElement(focusedElement).getOrElse(newFocusElementGrid.setFocusToElement(
-        newFocusElementGrid.elementsList.find(focusable => {
-          focusable match {
-            case Some(taskCollection: TaskCollection) => taskCollection.getTasks.contains(
-              focusedElement
-                .asInstanceOf[TaskCollection].getTasks.head)
-            case _ => false
-          }
-        }).flatten).getOrElse(newFocusElementGrid))
+      newFocusElementGrid = newFocusElementGrid.setFocusToElement(focusedElement).getOrElse(
+        newFocusElementGrid.setFocusToElement(
+          newFocusElementGrid.elementsList.find(focusable => {
+            focusable match {
+              case Some(taskCollection: TaskCollection) => taskCollection.getTasks.contains(
+                focusedElement
+                  .asInstanceOf[TaskCollection].getTasks.head)
+              case _ => false
+            }
+          }).flatten).getOrElse(newFocusElementGrid))
     focusElementGrid = Some(newFocusElementGrid)
     newFocusElementGrid
   }
