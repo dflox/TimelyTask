@@ -45,6 +45,8 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
       case Some(msg) => Some(InputError("Task is not valid: " + msg))
     }
   })
+  
+  // TODO: Implement CancelTask event
 
   ChangeView.addHandler({
     case viewChangeArg: ViewChangeArgument[TASKEdit, TaskEditViewModel] =>

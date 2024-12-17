@@ -7,6 +7,7 @@ import me.timelytask.model.settings.ViewType
 import me.timelytask.view.viewmodel.elemts.FocusElementGrid
 
 trait ViewModel[ViewType](modelPublisher: Publisher[Model]) {
+  //TODO: add dialog for questions form the event handler
   val focusElementGrid: Option[FocusElementGrid]
   val model: () => Option[Model] = () => {modelPublisher.getValue}
   val today: DateTime = DateTime.now()
