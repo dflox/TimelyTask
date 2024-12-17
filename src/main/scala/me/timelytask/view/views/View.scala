@@ -29,6 +29,9 @@ trait View[VT <: ViewType, ViewModelType <: ViewModel[VT], RenderType] {
   def viewModel: Option[ViewModelType] = viewModelPublisher.getValue
 
   def handleKey(key: Key): Boolean = {
+    if testIfFocusedElementIsTriggered(key) then
+      true
+    else
     Try[Boolean] {
       keymapPublisher.getValue.get.handleKey(key, this)
     } match
@@ -38,5 +41,13 @@ trait View[VT <: ViewType, ViewModelType <: ViewModel[VT], RenderType] {
 
   def update(viewModel: Option[ViewModelType]): Boolean
 
+  private def testIfFocusedElementIsTriggered(key: Key): Boolean = {
+    if key == Space then
+      return interactWithFocusedElement
+    false
+  }
+  
+  protected def interactWithFocusedElement: Boolean
+  
   viewModelPublisher.addListener(update)
 }

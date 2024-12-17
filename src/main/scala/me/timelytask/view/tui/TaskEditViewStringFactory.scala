@@ -22,13 +22,20 @@ object TaskEditViewStringFactory extends StringFactory[TASKEdit, TaskEditViewMod
     buildString(taskViewModel, ModelTUI.default)
   }
 
-  override def buildString(taskViewModel: TaskEditViewModel, TUIModel: ModelTUI): String = {
-    import TUIModel.*
-    import taskViewModel.*
+  override def buildString(taskEditViewModel: TaskEditViewModel, tuiModel: ModelTUI): String = {
+    import tuiModel.*
+    import taskEditViewModel.*
 
     val builder = new StringBuilder()
-    builder.append(taskStringBuilder(task, terminalWidth, terminalHeight, getFocusElementGrid.get,
-      longestPropertyLength))
+    if getFocusElementGrid.isEmpty then {
+      builder.append(createLine(terminalWidth)).append("\n")
+      builder.append(f"!!! Task ${task.name} is not defined. Please try again./n !!!")
+      builder.append(createLine(terminalWidth)).append("\n")
+      builder.append(alignTop(terminalHeight, 3))
+    } else {
+      builder.append(taskStringBuilder(task, terminalWidth, terminalHeight, getFocusElementGrid.get,
+        longestPropertyLength))
+    }
     builder.toString()
   }
 

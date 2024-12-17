@@ -42,10 +42,11 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
 
     // Generate Grid
     val (timeSlice, rowCount) = calculatePeriod(heightAvailable, 1, timeSelection.timeFrameInterval)
+
     getFocusElementGrid match {
-      case None => buildFocusElementGrid(timeSlice, rowCount, timeSelection, model().tasks)
+      case None => buildFocusElementGrid(timeSlice, rowCount, timeSelection)
       case Some(focusElementGrid) => if focusElementGrid.height != rowCount then
-        buildFocusElementGrid(timeSlice, rowCount, timeSelection, model().tasks, focusElementGrid
+        buildFocusElementGrid(timeSlice, rowCount, timeSelection, focusedElement = focusElementGrid
           .getFocusedElement)
     }
 

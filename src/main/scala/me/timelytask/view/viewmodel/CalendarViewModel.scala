@@ -53,7 +53,10 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
   }
 
   def buildFocusElementGrid(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection =
-  timeSelection, tasks: List[Task] = model().tasks, focusedElement: Option[Focusable[?]] = None)
+  timeSelection, tasks: List[Task] = model() match {
+    case Some(model) => model.tasks
+    case None => Nil
+  }, focusedElement: Option[Focusable[?]] = None)
   : FocusElementGrid = {
     var newFocusElementGrid = new FocusElementGrid(width = timeSelection.dayCount,
       height = rowCount)

@@ -11,7 +11,7 @@ class PersistenceController(using modelPublisher: Publisher[Model])
   println("PersistenceController created")
   
   StartApp.setHandler((args: Unit) => {
-    modelPublisher.update(Model.default)
+    modelPublisher.update(Some(Model.default))
     true
   })
 

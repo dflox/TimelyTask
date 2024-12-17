@@ -9,7 +9,7 @@ import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.dialogmodel.OptionDialogModel
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
-trait CalendarView[RenderType] extends View[CALENDAR, CalendarViewModel, RenderType]{
+trait CalendarView[RenderType] extends View[CALENDAR, CalendarViewModel, RenderType] {
   val nextDay: NextDay = NextDay.createEvent
   val previousDay: PreviousDay = PreviousDay.createEvent
   val nextWeek: NextWeek = NextWeek.createEvent
@@ -19,17 +19,18 @@ trait CalendarView[RenderType] extends View[CALENDAR, CalendarViewModel, RenderT
   val showWholeWeek: ShowWholeWeek = ShowWholeWeek.createEvent
   val showMoreDays: ShowMoreDays = ShowMoreDays.createEvent
   val showLessDays: ShowLessDays = ShowLessDays.createEvent
-  
-  val editFocusedTask: EditFocusedTask = EditFocusedTask.createEvent 
+
+  val editFocusedTask: EditFocusedTask = EditFocusedTask.createEvent
 
   def renderOptionDialog: (optionDialogModel: Option[OptionDialogModel[Task]],
                            renderType: Option[RenderType]) => Option[Task]
   
-  override def handleKey(key: Key): Boolean = {
-    if key == Space then {
-      editFocusedTask.call(viewModel.interact[RenderType](currentlyRendered,
-        renderOptionDialog))
+  protected def interactWithFocusedElement: Boolean = {
+    viewModel match {
+      case Some(viewModel) =>
+        editFocusedTask.call(viewModel.interact[RenderType](currentlyRendered,
+          renderOptionDialog))
+      case None => false
     }
-    else keymapPublisher.getValue.handleKey(key, this)
   }
 }

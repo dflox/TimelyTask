@@ -6,16 +6,14 @@ import me.timelytask.util.{MultiTypeObserver, Publisher}
 import me.timelytask.view.viewmodel.ViewModel
 
 trait Controller(using modelPublisher: Publisher[Model]) extends MultiTypeObserver {
-  val model: () => Model = () => {
+  val model: () => Option[Model] = () => {
     modelPublisher.getValue
   }
 
   given Conversion[Option[Model], Boolean] with {
-    def apply(option: Option[Model]): Boolean = option match {
-      case Some(model) =>
-        modelPublisher.update(model)
-        true
-      case None => false
+    def apply(option: Option[Model]): Boolean = {
+      modelPublisher.update(option)
+      option.isDefined
     }
   }
 }
