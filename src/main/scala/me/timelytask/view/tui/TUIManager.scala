@@ -55,8 +55,8 @@ override val taskEditKeyMapPublisher: Publisher[Keymap[TASKEdit, TaskEditViewMod
       keyInputTask = Some(inputThread.run(getInput))
       val key = keyInputTask.get.await()
       activeViewPublisher.getValue match {
-        case CALENDAR => calendarView.handleKey(key)
-        case TASKEdit => taskEditView.handleKey(key)
+        case CALENDAR => calendarView.handleKey(Some(key))
+        case TASKEdit => taskEditView.handleKey(Some(key))
       }
     }
   }

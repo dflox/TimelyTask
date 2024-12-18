@@ -6,12 +6,15 @@ import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.Terminal
 
-class TextInputDialogTUI(val dialogModel: DialogModel, val terminal: Terminal) extends TUIDialog {
+class TextInputDialogTUI(val dialogModel: Option[InputDialogModel[String]],
+                          val currentView: Option[String],
+                         val terminal: Terminal) extends TUIDialog {
 
-  def getUserInput: String = {
-    val textInputDialogModel = dialogModel.asInstanceOf[InputDialogModel]
-    val dialogString = createDialogString(textInputDialogModel.description, terminalWidth)
-    val viewWithDialog = overlapString(textInputDialogModel.currentView, dialogString)
+  def getUserInput: Option[String] = {
+    if dialogModel.isEmpty | currentView.isEmpty then return None
+
+    val dialogString = createDialogString(dialogModel.get.description, terminalWidth)
+    val viewWithDialog = overlapString(currentView.get, dialogString)
     terminal.writer().println(viewWithDialog)
 
     val history = new DefaultHistory()
@@ -22,9 +25,10 @@ class TextInputDialogTUI(val dialogModel: DialogModel, val terminal: Terminal) e
       .build()
 
     history.purge() // Clear the history before each input
-    val input = reader.readLine("> ")
+    val input = reader.readLine("> ", null, dialogModel.get.default.getOrElse(""))
     history.purge() // Clear the history after input
-    input
+
+    Some(input)
   }
 
   private def createDialogString(description: String, terminalWidth: Int): String = {

@@ -9,8 +9,9 @@ import me.timelytask.view.views.View
 class Keymap[VT <: ViewType, ViewModelType <: ViewModel[VT], V <: View[VT,
   ViewModelType, ?]](config: KeymapConfig,
                         resolver: EventResolver[VT, ViewModelType, V]) {
-  def handleKey(key: Key, view: V): Boolean = {
-    config.mappings.get(key).flatMap { eventType =>
+  def handleKey(key: Option[Key], view: V): Boolean = {
+    if key.isEmpty then return false
+    config.mappings.get(key.get).flatMap { eventType =>
       resolver.resolveEvent(eventType, view).map {
         case event: Event[Unit] => event.call(())
         case event: Event[ViewModel[VT]] => event.call(view.viewModel)

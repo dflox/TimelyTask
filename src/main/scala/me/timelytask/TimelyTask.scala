@@ -1,9 +1,8 @@
 package me.timelytask
 
-import me.timelytask.controller.{CoreInitializer, PersistenceController, ModelController, keyMapManager}
+import me.timelytask.controller.{CoreInitializer, ModelController, PersistenceController}
 import me.timelytask.model.Model
-import me.timelytask.model.settings.{Exit, StartApp, ViewType}
-import me.timelytask.model.utility.Unknown
+import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.view.*
 import me.timelytask.view.tui.KeyMapManager
@@ -16,18 +15,13 @@ import org.jline.terminal.{Terminal, TerminalBuilder}
 object TimelyTask extends App {
 
   //  ------------- Core -------------
-  var running = true
+  given modelPublisher: Publisher[Model] = Publisher[Model](Some(Model.default))
 
-  Exit.setHandler(() => {
-    running = false
-    true
-  })
-  given modelPublisher: Publisher[Model] = Publisher[Model](Model.default)
-
-  given activeViewPublisher: Publisher[ViewType] = Publisher[ViewType](ViewType.CALENDAR)
+  given activeViewPublisher: Publisher[ViewType] = Publisher[ViewType](Some(CALENDAR))
   
-  given viewModelPublisher: Publisher[ViewModel] = Publisher[ViewModel](DefaultViewModelProvider
-    .defaultViewModel)
+  given calendarViewModelPublisher: Publisher[ViewModel[CALENDAR]] = Publisher[ViewModel[CALENDAR]](None)
+  
+  given taskEditViewModelPublisher: Publisher[ViewModel[TASKEdit]] = Publisher[ViewModel[TASKEdit]](None)
 
   given taskController: ModelController = new ModelController()
   
@@ -58,14 +52,6 @@ object TimelyTask extends App {
 
   terminal.writer().println("starting")
   // ------------- END TUI -------------
-
-  StartApp.call
   
-  while (running) {
-    val key = Option(bindingReader.readBinding(keyMapManager.keyMap)) match {
-        case Some(keyboard) => keyboard
-        case None => Unknown
-      }
-    windowTUI.onUserInput(key)
-  }
+  
 }

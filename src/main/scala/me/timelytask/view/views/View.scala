@@ -24,16 +24,16 @@ trait View[VT <: ViewType, ViewModelType <: ViewModel[VT], RenderType] {
   def render: (RenderType, ViewType) => Unit
   
   protected var currentlyRendered: Option[RenderType]
+  
   def getCurrentlyRendered: Option[RenderType] = currentlyRendered
   
   def viewModel: Option[ViewModelType] = viewModelPublisher.getValue
 
-  def handleKey(key: Key): Boolean = {
-    if testIfFocusedElementIsTriggered(key) then
-      true
-    else
+  def handleKey(key: Option[Key]): Boolean = {
+    val (test, keyTested) = testIfFocusedElementIsTriggered(key)
+    if test then return true
     Try[Boolean] {
-      keymapPublisher.getValue.get.handleKey(key, this)
+      keymapPublisher.getValue.get.handleKey(keyTested, this)
     } match
       case Success(value) => value
       case Failure(exception) => throw new Exception("Keymap not found")
@@ -41,10 +41,10 @@ trait View[VT <: ViewType, ViewModelType <: ViewModel[VT], RenderType] {
 
   def update(viewModel: Option[ViewModelType]): Boolean
 
-  private def testIfFocusedElementIsTriggered(key: Key): Boolean = {
+  private def testIfFocusedElementIsTriggered(key: Option[Key]): (Boolean, Option[Key]) = {
     if key == Space then
-      return interactWithFocusedElement
-    false
+      return (interactWithFocusedElement, None)
+    (false, key)
   }
   
   protected def interactWithFocusedElement: Boolean

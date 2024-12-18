@@ -41,13 +41,21 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
   def interact[RenderType](currentView: Option[RenderType], optionDialogInputGetter:
   (Option[OptionDialogModel[Task]], Option[RenderType]) => Option[Task]): Option[CalendarViewModel]
   = {
-    focusElementGrid match
-      case Some(feg) =>
-        feg.getFocusedElement match
-          case Some(focusedElement) =>
-            focusedElement match
-              case taskCollection: TaskCollection =>
-                taskToEdit = optionDialogInputGetter(Some(taskCollection.dialogModel), currentView)
+    
+    def getFocusedElement: Option[Focusable[?]] = focusElementGrid match
+      case Some(feg) => feg.getFocusedElement
+      case None => None
+      
+    def getTaskCollection(focusable: Option[Focusable[?]]): Option[TaskCollection] = focusable match
+      case Some(taskCollection: TaskCollection) => Some(taskCollection)
+      case _ => None
+      
+    def getOptionInput(focusable: Option[TaskCollection]): Option[Task] = focusable match
+      case Some(taskCollection) => optionDialogInputGetter(Some(taskCollection.dialogModel), currentView)
+      case None => None 
+    
+    taskToEdit = getOptionInput(getTaskCollection(getFocusedElement))
+    
     if taskToEdit.isDefined then Some(this)
     else None
   }

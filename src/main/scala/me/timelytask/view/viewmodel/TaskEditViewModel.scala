@@ -81,9 +81,13 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
 
   def getFocusElementGrid: Option[FocusElementGrid] = focusElementGrid
 
-  def interact[RenderType](currentView: RenderType,
-                           optionDialogInputGetter: (OptionDialogModel[?], RenderType) => Option[?],
-                           inputDialogInputGetter: (InputDialogModel[?], RenderType) => Option[?])
+  def interact[RenderType](currentView: Option[RenderType],
+                           optionDialogInputGetter: (Option[OptionDialogModel[?]], 
+                             Option[RenderType]) => 
+                             Option[?],
+                           inputDialogInputGetter: (Option[InputDialogModel[?]], Option[RenderType])
+                             => 
+                             Option[?])
   : Option[TaskEditViewModel] = {
 
     def findCorrectInputGetter(focusedElement: Option[Focusable[?]]):
@@ -98,12 +102,12 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
 
     def getInputFromInputDialog(inputField: InputField[?]): Option[TaskEditViewModel] = {
       copyTask(getUpdatedTask(inputField.description,
-        inputDialogInputGetter(inputField.dialogModel, currentView)))
+        inputDialogInputGetter(Some(inputField.dialogModel), currentView)))
     }
 
     def getInputFromOptionDialog(optionInputField: OptionInputField[?]): Option[TaskEditViewModel] = {
       copyTask(getUpdatedTask(optionInputField.description,
-        optionDialogInputGetter(optionInputField.dialogModel, currentView)))
+        optionDialogInputGetter(Some(optionInputField.dialogModel), currentView)))
     }
 
     def copyTask(task: Option[Task]): Option[TaskEditViewModel] = {

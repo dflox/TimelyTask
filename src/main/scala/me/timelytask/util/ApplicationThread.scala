@@ -3,6 +3,7 @@ package me.timelytask.util
 import java.util.concurrent.{CancellationException, Executors}
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future, Promise}
+import scala.util.{Failure, Success, Try}
 
 class ApplicationThread[ReturnType] {
   private val executor = Executors.newSingleThreadExecutor()
@@ -12,17 +13,14 @@ class ApplicationThread[ReturnType] {
     val promise = Promise[ReturnType]()
 
     val future = Future {
-      try {
-        val result = code
-        promise.success(result)
-        result
-      } catch {
-        case e: CancellationException =>
-          promise.tryFailure(e)
-          throw e
-        case t: Throwable =>
-          promise.tryFailure(t)
-          throw t
+      val result = Try(code)
+      result match {
+        case Success(value) =>
+          promise.success(value)
+          value
+        case Failure(exception) =>
+          promise.tryFailure(exception)
+          throw exception
       }
     }
 
