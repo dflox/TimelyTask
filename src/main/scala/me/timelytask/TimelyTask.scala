@@ -33,24 +33,6 @@ object TimelyTask extends App {
   //  ------------- END Core -------------
 
   //  ------------- TUI -------------
-  given terminal: Terminal = TerminalBuilder.builder()
-    .system(true)
-    .build()
-
-  val history = new DefaultHistory()
-  
-  // Create a binding reader for handling key sequences
-  val bindingReader = new BindingReader(terminal.reader())
-
-  given inputHandler: KeyInputHandler = new KeyInputHandler
-
-  val windowTUI = new WindowTUI()
-
-  KeyMapManager
-  // Enter raw mode to process input immediately
-  terminal.enterRawMode()
-
-  terminal.writer().println("starting")
   // ------------- END TUI -------------
   
   
