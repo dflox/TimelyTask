@@ -10,7 +10,7 @@ class FocusElementGrid(elements: Vector[Vector[Option[Focusable[?]]]],
 
   val width: Int = elements.length
   val height: Int = elements(0).length
-  
+
   def getElements: Vector[Vector[Option[Focusable[?]]]] = elements
   def getFocusedElement: Option[Focusable[?]] = focusedElement
 
@@ -63,7 +63,7 @@ class FocusElementGrid(elements: Vector[Vector[Option[Focusable[?]]]],
     elementsList.drop(xyToIndex(x, y)).find{
       case Some(_) => true
       case None => false
-    }.flatten 
+    }.flatten
   }
 
   private def getNextElementUpwards(x: Int, y: Int): Option[Focusable[?]] = {

@@ -12,7 +12,7 @@ import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import com.github.nscala_time.time.Imports.*
 
-object GuiLauncher extends JFXApp3 {
+object CalendarGUI extends JFXApp3 {
 
   var today: DateTime = DateTime.now()
   var daysToShow = 7
