@@ -21,16 +21,4 @@ trait CalendarView[RenderType] extends View[CALENDAR, CalendarViewModel, RenderT
   val showLessDays: ShowLessDays = ShowLessDays.createEvent
 
   val editFocusedTask: EditFocusedTask = EditFocusedTask.createEvent
-
-  def renderOptionDialog: (optionDialogModel: Option[OptionDialogModel[Task]],
-                           renderType: Option[RenderType]) => Option[Task]
-  
-  protected def interactWithFocusedElement: Boolean = {
-    viewModel match {
-      case Some(viewModel) =>
-        editFocusedTask.call(viewModel.interact[RenderType](currentlyRendered,
-          renderOptionDialog))
-      case None => false
-    }
-  }
 }

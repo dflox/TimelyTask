@@ -16,7 +16,7 @@ case class MoveFocusTaskEditView(handler: Handler[FocusDirection],
   extends Event[FocusDirection](handler, isPossible)
 
 case object MoveFocus extends TypeSensitiveEventCompanion[Event[FocusDirection], FocusDirection] {
-  override protected def create[T <: ViewType](handler: Handler[FocusDirection],
+  override protected def create[T](handler: Handler[FocusDirection],
                                                isPossible: FocusDirection => Option[InputError])
   : Event[FocusDirection]
   = null.asInstanceOf[T] match {
@@ -34,7 +34,7 @@ case class SetFocusToTaskTaskEditView(handler: Handler[Task],
   extends Event[Task](handler, isPossible)
 
 case object SetFocusTo extends TypeSensitiveEventCompanion[Event[Task], Task] {
-  override protected def create[T <: ViewType](handler: Handler[Task],
+  override protected def create[T](handler: Handler[Task],
                                                isPossible: Task => Option[InputError])
   : Event[Task]
   = null.asInstanceOf[T] match {

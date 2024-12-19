@@ -1,3 +1,5 @@
 package me.timelytask.view.viewmodel.dialogmodel
 
-case class ConfirmDialogModel(question: String) extends DialogModel[Boolean]
+class ConfirmDialogModel(override val description: String,
+                         val default: Option[Boolean] = None,
+                         val question: String) extends DialogModel[Boolean]

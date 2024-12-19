@@ -9,7 +9,7 @@ trait Handler[Args] {
   def apply(args: Args): Boolean
 }
 
-trait Event[Args](protected val handler: Handler[Args],
+trait Event[Args](handler: Handler[Args],
                   isPossible: Args => Option[InputError]) {
   def call(args: Args): Boolean = {
     if (isPossible(args).nonEmpty) handler(args)

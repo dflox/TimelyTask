@@ -1,3 +1,5 @@
 package me.timelytask.view.viewmodel.dialogmodel
 
-trait DialogModel[T]
+trait DialogModel[T] {
+  val description: String
+}

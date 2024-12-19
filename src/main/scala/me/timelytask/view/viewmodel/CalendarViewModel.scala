@@ -5,7 +5,7 @@ import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
-import me.timelytask.view.viewmodel.dialogmodel.OptionDialogModel
+import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, OptionDialogModel}
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, TaskCollection}
 
 case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaultTimeSelection,
@@ -15,7 +15,6 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
 
   import CalendarViewModel.*
 
-  def getFocusElementGrid: Option[FocusElementGrid] = focusElementGrid
 
   // Variables
   val format = "m"
@@ -38,25 +37,22 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
   def getTaskToEdit: Option[Task] = taskToEdit
 
 
-  def interact[RenderType](currentView: Option[RenderType], optionDialogInputGetter:
-  (Option[OptionDialogModel[Task]], Option[RenderType]) => Option[Task]): Option[CalendarViewModel]
-  = {
+  override def interact[ViewModelType](inputGetter: Option[DialogModel[?]] => Option[?])
+  : Option[ViewModelType] = {
     
     def getFocusedElement: Option[Focusable[?]] = focusElementGrid match
       case Some(feg) => feg.getFocusedElement
       case None => None
       
-    def getTaskCollection(focusable: Option[Focusable[?]]): Option[TaskCollection] = focusable match
-      case Some(taskCollection: TaskCollection) => Some(taskCollection)
-      case _ => None
-      
-    def getOptionInput(focusable: Option[TaskCollection]): Option[Task] = focusable match
-      case Some(taskCollection) => optionDialogInputGetter(Some(taskCollection.dialogModel), currentView)
+    def getOptionInput(focusable: Option[Focusable[?]]): Option[Task] = focusable match
+      case Some(taskCollection) => inputGetter(Some(taskCollection.dialogModel)) match
+        case Some(task: Task) => Some(task)
+        case _ => None
       case None => None 
     
-    taskToEdit = getOptionInput(getTaskCollection(getFocusedElement))
+    taskToEdit = getOptionInput(getFocusedElement)
     
-    if taskToEdit.isDefined then Some(this)
+    if taskToEdit.isDefined then Some(this.asInstanceOf[ViewModelType])
     else None
   }
 

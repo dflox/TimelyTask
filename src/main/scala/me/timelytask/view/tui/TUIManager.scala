@@ -5,6 +5,7 @@ import me.timelytask.model.utility.{Key, Unknown}
 import me.timelytask.util.{ApplicationThread, CancelableTask, Publisher}
 import me.timelytask.view.UIManager
 import me.timelytask.view.keymaps.Keymap
+import me.timelytask.view.tui.dialog.DialogFactoryTUI
 import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
 import me.timelytask.view.views.{CalendarView, TaskEditView, View}
 import org.jline.keymap.BindingReader
@@ -15,14 +16,14 @@ import java.io.PrintWriter
 
 class TUIManager(using override val activeViewPublisher: Publisher[ViewType],
                  override val calendarKeyMapPublisher: Publisher[Keymap[CALENDAR,
-                   CalendarViewModel, CalendarView[?]]],
+                   CalendarViewModel, View[CALENDAR, CalendarViewModel, ?]]],
                  override val calendarViewModelPublisher: Publisher[CalendarViewModel],
                  override val taskEditKeyMapPublisher: Publisher[Keymap[TASKEdit, TaskEditViewModel,
-                   TaskEditView[?]]],
+                 View[TASKEdit, TaskEditViewModel, ?]]],
                  override val taskEditViewModelPublisher: Publisher[TaskEditViewModel])
   extends UIManager[String] {
 
-  val terminal: Terminal = TerminalBuilder.builder()
+  given terminal: Terminal = TerminalBuilder.builder()
     .system(true)
     .build()
 
@@ -46,6 +47,8 @@ class TUIManager(using override val activeViewPublisher: Publisher[ViewType],
   }
 
   val createTuiModel: Unit => ModelTUI = unit => ModelTUI(terminal.getHeight, terminal.getWidth)
+  
+  given dialogFactoryTUI: DialogFactoryTUI = DialogFactoryTUI()
 
   val calendarView: CalendarView[String] = TuiCalendarView(render, createTuiModel)
 

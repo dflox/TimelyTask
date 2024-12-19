@@ -8,7 +8,7 @@ trait Handler[Args] {
 }
 
 trait Command[Args] {
-  def doStep: Boolean
+  def doStep(): Boolean
 
   def redo: Boolean
 

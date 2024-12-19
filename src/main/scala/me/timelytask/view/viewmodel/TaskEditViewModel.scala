@@ -78,49 +78,28 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
         (p: Period) =>
           p.getWeeks + "w " + p.getDays + "d " + p.getHours + "h " + p.getMinutes + "m"))
     ))
+  
+  override def interact[ViewModelType](inputGetter: Option[DialogModel[?]] => Option[?])
+  : Option[ViewModelType] = {
 
-  def getFocusElementGrid: Option[FocusElementGrid] = focusElementGrid
-
-  def interact[RenderType](currentView: Option[RenderType],
-                           optionDialogInputGetter: (Option[OptionDialogModel[?]], 
-                             Option[RenderType]) => 
-                             Option[?],
-                           inputDialogInputGetter: (Option[InputDialogModel[?]], Option[RenderType])
-                             => 
-                             Option[?])
-  : Option[TaskEditViewModel] = {
-
-    def findCorrectInputGetter(focusedElement: Option[Focusable[?]]):
-    Option[TaskEditViewModel] = {
-      focusedElement match
-        case Some(inputField: InputField[?]) =>
-          getInputFromInputDialog(inputField)
-        case Some(optionInputField: OptionInputField[?]) =>
-          getInputFromOptionDialog(optionInputField)
-        case _ => None
-    }
-
-    def getInputFromInputDialog(inputField: InputField[?]): Option[TaskEditViewModel] = {
-      copyTask(getUpdatedTask(inputField.description,
-        inputDialogInputGetter(Some(inputField.dialogModel), currentView)))
-    }
-
-    def getInputFromOptionDialog(optionInputField: OptionInputField[?]): Option[TaskEditViewModel] = {
-      copyTask(getUpdatedTask(optionInputField.description,
-        optionDialogInputGetter(Some(optionInputField.dialogModel), currentView)))
-    }
-
-    def copyTask(task: Option[Task]): Option[TaskEditViewModel] = {
+    def copyTask(task: Option[Task]): Option[ViewModelType] = {
       task match
-        case Some(t) => Some(this.copy(task = t))
+        case Some(t) => Some(this.copy(task = t).asInstanceOf[ViewModelType])
         case None => None
     }
     
-    if focusElementGrid.isEmpty then return None 
-    findCorrectInputGetter(focusElementGrid.get.getFocusedElement)
+    def getNewTaskFromInput(focusable: Option[Focusable[?]]): Option[Task] = {
+      if focusable.isEmpty then return None
+      getUpdatedTask(focusable.get.description, inputGetter(Some(focusable.get.dialogModel))
+      )
+    }
+    
+    if focusElementGrid.isEmpty then return None
+    
+    copyTask(getNewTaskFromInput(focusElementGrid.get.getFocusedElement))
   }
 
-  def getUpdatedTask[T](property: String, valueOpt: Option[T]): Option[Task] = {
+  private def getUpdatedTask(property: String, valueOpt: Option[?]): Option[Task] = {
     if valueOpt.isEmpty then return None
     val value = valueOpt.get
     val taskBuilder = TaskBuilder(task)

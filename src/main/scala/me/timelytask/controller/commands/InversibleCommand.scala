@@ -10,9 +10,13 @@ trait InversibleHandler[Args] {
 
 trait InversibleCommand[Args](handler: InversibleHandler[Args], args: Args)
   extends Command[Args] {
+  
+  override def doStep(): Boolean = {
+    handler(args)
+  }
 
   override def redo: Boolean = {
-    handler.apply(args)
+    handler(args)
   }
 
   override def undoStep: Boolean = {
