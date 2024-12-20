@@ -20,8 +20,8 @@ trait Event[Args](handler: Handler[Args],
 
 trait EventCompanion[EventType <: Event[Args], Args] {
   protected var handler: Option[Handler[Args]] = None
-  protected var isPossible: Option[ Args => Option[InputError]] = None
-  
+  protected var isPossible: Option[Args => Option[InputError]] = None
+
   def setHandler(newHandler: Handler[Args], newIsPossible: Args => Option[InputError]): Unit = {
     handler = Some(newHandler)
     isPossible = Some(newIsPossible)
@@ -38,7 +38,8 @@ trait EventCompanion[EventType <: Event[Args], Args] {
 trait TypeSensitiveEventCompanion[EventType <: Event[Args], Args] {
   protected var wrappers: List[TypeSensitiveWrapper[?, Args]] = Nil
 
-  def addHandler[T: ClassTag](newHandler: Handler[Args], isPossible: Args => Option[InputError]): Unit = {
+  def addHandler[T: ClassTag](newHandler: Handler[Args], isPossible: Args => Option[InputError])
+  : Unit = {
     wrappers = TypeSensitiveWrapper[T, Args](newHandler, isPossible) :: wrappers
   }
 
@@ -53,7 +54,8 @@ trait TypeSensitiveEventCompanion[EventType <: Event[Args], Args] {
     Try[EventType] {
       wrappers.find(_.matchesType[T]) match {
         case Some(wrapper) => create[T](wrapper.handler, wrapper.isPossible)
-        case None => throw new Exception(s"Handler of requested type is not set for companion object")
+        case None => throw new Exception(
+          s"Handler of requested type is not set for companion object")
       }
     } match {
       case Success(event) => event

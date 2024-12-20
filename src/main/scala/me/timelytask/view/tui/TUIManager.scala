@@ -19,7 +19,7 @@ class TUIManager(using override val activeViewPublisher: Publisher[ViewType],
                    CalendarViewModel, View[CALENDAR, CalendarViewModel, ?]]],
                  override val calendarViewModelPublisher: Publisher[CalendarViewModel],
                  override val taskEditKeyMapPublisher: Publisher[Keymap[TASKEdit, TaskEditViewModel,
-                 View[TASKEdit, TaskEditViewModel, ?]]],
+                   View[TASKEdit, TaskEditViewModel, ?]]],
                  override val taskEditViewModelPublisher: Publisher[TaskEditViewModel])
   extends UIManager[String] {
 
@@ -47,7 +47,7 @@ class TUIManager(using override val activeViewPublisher: Publisher[ViewType],
   }
 
   val createTuiModel: Unit => ModelTUI = unit => ModelTUI(terminal.getHeight, terminal.getWidth)
-  
+
   given dialogFactoryTUI: DialogFactoryTUI = DialogFactoryTUI()
 
   val calendarView: CalendarView[String] = TuiCalendarView(render, createTuiModel)

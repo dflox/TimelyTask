@@ -13,7 +13,7 @@ import me.timelytask.view.viewmodel.elemts.FocusDirection
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
-trait View[VT <: ViewType: ClassTag, ViewModelType <: ViewModel[VT], RenderType] {
+trait View[VT <: ViewType : ClassTag, ViewModelType <: ViewModel[VT, ViewModelType], RenderType] {
 
   val changeView: ChangeView = ChangeView.createEvent
   val moveFocus: Event[FocusDirection] = MoveFocus.createEvent[VT]
@@ -27,15 +27,15 @@ trait View[VT <: ViewType: ClassTag, ViewModelType <: ViewModel[VT], RenderType]
   def dialogFactory: DialogFactory[RenderType]
 
   def keymapPublisher: Publisher[Keymap[VT, ViewModelType, View[VT, ViewModelType, ?]]]
-  
+
   def viewModelPublisher: Publisher[ViewModelType]
-  
+
   def render: (RenderType, ViewType) => Unit
-  
+
   protected var currentlyRendered: Option[RenderType] = None
-  
+
   def getCurrentlyRendered: Option[RenderType] = currentlyRendered
-  
+
   def viewModel: Option[ViewModelType] = viewModelPublisher.getValue
 
   def handleKey(key: Option[Key]): Boolean = {
@@ -55,14 +55,14 @@ trait View[VT <: ViewType: ClassTag, ViewModelType <: ViewModel[VT], RenderType]
       return (interactWithFocusedElement, None)
     (false, key)
   }
-  
+
   private def interactWithFocusedElement: Boolean = {
     viewModel match
-    case Some(viewModel) =>
-      viewModelPublisher.update(viewModel.interact[ViewModelType](renderDialog))
-      true
-    case None => false
+      case Some(viewModel) =>
+        viewModelPublisher.update(viewModel.interact(renderDialog))
+        true
+      case None => false
   }
-  
+
   viewModelPublisher.addListener(update)
 }

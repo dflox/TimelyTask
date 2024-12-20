@@ -6,7 +6,7 @@ import me.timelytask.view.events.Event
 import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.views.View
 
-class Keymap[VT <: ViewType, ViewModelType <: ViewModel[VT], V <: View[VT,
+class Keymap[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType], V <: View[VT,
   ViewModelType, ?]](config: KeymapConfig,
                      resolver: EventResolver[VT, ViewModelType, V]) {
   def handleKey(key: Option[Key], view: V): Boolean = {

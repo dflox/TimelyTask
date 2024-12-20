@@ -1,13 +1,8 @@
 package me.timelytask.view.views
 
-import me.timelytask.model.Task
 import me.timelytask.model.settings.CALENDAR
-import me.timelytask.model.utility.{Key, Space}
-import me.timelytask.util.Publisher
 import me.timelytask.view.events.*
-import me.timelytask.view.keymaps.Keymap
-import me.timelytask.view.viewmodel.dialogmodel.OptionDialogModel
-import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
+import me.timelytask.view.viewmodel.CalendarViewModel
 
 trait CalendarView[RenderType] extends View[CALENDAR, CalendarViewModel, RenderType] {
   val nextDay: NextDay = NextDay.createEvent

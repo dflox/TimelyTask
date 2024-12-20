@@ -8,10 +8,9 @@ import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.*
 import me.timelytask.view.events.argwrapper.ViewChangeArgumentWrapper
-import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
 import me.timelytask.view.viewmodel.elemts.{FocusDirection, Focusable, TaskCollection}
 import me.timelytask.view.viewmodel.viewchanger.{CalendarViewChangeArg, TaskEditViewChangeArg, ViewChangeArgument}
-import me.timelytask.view.viewmodel.viewchanger.ViewChangeArgument
+import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel, ViewModel}
 
 import scala.util.{Failure, Success, Try}
 
@@ -100,15 +99,18 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
                        None)
 
   protected var changeView: Option[ChangeView] = None
+
   private def initChangeView: () => Unit = () => changeView = Some(ChangeView.createEvent)
 
   EditFocusedTask.setHandler((args: Option[CalendarViewModel]) => {
     if args.isEmpty then false
-    else {val task = args.get.getTaskToEdit
-    if changeView.isEmpty then initChangeView()
-    changeView.get.call[TASKEdit](ViewChangeArgumentWrapper[TASKEdit]
-      (TaskEditViewChangeArg(task, Some(CALENDAR))))
-  }}, (args: Option[CalendarViewModel]) => {
+    else {
+      val task = args.get.getTaskToEdit
+      if changeView.isEmpty then initChangeView()
+      changeView.get.call[TASKEdit](ViewChangeArgumentWrapper[TASKEdit, ViewModel[TASKEdit,
+        TaskEditViewModel], TaskEditViewChangeArg](TaskEditViewChangeArg(task, Some(CALENDAR))))
+    }
+  }, (args: Option[CalendarViewModel]) => {
     if args.isEmpty | args.get.getTaskToEdit.isEmpty then Some(InputError("No task to edit."))
     else None
   })
@@ -119,7 +121,7 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
       activeViewPublisher.update(Some(CALENDAR))
       true
     case _ => false
-  }, (args: ViewChangeArgumentWrapper[ViewType]) => args.arg match
+  }, (args: ViewChangeArgumentWrapper[ViewType, ?, ?]) => args.arg match
     case arg: CalendarViewChangeArg => None
     case _ => Some(InputError("Cannot change view to calendar view."))
   )
@@ -128,7 +130,7 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
     if model.isEmpty then return false
     calendarViewModelPublisher.getValue match
       case Some(viewModel) =>
-        Some(CalendarViewModel(viewModel.timeSelection,modelPublisher))
+        Some(CalendarViewModel(viewModel.timeSelection, modelPublisher))
       case None => Some(CalendarViewModel(modelPublisher = modelPublisher))
   }
 

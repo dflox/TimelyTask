@@ -59,7 +59,15 @@ object TuiUtils {
 
     format match {
       case "l" => text + createSpace(space) // left
-      case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
+      case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2) else
+                                                                                               createSpace(
+                                                                                                 space /
+                                                                                                   2) +
+                                                                                                 text +
+                                                                                                 createSpace(
+                                                                                                   space /
+                                                                                                     2 +
+                                                                                                     1) // middle
       case "r" => createSpace(math.max(space, 0)) + text // right
     }
   }

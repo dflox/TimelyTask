@@ -45,10 +45,12 @@ object ColorUtils {
 
     // 256 color mode (8-bit colors)
     def color256(n: Int): String = s"\u001B[38;5;${n}m"
+
     def bgColor256(n: Int): String = s"\u001B[48;5;${n}m"
 
     // True color mode (24-bit colors)
     def trueColor(r: Int, g: Int, b: Int): String = s"\u001B[38;2;$r;$g;${b}m"
+
     def bgTrueColor(r: Int, g: Int, b: Int): String = s"\u001B[48;2;$r;$g;${b}m"
 
     // Styles
@@ -95,6 +97,7 @@ object ColorUtils {
 
   // GUI colors as hex values and java.awt.Color objects
   object GUI {
+
     import java.awt.Color
 
     val BLACK = new Color(0x000000)

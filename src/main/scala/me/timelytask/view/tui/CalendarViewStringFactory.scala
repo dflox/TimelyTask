@@ -46,8 +46,9 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
     getFocusElementGrid match {
       case None => buildFocusElementGrid(timeSlice, rowCount, timeSelection)
       case Some(focusElementGrid) => if focusElementGrid.height != rowCount then
-        buildFocusElementGrid(timeSlice, rowCount, timeSelection, focusedElement = focusElementGrid
-          .getFocusedElement)
+                                       buildFocusElementGrid(timeSlice, rowCount, timeSelection,
+                                         focusedElement = focusElementGrid
+                                           .getFocusedElement)
     }
 
     // Start Building Output
@@ -115,10 +116,10 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
     val format = "| HH:mm |"
 
     calendarViewModel.getFocusElementGrid match {
-      case Some(focusElementGrid) => focusElementGrid.getElements.transpose.zipWithIndex.foreach( 
+      case Some(focusElementGrid) => focusElementGrid.getElements.transpose.zipWithIndex.foreach(
         (row, rowNum) => {
           builder.append(colored(timeSelection.day.withPeriodAdded(timeSlice, rowNum).toString(
-            format),timeTextColor))
+            format), timeTextColor))
           row.foreach {
             case Some(taskCollection: TaskCollection) =>
               builder.append(columnSpacer(taskCollection.toString, spacePerColumn, "l") + "|")

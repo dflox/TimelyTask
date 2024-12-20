@@ -7,9 +7,11 @@ import me.timelytask.util.Publisher
 
 class CoreApplication {
   given modelPublisher: Publisher[Model] = Publisher[Model](Some(Model.default))
+
   given taskController: ModelController = new ModelController()
+
   given persistenceController: PersistenceController = new PersistenceController()
-  
+
   def run(): Unit = {
     summon[Publisher[Model]]
     summon[ModelController]

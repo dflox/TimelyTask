@@ -9,7 +9,7 @@ case class TimeSelection(day: DateTime, dayCount: Int, timeFrame: Period) {
   val MAX_DAY_COUNT: Int = 14
   val MIN_TIME_FRAME: Period = 1.hour
   val MAX_TIME_FRAME: Period = 24.hours
-  
+
   val timeFrameInterval: Interval = new Interval(day, day.withPeriodAdded(timeFrame, 1))
 
   // Get the first Day of the week
@@ -28,37 +28,37 @@ case class TimeSelection(day: DateTime, dayCount: Int, timeFrame: Period) {
     val lastDay: DateTime = day + (dayCount - 1).days
     day.toString(formatStart) + separator + lastDay.toString(formatEnd)
   }
-  
+
   @targetName("plusPeriod")
   def +(period: Period): TimeSelection = {
     TimeSelection(day + period, dayCount, timeFrame)
   }
-  
+
   @targetName("minusPeriod")
   def -(period: Period): TimeSelection = {
     TimeSelection(day - period, dayCount, timeFrame)
   }
-  
+
   def wholeWeek: TimeSelection = {
     TimeSelection(getFirstDayOfWeek, 7, timeFrame)
   }
-  
+
   def addDayCount(days: Int): Option[TimeSelection] = {
-    if(dayCount + days > MAX_DAY_COUNT | dayCount + days < MIN_DAY_COUNT) {
+    if (dayCount + days > MAX_DAY_COUNT | dayCount + days < MIN_DAY_COUNT) {
       None
     } else {
       Some(TimeSelection(day, dayCount + days, timeFrame))
     }
   }
-  
+
   def goToDate(date: DateTime): TimeSelection = {
     TimeSelection(date, dayCount, timeFrame)
   }
-  
+
   def startingToday: TimeSelection = {
     TimeSelection(DateTime.now().withTime(day.toLocalTime), dayCount, timeFrame)
   }
-  
+
   def withTimeFrame(timeFrame: Period): Option[TimeSelection] = {
     if ((MIN_TIME_FRAME - timeFrame).millis > 0 || (MAX_TIME_FRAME - timeFrame).millis < 0) {
       None
@@ -78,6 +78,6 @@ given Conversion[TimeSelection, List[DateTime]] with {
 
 object TimeSelection {
   val START_OF_DAY: LocalTime = new LocalTime(6, 0, 0)
-  val defaultTimeSelection: TimeSelection = TimeSelection(DateTime.now().withTime(START_OF_DAY), 
+  val defaultTimeSelection: TimeSelection = TimeSelection(DateTime.now().withTime(START_OF_DAY),
     7, 14.hours)
 }

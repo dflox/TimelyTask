@@ -6,9 +6,10 @@ import me.timelytask.view.keymaps.EventResolver
 import me.timelytask.view.viewmodel.TaskEditViewModel
 import me.timelytask.view.views.{TaskEditView, View}
 
-class TaskEditViewResolver extends EventResolver[TASKEdit, TaskEditViewModel, 
-  View[TASKEdit, TaskEditViewModel,?]] {
-  override def resolveAndCallEvent(eventType: EventTypeId, view: View[TASKEdit, TaskEditViewModel,?])
+class TaskEditViewResolver extends EventResolver[TASKEdit, TaskEditViewModel,
+  View[TASKEdit, TaskEditViewModel, ?]] {
+  override def resolveAndCallEvent(eventType: EventTypeId, view: View[TASKEdit, 
+    TaskEditViewModel, ?])
   : Option[Boolean] = {
     view match {
       case taskEditView: TaskEditView[?] => callEvent(eventType, taskEditView)
@@ -18,7 +19,7 @@ class TaskEditViewResolver extends EventResolver[TASKEdit, TaskEditViewModel,
 
   private def callEvent(eventType: EventTypeId, taskEditView: TaskEditView[?]): Option[Boolean] = {
     eventType match {
-      case EventTypeId("SaveTask") => Some(taskEditView.viewModel.isDefined & 
+      case EventTypeId("SaveTask") => Some(taskEditView.viewModel.isDefined &
         taskEditView.saveTask.call(taskEditView.viewModel.get))
       case _ => None
     }

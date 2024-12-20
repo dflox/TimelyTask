@@ -1,7 +1,7 @@
 package me.timelytask
 
-import ColorUtils.Terminal.*
-import ColorUtils.*
+import me.timelytask.ColorUtils.*
+import me.timelytask.ColorUtils.Terminal.*
 
 object ColorTest extends App {
 

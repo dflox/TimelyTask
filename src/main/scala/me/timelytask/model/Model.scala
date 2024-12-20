@@ -2,7 +2,6 @@ package me.timelytask.model
 
 import me.timelytask.model.state.TaskState
 
-import java.util.UUID
 import scala.collection.immutable.HashSet
 
 case class Model(tasks: List[Task],

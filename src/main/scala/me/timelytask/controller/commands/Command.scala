@@ -28,7 +28,7 @@ trait UndoableCommand[Args](handler: Handler[Args], args: Args) extends Command[
   override def undoStep: Boolean = {
     false
   }
-  
+
   override def redo: Boolean = doStep()
 }
 
@@ -50,26 +50,32 @@ trait CommandCompanion[T <: Command[Args], Args] {
 }
 
 case class StartApp(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
+
 object StartApp extends CommandCompanion[StartApp, Unit] {
   protected def create(args: Unit): StartApp = StartApp(handler.get, args)
 }
 
 case class SaveData(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
-object SaveData extends CommandCompanion[SaveData, Unit]{
+
+object SaveData extends CommandCompanion[SaveData, Unit] {
   protected def create(args: Unit): SaveData = SaveData(handler.get, args)
 }
 
 case class LoadData(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
-object LoadData extends CommandCompanion[LoadData, Unit]{
+
+object LoadData extends CommandCompanion[LoadData, Unit] {
   protected def create(args: Unit): LoadData = LoadData(handler.get, args)
 }
 
 case class Exit(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
-object Exit extends CommandCompanion[Exit, Unit]{
+
+object Exit extends CommandCompanion[Exit, Unit] {
   protected def create(args: Unit): Exit = Exit(handler.get, args)
 }
 
-case class SaveAndExit(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler, args)
-object SaveAndExit extends CommandCompanion[SaveAndExit, Unit]{
+case class SaveAndExit(handler: Handler[Unit], args: Unit) extends UndoableCommand[Unit](handler,
+  args)
+
+object SaveAndExit extends CommandCompanion[SaveAndExit, Unit] {
   protected def create(args: Unit): SaveAndExit = SaveAndExit(handler.get, args)
 }

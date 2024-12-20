@@ -31,11 +31,11 @@ case object MoveFocus extends TypeSensitiveEventCompanion[Event[FocusDirection],
 }
 
 case class SetFocusToTaskCalendarView(handler: Handler[Task],
-                                 isPossible: Task => Option[InputError])
+                                      isPossible: Task => Option[InputError])
   extends Event[Task](handler, isPossible)
 
 case class SetFocusToTaskTaskEditView(handler: Handler[Task],
-                                 isPossible: Task => Option[InputError])
+                                      isPossible: Task => Option[InputError])
   extends Event[Task](handler, isPossible)
 
 case object SetFocusTo extends TypeSensitiveEventCompanion[Event[Task], Task] {

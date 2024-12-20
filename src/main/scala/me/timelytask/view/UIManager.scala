@@ -9,9 +9,15 @@ import me.timelytask.view.views.{CalendarView, TaskEditView, View}
 
 trait UIManager[RenderType] {
   def activeViewPublisher: Publisher[ViewType]
-  def calendarKeyMapPublisher: Publisher[Keymap[CALENDAR, CalendarViewModel,View[CALENDAR, CalendarViewModel, ?]]]
-  def taskEditKeyMapPublisher: Publisher[Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit, TaskEditViewModel, ?]]]
+
+  def calendarKeyMapPublisher: Publisher[Keymap[CALENDAR, CalendarViewModel, View[CALENDAR, 
+    CalendarViewModel, ?]]]
+
+  def taskEditKeyMapPublisher: Publisher[Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit, 
+    TaskEditViewModel, ?]]]
+
   def calendarViewModelPublisher: Publisher[CalendarViewModel]
+
   def taskEditViewModelPublisher: Publisher[TaskEditViewModel]
 
   val calendarView: CalendarView[RenderType]

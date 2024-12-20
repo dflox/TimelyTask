@@ -1,22 +1,22 @@
 package me.timelytask.controller
 
+import me.timelytask.controller.commands.{Exit, Handler, SaveAndExit, StartApp}
 import me.timelytask.model.Model
-import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.util.Publisher
-import me.timelytask.controller.commands.{Exit, SaveAndExit, StartApp, Handler}
+import me.timelytask.view.viewmodel.ViewModel
 
-class PersistenceController(using modelPublisher: Publisher[Model]) 
+class PersistenceController(using modelPublisher: Publisher[Model])
   extends Controller {
-  
+
   StartApp.setHandler((args: Unit) => {
     modelPublisher.update(Some(Model.default))
     true
   })
 
   SaveAndExit.setHandler((args: Unit) => {
-    if(save()) {
+    if (save()) {
       Exit.createCommand(()).doStep()
-    }else {
+    } else {
       false
     }
   })

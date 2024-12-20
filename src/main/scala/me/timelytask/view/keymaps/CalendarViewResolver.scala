@@ -15,7 +15,7 @@ class CalendarViewResolver extends EventResolver[CALENDAR, CalendarViewModel, Vi
       case _ => None
     }
   }
-  
+
   private def callEvent(eventType: EventTypeId, calendarView: CalendarView[?]): Option[Boolean] = {
     eventType match {
       case EventTypeId("NextDay") => Some(calendarView.nextDay.call(()))

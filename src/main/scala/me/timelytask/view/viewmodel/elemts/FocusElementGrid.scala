@@ -5,31 +5,32 @@ import me.timelytask.view.viewmodel.elemts.FocusDirection.*
 class FocusElementGrid(elements: Vector[Vector[Option[Focusable[?]]]],
                        focusedElement: Option[Focusable[?]])
   extends
-                                                                                       FocusShifter {
+  FocusShifter {
   def this(width: Int, height: Int) = this(Vector.fill(width, height)(None), None)
 
   val width: Int = elements.length
   val height: Int = elements(0).length
-  
+
   def getElements: Vector[Vector[Option[Focusable[?]]]] = elements
+
   def getFocusedElement: Option[Focusable[?]] = focusedElement
 
   val elementsList: Vector[Option[Focusable[?]]] = elements.flatten
 
   def setElement(x: Int, y: Int, element: Option[Focusable[?]]): Option[FocusElementGrid] = {
-    if(x < 0 || x >= width || y < 0 || y >= height) return None
+    if (x < 0 || x >= width || y < 0 || y >= height) return None
     val newElements = elements.updated(x, elements(x).updated(y, element))
-    if(getFocusedElementPosition == (x, y)) Some(FocusElementGrid(newElements, element))
+    if (getFocusedElementPosition == (x, y)) Some(FocusElementGrid(newElements, element))
     else Some(FocusElementGrid(newElements, focusedElement))
   }
 
   def setFocusToElement(x: Int, y: Int): Option[FocusElementGrid] = {
-    if(x < 0 || x >= width || y < 0 || y >= height) return None
+    if (x < 0 || x >= width || y < 0 || y >= height) return None
     Some(FocusElementGrid(elements, elements(x)(y)))
   }
 
   def setFocusToElement(element: Option[Focusable[?]]): Option[FocusElementGrid] = {
-    if(element.isEmpty | !elementsList.contains(element)) return None
+    if (element.isEmpty | !elementsList.contains(element)) return None
     Some(FocusElementGrid(elements, focusedElement = element))
   }
 
@@ -60,14 +61,14 @@ class FocusElementGrid(elements: Vector[Vector[Option[Focusable[?]]]],
   }
 
   private def getNextElementDownwards(x: Int, y: Int): Option[Focusable[?]] = {
-    elementsList.drop(xyToIndex(x, y)).find{
+    elementsList.drop(xyToIndex(x, y)).find {
       case Some(_) => true
       case None => false
-    }.flatten 
+    }.flatten
   }
 
   private def getNextElementUpwards(x: Int, y: Int): Option[Focusable[?]] = {
-    elementsList.take(xyToIndex(x, y)).findLast{
+    elementsList.take(xyToIndex(x, y)).findLast {
       case Some(_) => true
       case None => false
     }.flatten
@@ -83,7 +84,7 @@ class FocusElementGrid(elements: Vector[Vector[Option[Focusable[?]]]],
       Seq(
         if (pos - offset >= 0) elementsList(pos - offset) else None, // Left side
         if (pos + offset < elementsList.length) elementsList(pos + offset) else None // Right side
-      ).find{
+      ).find {
         case Some(_) => true
         case None => false
       }.flatten // Find the first non-empty in this sequence

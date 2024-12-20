@@ -23,8 +23,8 @@ object TaskEditViewStringFactory extends StringFactory[TASKEdit, TaskEditViewMod
   }
 
   override def buildString(taskEditViewModel: TaskEditViewModel, tuiModel: ModelTUI): String = {
-    import tuiModel.*
     import taskEditViewModel.*
+    import tuiModel.*
 
     val builder = new StringBuilder()
     if getFocusElementGrid.isEmpty then {
@@ -39,7 +39,7 @@ object TaskEditViewStringFactory extends StringFactory[TASKEdit, TaskEditViewMod
     builder.toString()
   }
 
-  private def taskStringBuilder(task: Task, width: Int, terminalHeight: Int, 
+  private def taskStringBuilder(task: Task, width: Int, terminalHeight: Int,
                                 focusElementGrid: FocusElementGrid,
                                 columnSize: Int): String = {
     val builder = new StringBuilder()
@@ -62,8 +62,8 @@ object TaskEditViewStringFactory extends StringFactory[TASKEdit, TaskEditViewMod
           }
           case optionInputField: OptionInputField[?] => {
             description = optionInputField.description
-            if optionInputField.default.nonEmpty 
-            then value = optionInputField.default.map(optionInputField.displayFunc).mkString (", ")
+            if optionInputField.default.nonEmpty
+            then value = optionInputField.default.map(optionInputField.displayFunc).mkString(", ")
           }
 
         builder.append(buildEntry(description, value, width, columnSize,
@@ -102,10 +102,10 @@ object TaskEditViewStringFactory extends StringFactory[TASKEdit, TaskEditViewMod
       totalLines += 1 + valueLines
       builder.toString()
     }
-    
+
     builder.append(alignTop(terminalHeight, totalLines))
     builder.toString()
   }
 
-  
+
 }

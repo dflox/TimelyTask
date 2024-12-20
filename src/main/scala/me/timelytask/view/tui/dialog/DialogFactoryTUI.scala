@@ -10,11 +10,11 @@ class DialogFactoryTUI(using terminal: Terminal) extends DialogFactory[String] {
   override def apply(dialogModel: Option[DialogModel[?]], currentView: Option[String])
   : Option[Dialog[?, String]] = {
     dialogModel match {
-      case dialogModel: Option[OptionDialogModel[_]] => Some(OptionDialogTUI(dialogModel, 
+      case dialogModel: Option[OptionDialogModel[_]] => Some(OptionDialogTUI(dialogModel,
         currentView, terminal))
-      case dialogModel: Option[ConfirmDialogModel] => Some(ConfirmDialogTUI(dialogModel, 
+      case dialogModel: Option[ConfirmDialogModel] => Some(ConfirmDialogTUI(dialogModel,
         currentView, terminal))
-      case dialogModel: Option[InputDialogModel[String]] => Some(TextInputDialogTUI(dialogModel, 
+      case dialogModel: Option[InputDialogModel[String]] => Some(TextInputDialogTUI(dialogModel,
         currentView, terminal))
       case dialogModel: Option[InputDialogModel[DateTime]] => Some(DateInputDialogTUI(dialogModel,
         currentView, terminal))

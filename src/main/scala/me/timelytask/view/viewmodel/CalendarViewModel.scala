@@ -5,13 +5,13 @@ import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
-import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, OptionDialogModel}
+import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, TaskCollection}
 
 case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaultTimeSelection,
                              modelPublisher: Publisher[Model],
                              protected var focusElementGrid: Option[FocusElementGrid] = None)
-  extends ViewModel[CALENDAR](modelPublisher) {
+  extends ViewModel[CALENDAR, CalendarViewModel](modelPublisher) {
 
   import CalendarViewModel.*
 
@@ -37,22 +37,22 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
   def getTaskToEdit: Option[Task] = taskToEdit
 
 
-  override def interact[ViewModelType](inputGetter: Option[DialogModel[?]] => Option[?])
-  : Option[ViewModelType] = {
-    
+  override def interact(inputGetter: Option[DialogModel[?]] => Option[?])
+  : Option[CalendarViewModel] = {
+
     def getFocusedElement: Option[Focusable[?]] = focusElementGrid match
       case Some(feg) => feg.getFocusedElement
       case None => None
-      
+
     def getOptionInput(focusable: Option[Focusable[?]]): Option[Task] = focusable match
       case Some(taskCollection) => inputGetter(Some(taskCollection.dialogModel)) match
         case Some(task: Task) => Some(task)
         case _ => None
-      case None => None 
-    
+      case None => None
+
     taskToEdit = getOptionInput(getFocusedElement)
-    
-    if taskToEdit.isDefined then Some(this.asInstanceOf[ViewModelType])
+
+    if taskToEdit.isDefined then Some(this)
     else None
   }
 

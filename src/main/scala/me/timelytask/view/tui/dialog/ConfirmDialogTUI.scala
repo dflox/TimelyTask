@@ -8,7 +8,7 @@ class ConfirmDialogTUI(override val dialogModel: Option[ConfirmDialogModel],
                        override val currentView: Option[String],
                        override val terminal: Terminal)
   extends TUIDialog[Boolean] {
-  
+
   override def apply(): Option[Boolean] = {
     if dialogModel.isEmpty | currentView.isEmpty then return None
 

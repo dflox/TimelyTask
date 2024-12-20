@@ -12,5 +12,5 @@ class GlobalEventHandler(using
                          modelPublisher: Publisher[Model],
                          undoManager: UndoManager,
                          activeViewPublisher: Publisher[ViewType]) {
-  
+
 }

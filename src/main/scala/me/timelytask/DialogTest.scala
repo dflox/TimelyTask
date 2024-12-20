@@ -1,7 +1,8 @@
 //package me.timelytask
 //
 //import me.timelytask.view.tui.dialog.DialogFactoryTUI
-//import me.timelytask.view.viewmodel.dialogmodel.{ConfirmDialogModel, OptionDialogModel, InputDialogModel}
+//import me.timelytask.view.viewmodel.dialogmodel.{ConfirmDialogModel, OptionDialogModel, 
+// InputDialogModel}
 //import org.jline.terminal.{Terminal, TerminalBuilder}
 //
 //object DialogTest extends App {
@@ -32,7 +33,8 @@
 //  val userInput = dialog.getUserInput
 //  terminal.writer().println(s"User input: $userInput")
 //
-//  val confirmDialogModel = ConfirmDialogModel("Findest du den Tag heute schön?", exampleViewString)
+//  val confirmDialogModel = ConfirmDialogModel("Findest du den Tag heute schön?", 
+//  exampleViewString)
 //  val dialog2 = dialogFactory.createDialog(confirmDialogModel)
 //
 //  val userInput2 = dialog2.getUserInput

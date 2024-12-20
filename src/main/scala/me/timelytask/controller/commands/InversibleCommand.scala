@@ -10,7 +10,7 @@ trait InversibleHandler[Args] {
 
 trait InversibleCommand[Args](handler: InversibleHandler[Args], args: Args)
   extends Command[Args] {
-  
+
   override def doStep(): Boolean = {
     handler(args)
   }
@@ -47,19 +47,22 @@ object AddTask extends InversibleCommandCompanion[AddTask, Task] {
   protected def create(args: Task): AddTask = AddTask(handler.get, args)
 }
 
-case class RemoveTask(handler: InversibleHandler[Task], args: Task) extends InversibleCommand[Task](handler, args)
+case class RemoveTask(handler: InversibleHandler[Task], args: Task) extends InversibleCommand[Task](
+  handler, args)
 
 object RemoveTask extends InversibleCommandCompanion[RemoveTask, Task] {
   protected def create(using args: Task): RemoveTask = RemoveTask(handler.get, args)
 }
 
-case class AddTag(handler: InversibleHandler[Tag], args: Tag) extends InversibleCommand[Tag](handler, args)
+case class AddTag(handler: InversibleHandler[Tag], args: Tag) extends InversibleCommand[Tag](
+  handler, args)
 
 object AddTag extends InversibleCommandCompanion[AddTag, Tag] {
   protected def create(using args: Tag): AddTag = AddTag(handler.get, args)
 }
 
-case class RemoveTag(handler: InversibleHandler[Tag], args: Tag) extends InversibleCommand[Tag](handler, args)
+case class RemoveTag(handler: InversibleHandler[Tag], args: Tag) extends InversibleCommand[Tag](
+  handler, args)
 
 object RemoveTag extends InversibleCommandCompanion[RemoveTag, Tag] {
   protected def create(using args: Tag): RemoveTag = RemoveTag(handler.get, args)
@@ -79,7 +82,8 @@ object RemovePriority extends InversibleCommandCompanion[RemovePriority, Priorit
   protected def create(using args: Priority): RemovePriority = RemovePriority(handler.get, args)
 }
 
-case class AddState(handler: InversibleHandler[State], args: State) extends InversibleCommand[State](handler, args)
+case class AddState(handler: InversibleHandler[State], args: State)
+  extends InversibleCommand[State](handler, args)
 
 object AddState extends InversibleCommandCompanion[AddState, State] {
   protected def create(using args: State): AddState = AddState(handler.get, args)

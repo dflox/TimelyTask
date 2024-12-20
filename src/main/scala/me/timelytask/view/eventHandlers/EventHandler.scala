@@ -6,11 +6,11 @@ import me.timelytask.model.settings.ViewType
 import me.timelytask.util.Publisher
 import me.timelytask.view.viewmodel.ViewModel
 
-trait EventHandler[T <: ViewType, M <: ViewModel[T]](using
-                                                     viewModelPublisher: Publisher[M],
-                                                     modelPublisher: Publisher[Model],
-                                                     undoManager: UndoManager,
-                                                     activeViewPublisher: Publisher[ViewType]) {
+trait EventHandler[T <: ViewType, M <: ViewModel[T, M]](using
+                                                        viewModelPublisher: Publisher[M],
+                                                        modelPublisher: Publisher[Model],
+                                                        undoManager: UndoManager,
+                                                        activeViewPublisher: Publisher[ViewType]) {
 
   val model: () => Option[Model] = () => modelPublisher.getValue
 

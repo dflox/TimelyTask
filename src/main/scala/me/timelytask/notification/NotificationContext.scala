@@ -10,7 +10,7 @@ class NotificationContext(private var strategy: NotificationStrategy) {
 
     // normale notification als Beispiel
     strategy.sendNotification(notification)
-    
+
     // deep clone von der notification
     strategy.sendNotification(notification.deepClone())
   }

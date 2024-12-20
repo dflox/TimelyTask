@@ -45,7 +45,7 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
       case Some(msg) => Some(InputError("Task is not valid: " + msg))
     }
   })
-  
+
   // TODO: Implement CancelTask event
 
   private def modelUpdate(model: Option[Model]): Boolean = {
@@ -55,7 +55,7 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
     if task.get == viewModel().get.task then return false
     Some(viewModel().get.copy(task = task.get))
   }
-  
+
   modelPublisher.addListener(modelUpdate)
 
 
@@ -65,11 +65,11 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
       activeViewPublisher.update(Some(TASKEdit))
       true
     case _ => false
-  }, (args: ViewChangeArgumentWrapper[ViewType]) => args.arg match
+  }, (args: ViewChangeArgumentWrapper[ViewType, ?, ?]) => args.arg match
     case arg: TaskEditViewChangeArg => None
     case _ => Some(InputError("Cannot change view to calendar view."))
   )
-  
+
   // Focus Events
   MoveFocus.addHandler[TASKEdit]((args: FocusDirection) => {
     Try[TaskEditViewModel] {

@@ -7,20 +7,19 @@ import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.Terminal
 
-import scala.util.{Try, Success, Failure}
-
+import scala.util.{Failure, Success, Try}
 
 
 class DateInputDialogTUI(override val dialogModel: Option[InputDialogModel[DateTime]],
                          override val currentView: Option[String],
-                         override val terminal: Terminal) 
+                         override val terminal: Terminal)
   extends TUIDialog[DateTime] {
 
   override def apply(): Option[DateTime] = {
     if dialogModel.isEmpty | currentView.isEmpty then return None
-    
+
     var break = false
-    
+
     val terminalWidth = terminal.getWidth
     val dialogString = createDialogString(dialogModel.get.description, terminalWidth)
     val viewWithDialog = overlapString(currentView.get, dialogString)
@@ -33,14 +32,14 @@ class DateInputDialogTUI(override val dialogModel: Option[InputDialogModel[DateT
       .history(history) // Attach the history
       .variable(LineReader.HISTORY_SIZE, 0) // Disable history size
       .build()
-  
-    
+
+
     history.purge() // Clear the history before each input
-    val input = reader.readLine("> ", null, 
+    val input = reader.readLine("> ", null,
       dialogModel.get.default.map(_.toString("yyyy-MM-dd")).getOrElse(""))
     history.purge() // Clear the history after input
-    
-    Try[Option[DateTime]]{
+
+    Try[Option[DateTime]] {
       Some(DateTime.parse(input))
     } match {
       case Success(value) => value

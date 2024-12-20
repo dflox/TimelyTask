@@ -1,16 +1,17 @@
 package me.timelytask.view.viewmodel
 
-import com.github.nscala_time.time.Imports.{DateTime, LocalTime, Period}
+import com.github.nscala_time.time.Imports.{DateTime, Period}
 import me.timelytask.model.builder.TaskBuilder
 import me.timelytask.model.settings.*
 import me.timelytask.model.state.TaskState
 import me.timelytask.model.{Deadline, Model, Task}
 import me.timelytask.util.Publisher
-import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, InputDialogModel, OptionDialogModel}
+import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, InputField, OptionInputField}
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
+import scala.compiletime.erasedValue
 import scala.util.{Failure, Success, Try}
 
 case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
@@ -18,7 +19,7 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
                              protected var focusElementGrid: Option[FocusElementGrid] = None,
                              dialogModel: Option[DialogModel[?]] = None,
                              modelPublisher: Publisher[Model])
-  extends ViewModel[TASKEdit](modelPublisher) {
+  extends ViewModel[TASKEdit, TaskEditViewModel](modelPublisher) {
 
   focusElementGridInit()
 
@@ -26,7 +27,7 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
     Try[Task] {
       model().get.tasks.find(_.uuid.equals(taskID)).get
     } match {
-      case Failure(_) => return
+      case Failure(_) =>
       case Success(t) =>
         val elements = createElements(t, model().get)
         focusElementGrid = Some(FocusElementGrid(elements, elements(0)(0)))
@@ -63,7 +64,7 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
         task.state.toList)),
 
       Some(InputField[Period](Task.descTedDuration, Some(task.tedDuration), (p: Period) =>
-        p.getHours + "h " + p.getMinutes + "m")),
+        p.getHours.toString + "h " + p.getMinutes + "m")),
 
       Some(OptionInputField[UUID](Task.descDependentOn, model.tasks.map(_.uuid), (uuid: UUID) =>
         model.tasks.find(_.uuid.equals(uuid)) match
@@ -76,26 +77,26 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
 
       Some(InputField[Period](Task.descRecurrenceInterval, Some(task.recurrenceInterval),
         (p: Period) =>
-          p.getWeeks + "w " + p.getDays + "d " + p.getHours + "h " + p.getMinutes + "m"))
+          p.getWeeks.toString + "w " + p.getDays + "d " + p.getHours + "h " + p.getMinutes + "m"))
     ))
-  
-  override def interact[ViewModelType](inputGetter: Option[DialogModel[?]] => Option[?])
-  : Option[ViewModelType] = {
 
-    def copyTask(task: Option[Task]): Option[ViewModelType] = {
+  override def interact(inputGetter: Option[DialogModel[?]] => Option[?])
+  : Option[TaskEditViewModel] = {
+
+    def copyTask(task: Option[Task]): Option[TaskEditViewModel] = {
       task match
-        case Some(t) => Some(this.copy(task = t).asInstanceOf[ViewModelType])
+        case Some(t) => Some(this.copy(task = t))
         case None => None
     }
-    
+
     def getNewTaskFromInput(focusable: Option[Focusable[?]]): Option[Task] = {
       if focusable.isEmpty then return None
       getUpdatedTask(focusable.get.description, inputGetter(Some(focusable.get.dialogModel))
       )
     }
-    
+
     if focusElementGrid.isEmpty then return None
-    
+
     copyTask(getNewTaskFromInput(focusElementGrid.get.getFocusedElement))
   }
 
@@ -112,8 +113,8 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
         case u: UUID => Some(taskBuilder.setPriority(u).build())
         case _ => None
       }
-      case Task.descTags => value match {
-        case hs: HashSet[UUID] => Some(taskBuilder.setTags(hs).build())
+      case Task.descTags => matchUUIDHashSet(value) match {
+        case Some(hs) => Some(taskBuilder.setTags(hs).build())
         case _ => None
       }
       case Task.descDeadline => value match {
@@ -132,8 +133,8 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
         case p: Period => Some(taskBuilder.setTedDuration(p).build())
         case _ => None
       }
-      case Task.descDependentOn => value match {
-        case hs: HashSet[UUID] => Some(taskBuilder.setDependentOn(hs).build())
+      case Task.descDependentOn => matchUUIDHashSet(value) match {
+        case Some(hs) => Some(taskBuilder.setDependentOn(hs).build())
         case _ => None
       }
       case Task.descReoccurring => value match {
@@ -147,4 +148,11 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
       case _ => None
     }
   }
+
+  private inline def matchUUIDHashSet[T](inline value: T): Option[HashSet[UUID]] = {
+    inline erasedValue[T] match
+      case _: HashSet[UUID] => Some(value.asInstanceOf[HashSet[UUID]])
+      case _ => None
+  }
+  
 }

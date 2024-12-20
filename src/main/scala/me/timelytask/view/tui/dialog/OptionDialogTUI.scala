@@ -11,7 +11,7 @@ class OptionDialogTUI[T](override val dialogModel: Option[OptionDialogModel[T]],
 
   override def apply(): Option[T] = {
     if dialogModel.isEmpty | currentView.isEmpty then return None
-    
+
     if (dialogModel.get.options.length > 36) {
       throw new IllegalArgumentException("OptionDialogTUI only supports up to 36 options currently")
     }
@@ -34,28 +34,30 @@ class OptionDialogTUI[T](override val dialogModel: Option[OptionDialogModel[T]],
   : String = {
     val stringBuilder = new StringBuilder()
     stringBuilder.append(createLine(terminalWidth) + "\n")
-    
-    stringBuilder.append(cutText(s"Please select an option (0-${numToCharString(options.length-1)
-    })" +":", terminalWidth) + "\n")
+
+    stringBuilder.append(cutText(s"Please select an option (0-${
+      numToCharString(options.length - 1)
+    })" + ":", terminalWidth) + "\n")
     for (i <- options.indices) {
-      stringBuilder.append(cutText(s"(${numToCharString(i)}) " + displayFunc(options(i)), 
+      stringBuilder.append(cutText(s"(${numToCharString(i)}) " + displayFunc(options(i)),
         terminalWidth) + "\n")
     }
-    
+
     stringBuilder.append(createLine(terminalWidth))
     stringBuilder.toString()
   }
-  
+
   private def numToCharString(num: Int): String = {
     if num >= 0 & num <= 9 then num.toString
-      if num >= 0 & num <= 36 then (num - 10 + 97).toChar.toString
-      else throw new IllegalArgumentException("numToCharString only supports up to 36 options currently")
+    if num >= 0 & num <= 36 then (num - 10 + 97).toChar.toString
+    else throw new IllegalArgumentException(
+      "numToCharString only supports up to 36 options currently")
   }
-  
+
   private def charToNum(char: Char): Int = {
     if char.isDigit then char.asDigit
     else if char.isLetter then char.toLower.toInt - 97 + 10
-   else -1
+         else -1
   }
 
   private def createCustomKeyMap(options: List[T]): Map[Int, T] = {

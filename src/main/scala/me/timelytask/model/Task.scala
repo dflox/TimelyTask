@@ -35,7 +35,7 @@ case class Task(name: String = "",
         case None => None
       case None => None
   }
-  
+
   def start(stateFinder: UUID => Option[TaskState], openState: Option[UUID]): Option[Task] = {
     // change the state of the task to started (State Pattern)
     getState[OpenState](stateFinder, state) match

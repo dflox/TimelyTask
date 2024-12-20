@@ -20,7 +20,7 @@
 //NextDay.call 
 //viewModelPublisher.getValue.asInstanceOf[CalendarViewModel].timeSelection.day
 
-import com.github.nscala_time.time.Imports._
+import com.github.nscala_time.time.Imports.*
 
 DateTime.parse("").toString("yyyy.MMMM.dddd HH:mm:ss")
 

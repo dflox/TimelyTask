@@ -28,8 +28,9 @@ days.foreach(day => println(day.dayOfWeek.getAsText))
 trait testTrait {
   object testObject {
     def testMethod(): String = "testObject: " + x
+
     var x = 5
-  } 
+  }
 }
 
 object class1 extends testTrait

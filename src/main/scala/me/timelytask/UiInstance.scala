@@ -40,7 +40,7 @@ class UiInstance(using modelPublisher: Publisher[Model]) {
 
   def run(): Unit = {
     init()
-    val uiThread =  new ApplicationThread[Unit]()
+    val uiThread = new ApplicationThread[Unit]()
     uiThread.run(uiManager.run()).await()
   }
 

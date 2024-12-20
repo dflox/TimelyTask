@@ -1,11 +1,10 @@
 package me.timelytask.view.tui.dialog
 
-import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.views.Dialog
 import org.jline.terminal.Terminal
 
 trait TUIDialog[T] extends Dialog[T, String] {
-  
+
   val terminal: Terminal
   val terminalWidth: Int = terminal.getWidth
 
@@ -16,7 +15,7 @@ trait TUIDialog[T] extends Dialog[T, String] {
     if (lineDiff < 0) {
       foreground
     } else {
-      var overlappedLines = backgroundLines
+      val overlappedLines = backgroundLines
       for (i <- lineDiff until backgroundLines.length) {
         overlappedLines(i) = foregroundLines(i - lineDiff)
       }

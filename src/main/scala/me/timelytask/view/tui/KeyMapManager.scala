@@ -8,7 +8,7 @@ import me.timelytask.util.Publisher
 import me.timelytask.view.events.Event
 import org.jline.keymap.KeyMap
 
-object KeyMapManager{
+object KeyMapManager {
   val keyMap: KeyMap[Key] = {
     val keyMap = new KeyMap[Key]()
     // Arrow keys (with both common variants)
