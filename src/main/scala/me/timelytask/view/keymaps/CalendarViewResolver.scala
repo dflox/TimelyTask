@@ -3,26 +3,29 @@ package me.timelytask.view.keymaps
 import me.timelytask.model.settings.{CALENDAR, EventTypeId}
 import me.timelytask.view.events.Event
 import me.timelytask.view.viewmodel.CalendarViewModel
-import me.timelytask.view.views.CalendarView
+import me.timelytask.view.views.{CalendarView, View}
 
-class CalendarViewResolver extends EventResolver[CALENDAR, CalendarViewModel, CalendarView[?]] {
-  override def resolveEvent[Args](eventType: EventTypeId, view: CalendarView[?])
-  : Option[Event[Args]] = {
-    // Type-safe casting helper
-    def castIfPossible[T](value: Any): Option[T] =
-      value match
-        case t: T => Some(t)
-        case _ => None
-
+class CalendarViewResolver extends EventResolver[CALENDAR, CalendarViewModel, View[CALENDAR,
+  CalendarViewModel, ?]] {
+  override def resolveAndCallEvent(eventType: EventTypeId, view: View[CALENDAR,
+    CalendarViewModel, ?])
+  : Option[Boolean] = {
+    view match {
+      case calendarView: CalendarView[?] => callEvent(eventType, calendarView)
+      case _ => None
+    }
+  }
+  
+  private def callEvent(eventType: EventTypeId, calendarView: CalendarView[?]): Option[Boolean] = {
     eventType match {
-      case EventTypeId("NextDay") => castIfPossible[Event[Args]](view.nextDay)
-      case EventTypeId("PreviousDay") => castIfPossible[Event[Args]](view.previousDay)
-      case EventTypeId("NextWeek") => castIfPossible[Event[Args]](view.nextWeek)
-      case EventTypeId("PreviousWeek") => castIfPossible[Event[Args]](view.previousWeek)
-      case EventTypeId("GoToToday") => castIfPossible[Event[Args]](view.goToToday)
-      case EventTypeId("GoToDate") => castIfPossible[Event[Args]](view.goToDate)
-      case EventTypeId("ShowWholeWeek") => castIfPossible[Event[Args]](view.showWholeWeek)
-      case EventTypeId("ShowMoreDays") => castIfPossible[Event[Args]](view.showMoreDays)
+      case EventTypeId("NextDay") => Some(calendarView.nextDay.call(()))
+      case EventTypeId("PreviousDay") => Some(calendarView.previousDay.call(()))
+      case EventTypeId("NextWeek") => Some(calendarView.nextWeek.call(()))
+      case EventTypeId("PreviousWeek") => Some(calendarView.previousWeek.call(()))
+      case EventTypeId("GoToToday") => Some(calendarView.goToToday.call(()))
+      case EventTypeId("GoToDate") => Some(calendarView.goToDate.call(()))
+      case EventTypeId("ShowWholeWeek") => Some(calendarView.showWholeWeek.call(()))
+      case EventTypeId("ShowMoreDays") => Some(calendarView.showMoreDays.call(()))
       case _ => None
     }
   }

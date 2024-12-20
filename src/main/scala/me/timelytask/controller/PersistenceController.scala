@@ -8,8 +8,6 @@ import me.timelytask.controller.commands.{Exit, SaveAndExit, StartApp, Handler}
 class PersistenceController(using modelPublisher: Publisher[Model]) 
   extends Controller {
   
-  println("PersistenceController created")
-  
   StartApp.setHandler((args: Unit) => {
     modelPublisher.update(Some(Model.default))
     true

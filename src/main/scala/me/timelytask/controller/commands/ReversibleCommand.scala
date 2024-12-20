@@ -4,7 +4,7 @@ import me.timelytask.model.*
 import me.timelytask.util.Publisher
 
 trait StoreHandler[Args, StateValue] {
-  def apply(args: Args): StateValue
+  def apply(args: Args): Option[StateValue]
 }
 
 trait RestoreHandler[Args, StateValue] {
@@ -21,7 +21,7 @@ trait ReversibleCommand[Args, StateValue](handler: Handler[Args], args: Args,
     state match {
       case Some(s) => false
       case None =>
-        state = Some(storeHandler(args))
+        state = storeHandler(args)
         handler(args)
     }
   }

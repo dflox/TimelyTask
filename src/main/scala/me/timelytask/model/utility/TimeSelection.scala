@@ -51,6 +51,10 @@ case class TimeSelection(day: DateTime, dayCount: Int, timeFrame: Period) {
     }
   }
   
+  def goToDate(date: DateTime): TimeSelection = {
+    TimeSelection(date, dayCount, timeFrame)
+  }
+  
   def startingToday: TimeSelection = {
     TimeSelection(DateTime.now().withTime(day.toLocalTime), dayCount, timeFrame)
   }

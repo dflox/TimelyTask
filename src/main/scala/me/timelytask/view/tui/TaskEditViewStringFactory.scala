@@ -49,7 +49,6 @@ object TaskEditViewStringFactory extends StringFactory[TASKEdit, TaskEditViewMod
     val separator: String = " | "
     var totalLines = 0
 
-
     for (focusable <- focusElementGrid.elementsList) {
       if focusable.isEmpty then builder.append(createLine(width)).append("\n")
       else {
@@ -67,45 +66,46 @@ object TaskEditViewStringFactory extends StringFactory[TASKEdit, TaskEditViewMod
             then value = optionInputField.default.map(optionInputField.displayFunc).mkString (", ")
           }
 
-        val (str, valueLines) = buildEntry(description, value, width, columnSize,
-          focusable.equals(focusElementGrid.getFocusedElement.get), getTerminalBgColor(
-            _.background2))
-        totalLines += 1 + valueLines
+        builder.append(buildEntry(description, value, width, columnSize,
+          focusable.equals(focusElementGrid.getFocusedElement.get), getTerminalBgColor(_
+            .background2)))
       }
     }
 
+    def buildEntry(description: String, value: String, width: Int, columnSize: Int,
+                   isFocused: Boolean, backgroundColorFocused: String): String = {
+      val separator: String = " | "
+      val maxLineLength = width - columnSize - separator.length
+      val formattedName = colored(columnSpacer(s"$description:", columnSize, "l"),
+        backgroundColorFocused)
+      val builder = new StringBuilder()
+      var remainingValue = value
+      var valueLines = 0
+
+      builder.append(formattedName).append(separator)
+
+      while (remainingValue.length > maxLineLength) {
+        val splitIndex = remainingValue.lastIndexWhere(_.isWhitespace, maxLineLength)
+        val (line, rest) = if (splitIndex > 0) {
+          remainingValue.splitAt(splitIndex)
+        } else {
+          remainingValue.splitAt(maxLineLength)
+        }
+        builder.append(line.trim).append("\n")
+        builder.append(createSpace(columnSize)).append(separator)
+        remainingValue = rest.trim
+        valueLines += 1
+      }
+
+      builder.append(remainingValue).append("\n")
+      valueLines += 1
+      totalLines += 1 + valueLines
+      builder.toString()
+    }
+    
     builder.append(alignTop(terminalHeight, totalLines))
     builder.toString()
   }
 
-  def buildEntry(description: String, value: String, width: Int, columnSize: Int,
-                 isFocused: Boolean, backgroundColorFocused: String): (str: String, valueLines:
-    Int) = {
-    val separator: String = " | "
-    val maxLineLength = width - columnSize - separator.length
-    val formattedName = colored(columnSpacer(s"$description:", columnSize, "l"),
-      backgroundColorFocused)
-    val builder = new StringBuilder()
-    var remainingValue = value
-    var valueLines = 0
-
-    builder.append(formattedName).append(separator)
-
-    while (remainingValue.length > maxLineLength) {
-      val splitIndex = remainingValue.lastIndexWhere(_.isWhitespace, maxLineLength)
-      val (line, rest) = if (splitIndex > 0) {
-        remainingValue.splitAt(splitIndex)
-      } else {
-        remainingValue.splitAt(maxLineLength)
-      }
-      builder.append(line.trim).append("\n")
-      builder.append(createSpace(columnSize)).append(separator)
-      remainingValue = rest.trim
-      valueLines += 1
-    }
-
-    builder.append(remainingValue).append("\n")
-    valueLines += 1
-    (builder.toString(), valueLines)
-  }
+  
 }

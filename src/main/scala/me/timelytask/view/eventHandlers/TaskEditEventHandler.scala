@@ -48,6 +48,17 @@ class TaskEditEventHandler(using taskEditViewModelPublisher: Publisher[TaskEditV
   
   // TODO: Implement CancelTask event
 
+  private def modelUpdate(model: Option[Model]): Boolean = {
+    if model.isEmpty then return false
+    val task = model.get.tasks.find(_.uuid == viewModel().get.task.uuid)
+    if task.isEmpty then return false
+    if task.get == viewModel().get.task then return false
+    Some(viewModel().get.copy(task = task.get))
+  }
+  
+  modelPublisher.addListener(modelUpdate)
+
+
   ChangeView.addHandler({
     case viewChangeArg: ViewChangeArgument[TASKEdit, TaskEditViewModel] =>
       taskEditViewModelPublisher.update(viewChangeArg(taskEditViewModelPublisher.getValue))

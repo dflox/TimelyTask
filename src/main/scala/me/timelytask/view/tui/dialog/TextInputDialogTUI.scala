@@ -6,11 +6,11 @@ import org.jline.reader.impl.history.DefaultHistory
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.Terminal
 
-class TextInputDialogTUI(val dialogModel: Option[InputDialogModel[String]],
-                          val currentView: Option[String],
-                         val terminal: Terminal) extends TUIDialog {
+class TextInputDialogTUI(override val dialogModel: Option[InputDialogModel[String]],
+                         override val currentView: Option[String],
+                         override val terminal: Terminal) extends TUIDialog[String] {
 
-  def getUserInput: Option[String] = {
+  def apply(): Option[String] = {
     if dialogModel.isEmpty | currentView.isEmpty then return None
 
     val dialogString = createDialogString(dialogModel.get.description, terminalWidth)

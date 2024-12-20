@@ -120,7 +120,7 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
           builder.append(colored(timeSelection.day.withPeriodAdded(timeSlice, rowNum).toString(
             format),timeTextColor))
           row.foreach {
-            case taskCollection: TaskCollection =>
+            case Some(taskCollection: TaskCollection) =>
               builder.append(columnSpacer(taskCollection.toString, spacePerColumn, "l") + "|")
             case _ => builder.append(columnSpacer("", spacePerColumn, "l") + "|")
           }

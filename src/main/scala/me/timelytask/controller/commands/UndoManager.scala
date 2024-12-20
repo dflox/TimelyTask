@@ -1,13 +1,11 @@
 package me.timelytask.controller.commands
 
-import me.timelytask.controller.commands.Command
-
 class UndoManager {
   private var undoStack: List[Command[?]] = Nil
   private var redoStack: List[Command[?]] = Nil
 
   def doStep(command: Command[?]): Boolean = {
-    if command.doStep then
+    if command.doStep() then
       undoStack = command :: undoStack
       redoStack = Nil
       true
@@ -32,7 +30,7 @@ class UndoManager {
     redoStack match {
       case Nil => false
       case head :: stack =>
-        if head.doStep then
+        if head.doStep() then
           redoStack = stack
           undoStack = head :: undoStack
           true

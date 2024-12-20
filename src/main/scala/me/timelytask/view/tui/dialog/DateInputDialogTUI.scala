@@ -11,12 +11,12 @@ import scala.util.{Try, Success, Failure}
 
 
 
-class DateInputDialogTUI(val dialogModel: Option[InputDialogModel[DateTime]],
-                         val currentView: Option[String],
-                         val terminal: Terminal) 
-  extends TUIDialog {
+class DateInputDialogTUI(override val dialogModel: Option[InputDialogModel[DateTime]],
+                         override val currentView: Option[String],
+                         override val terminal: Terminal) 
+  extends TUIDialog[DateTime] {
 
-  def getUserInput: Option[DateTime] = {
+  override def apply(): Option[DateTime] = {
     if dialogModel.isEmpty | currentView.isEmpty then return None
     
     var break = false

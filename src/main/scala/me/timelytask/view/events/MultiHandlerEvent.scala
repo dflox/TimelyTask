@@ -10,7 +10,7 @@ trait TypeSensitiveHandler[T, ArgsType, Args <: ArgWrapper[?, ArgsType]] {
 }
 
 trait MultiHandlerEvent[ArgsType, Args <: ArgWrapper[?, ArgsType]]
-(protected val handlers: List[TypeSensitiveHandler[?,ArgsType, Args]],
+(handlers: List[TypeSensitiveHandler[?,ArgsType, Args]],
  isPossibles: List[Args => Option[InputError]]) {
   def call[T](args: Args): Boolean = {
     if isPossibles.exists(isPossible => isPossible match

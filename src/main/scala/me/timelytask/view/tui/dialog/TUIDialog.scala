@@ -1,18 +1,15 @@
 package me.timelytask.view.tui.dialog
 
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
+import me.timelytask.view.views.Dialog
 import org.jline.terminal.Terminal
 
-trait TUIDialog[T] {
-  def getUserInput: Option[?]
-
-  val dialogModel: Option[DialogModel[T]]
+trait TUIDialog[T] extends Dialog[T, String] {
+  
   val terminal: Terminal
-  val currentView: Option[String]
   val terminalWidth: Int = terminal.getWidth
 
-
-  def overlapString(background: String, foreground: String): String = {
+  protected def overlapString(background: String, foreground: String): String = {
     val backgroundLines = background.split("\n")
     val foregroundLines = foreground.split("\n")
     val lineDiff = backgroundLines.length - foregroundLines.length

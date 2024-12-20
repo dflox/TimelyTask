@@ -4,12 +4,12 @@ import me.timelytask.view.tui.TuiUtils.{createLine, cutText}
 import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, OptionDialogModel}
 import org.jline.terminal.Terminal
 
-class OptionDialogTUI[T](val dialogModel: Option[OptionDialogModel[T]],
-                         val currentView: Option[String],
-                         val terminal: Terminal)
-  extends TUIDialog {
+class OptionDialogTUI[T](override val dialogModel: Option[OptionDialogModel[T]],
+                         override val currentView: Option[String],
+                         override val terminal: Terminal)
+  extends TUIDialog[T] {
 
-  override def getUserInput: Option[T] = {
+  override def apply(): Option[T] = {
     if dialogModel.isEmpty | currentView.isEmpty then return None
     
     if (dialogModel.get.options.length > 36) {

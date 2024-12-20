@@ -7,15 +7,24 @@ import me.timelytask.util.Publisher
 import me.timelytask.view.events.{ChangeView, Event, MoveFocus, SetFocusTo}
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.ViewModel
-import me.timelytask.view.viewmodel.dialogmodel.{ConfirmDialogModel, InputDialogModel, OptionDialogModel}
+import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.FocusDirection
-import scala.util.{Try, Success, Failure}
 
-trait View[VT <: ViewType, ViewModelType <: ViewModel[VT], RenderType] {
+import scala.reflect.ClassTag
+import scala.util.{Failure, Success, Try}
+
+trait View[VT <: ViewType: ClassTag, ViewModelType <: ViewModel[VT], RenderType] {
 
   val changeView: ChangeView = ChangeView.createEvent
   val moveFocus: Event[FocusDirection] = MoveFocus.createEvent[VT]
   val setFocusTo: Event[Task] = SetFocusTo.createEvent[VT]
+
+  private def renderDialog: (dialogModel: Option[DialogModel[?]]) => Option[?] =
+    (dialogModel: Option[DialogModel[?]]) => dialogFactory(dialogModel, currentlyRendered) match
+      case Some(dialog: Dialog[?, RenderType]) => dialog()
+      case None => None
+
+  def dialogFactory: DialogFactory[RenderType]
 
   def keymapPublisher: Publisher[Keymap[VT, ViewModelType, View[VT, ViewModelType, ?]]]
   
@@ -23,7 +32,7 @@ trait View[VT <: ViewType, ViewModelType <: ViewModel[VT], RenderType] {
   
   def render: (RenderType, ViewType) => Unit
   
-  protected var currentlyRendered: Option[RenderType]
+  protected var currentlyRendered: Option[RenderType] = None
   
   def getCurrentlyRendered: Option[RenderType] = currentlyRendered
   
@@ -47,7 +56,13 @@ trait View[VT <: ViewType, ViewModelType <: ViewModel[VT], RenderType] {
     (false, key)
   }
   
-  protected def interactWithFocusedElement: Boolean
+  private def interactWithFocusedElement: Boolean = {
+    viewModel match
+    case Some(viewModel) =>
+      viewModelPublisher.update(viewModel.interact[ViewModelType](renderDialog))
+      true
+    case None => false
+  }
   
   viewModelPublisher.addListener(update)
 }
