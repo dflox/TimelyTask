@@ -6,6 +6,7 @@ import org.jline.terminal.Terminal
 
 trait TUIDialog[T] extends Dialog[T, String] {
   
+  val currentView: Option[String]
   val terminal: Terminal
   val terminalWidth: Int = terminal.getWidth
 

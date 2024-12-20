@@ -37,7 +37,7 @@ class DateInputDialogTUI(override val dialogModel: Option[InputDialogModel[DateT
     
     history.purge() // Clear the history before each input
     val input = reader.readLine("> ", null, 
-      dialogModel.get.default.map(_.toString("yyyy-MM-dd")).getOrElse(""))
+      dialogModel.get.default.map(_.toString("yyyy-MM-dd HH:mm")).getOrElse(""))
     history.purge() // Clear the history after input
     
     Try[Option[DateTime]]{
@@ -51,7 +51,7 @@ class DateInputDialogTUI(override val dialogModel: Option[InputDialogModel[DateT
   private def createDialogString(description: String, terminalWidth: Int): String = {
     val stringBuilder = new StringBuilder()
     stringBuilder.append(createLine(terminalWidth) + "\n")
-    stringBuilder.append(description + " (Format: yyyy-MM-dd)")
+    stringBuilder.append(description + " (Format: yyyy-MM-dd HH:mm)" + "\n")
     stringBuilder.toString()
   }
 

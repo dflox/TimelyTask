@@ -3,7 +3,8 @@ package me.timelytask.view.gui
 import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.view.UIManager
-import me.timelytask.view.gui.{CalendarGUI, TaskDetailsView}
+import me.timelytask.view.gui.dialog.DialogFactoryGUI
+import me.timelytask.view.gui.{CalendarViewSceneFactory, TaskDetailsView}
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.dialogmodel.OptionDialogModel
 import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
@@ -27,14 +28,12 @@ class GUIManager(using override val activeViewPublisher: Publisher[ViewType],
         stage.scene = sc
     }
   }
+  
+  given dialogFactory: DialogFactoryGUI = DialogFactoryGUI()
 
-  val calendarView: CalendarView[Scene] = new CalendarView[Scene] {
-    override def renderOptionDialog(optionDialogModel: Option[OptionDialogModel[?]], renderType: Option[Scene]): Option[?] = None
-  }
+  val calendarView: GUICalendarView = new GUICalendarView(render)
 
-  val taskEditView: TaskEditView[Scene] = new TaskEditView[Scene] {
-    override def renderOptionDialog(optionDialogModel: Option[OptionDialogModel[?]], renderType: Option[Scene]): Option[?] = None
-  }
+  val taskEditView: GUITaskEditView = new GUITaskEditView(render)
 
   def createGuiModel: Unit => ModelGUI = _ => ModelGUI()
 
@@ -44,11 +43,8 @@ class GUIManager(using override val activeViewPublisher: Publisher[ViewType],
 
   override def start(): Unit = {
     stage = new PrimaryStage {
-      title = "Calendar View"
-      scene = new Scene {
-        root = CalendarGUI()
-      }
     }
+    render(new CalendarViewSceneFactory().createCalendarGUI(), CALENDAR)
     stage.show()
   }
 }
