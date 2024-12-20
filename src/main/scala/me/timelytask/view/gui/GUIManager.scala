@@ -3,17 +3,17 @@ package me.timelytask.view.gui
 import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.view.UIManager
-import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.gui.{CalendarGUI, TaskDetailsView}
+import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.dialogmodel.OptionDialogModel
 import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
 import me.timelytask.view.views.{CalendarView, TaskEditView}
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
+import scalafx.geometry.Pos
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ToolBar}
 import scalafx.scene.layout.{BorderPane, VBox}
-import scalafx.geometry.Pos
 
 class GUIManager(using override val activeViewPublisher: Publisher[ViewType],
                  override val calendarKeyMapPublisher: Publisher[Keymap[CALENDAR, CalendarViewModel, CalendarView[?]]],
@@ -22,28 +22,21 @@ class GUIManager(using override val activeViewPublisher: Publisher[ViewType],
                  override val taskEditViewModelPublisher: Publisher[TaskEditViewModel])
   extends UIManager[Unit] with JFXApp3 {
 
-  override val render: (Unit, ViewType) => Unit = (_, vt: ViewType) => {
-    if activeViewPublisher.getValue == vt then {
-      updateView(vt)
+  override val render: (Scene, ViewType) => Unit = (sc: Scene, vt: ViewType) => {
+    if activeViewPublisher.getValue.getOrElse(() => None) == vt then {
+        stage.scene = sc
     }
   }
 
-  val calendarView: CalendarView[Unit] = new CalendarView[Unit] {
-    override def renderOptionDialog(optionDialogModel: Option[OptionDialogModel[Task]], renderType: Option[Unit]): Option[Task] = None
+  val calendarView: CalendarView[Scene] = new CalendarView[Scene] {
+    override def renderOptionDialog(optionDialogModel: Option[OptionDialogModel[?]], renderType: Option[Scene]): Option[?] = None
   }
 
-  val taskEditView: TaskEditView[Unit] = new TaskEditView[Unit] {
-    override def renderOptionDialog(optionDialogModel: Option[OptionDialogModel[Task]], renderType: Option[Unit]): Option[Task] = None
+  val taskEditView: TaskEditView[Scene] = new TaskEditView[Scene] {
+    override def renderOptionDialog(optionDialogModel: Option[OptionDialogModel[?]], renderType: Option[Scene]): Option[?] = None
   }
 
   def createGuiModel: Unit => ModelGUI = _ => ModelGUI()
-
-  def updateView(viewType: ViewType): Unit = {
-    viewType match {
-      case CALENDAR => calendarViewModelPublisher.getValue.foreach(calendarView.update)
-      case TASKEdit => taskEditViewModelPublisher.getValue.foreach(taskEditView.update)
-    }
-  }
 
   override def run(): Unit = {
     start()
@@ -53,7 +46,7 @@ class GUIManager(using override val activeViewPublisher: Publisher[ViewType],
     stage = new PrimaryStage {
       title = "Calendar View"
       scene = new Scene {
-        root = new CalendarGUI().createCalendarGUI()
+        root = CalendarGUI()
       }
     }
     stage.show()
