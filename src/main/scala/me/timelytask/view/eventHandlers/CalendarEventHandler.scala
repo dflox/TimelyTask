@@ -8,9 +8,10 @@ import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.*
 import me.timelytask.view.events.argwrapper.ViewChangeArgumentWrapper
-import me.timelytask.view.viewmodel.CalendarViewModel
+import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
 import me.timelytask.view.viewmodel.elemts.{FocusDirection, Focusable, TaskCollection}
 import me.timelytask.view.viewmodel.viewchanger.{CalendarViewChangeArg, TaskEditViewChangeArg, ViewChangeArgument}
+import me.timelytask.view.viewmodel.viewchanger.ViewChangeArgument
 
 import scala.util.{Failure, Success, Try}
 
@@ -105,8 +106,8 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
     if args.isEmpty then false
     else {val task = args.get.getTaskToEdit
     if changeView.isEmpty then initChangeView()
-    changeView.get.call[TASKEdit](ViewChangeArgumentWrapper[TASKEdit](TaskEditViewChangeArg(task, Some
-      (CALENDAR))))
+    changeView.get.call[TASKEdit](ViewChangeArgumentWrapper[TASKEdit]
+      (TaskEditViewChangeArg(task, Some(CALENDAR))))
   }}, (args: Option[CalendarViewModel]) => {
     if args.isEmpty | args.get.getTaskToEdit.isEmpty then Some(InputError("No task to edit."))
     else None

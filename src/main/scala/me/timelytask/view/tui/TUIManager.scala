@@ -30,7 +30,7 @@ class TUIManager(using override val activeViewPublisher: Publisher[ViewType],
   terminal.enterRawMode()
 
   override val render: (String, ViewType) => Unit = (str: String, vt: ViewType) => {
-    if activeViewPublisher.getValue == vt then {
+    if activeViewPublisher.getValue.getOrElse(() => None) == vt then {
       terminal.puts(Capability.clear_screen)
       writer.print(str)
       writer.flush()
