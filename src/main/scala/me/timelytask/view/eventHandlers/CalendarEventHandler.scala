@@ -1,17 +1,16 @@
 package me.timelytask.view.eventHandlers
 
-import com.github.nscala_time.time.Imports.{Period, richInt}
+import com.github.nscala_time.time.Imports.{DateTime, Period, richInt}
 import me.timelytask.controller.commands.UndoManager
-import me.timelytask.model.settings.{CALENDAR, ViewType}
+import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
 import me.timelytask.model.utility.{InputError, TimeSelection}
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.*
 import me.timelytask.view.events.argwrapper.ViewChangeArgumentWrapper
 import me.timelytask.view.viewmodel.CalendarViewModel
-import me.timelytask.view.viewmodel.elemts.FocusDirection.*
 import me.timelytask.view.viewmodel.elemts.{FocusDirection, Focusable, TaskCollection}
-import me.timelytask.view.viewmodel.viewchanger.{CalendarViewChangeArg, ViewChangeArgument}
+import me.timelytask.view.viewmodel.viewchanger.{CalendarViewChangeArg, TaskEditViewChangeArg, ViewChangeArgument}
 
 import scala.util.{Failure, Success, Try}
 
@@ -62,7 +61,13 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
   ShowLessDays.setHandler((args: Unit) => {
     addDaysToTimeSelection(-1)
   }, (args: Unit) => None)
-  
+
+  GoToDate.setHandler((args: Unit) => {
+    // TODO: Implement GoToDate event, needs custom Dialog in ViewModel triggered by Eventhandler
+    //  - not yet implemented in current ViewModel
+    false
+  }, (args: Unit) => None)
+
   // Focus Events
   MoveFocus.addHandler[CALENDAR]((args: FocusDirection) => {
     Try[CalendarViewModel] {
@@ -71,19 +76,20 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
     } match
       case Success(value) => Some(value)
       case Failure(exception) => None
-  }, (args: FocusDirection) => if viewModel().isEmpty | viewModel().get.getFocusElementGrid.isEmpty 
-                                                      then
+  }, (args: FocusDirection) => if viewModel().isEmpty | viewModel().get.getFocusElementGrid.isEmpty
+                               then
                                  Some(InputError("Fatal Error: No focus element grid defined!"))
                                else
                                  None)
 
   SetFocusTo.addHandler[CALENDAR]((args: Task) => {
     Try[CalendarViewModel] {
-      viewModel().get.copy(focusElementGrid = viewModel().get.getFocusElementGrid.get.setFocusToElement
-        (selectFunc = {
-          case Some(taskCollection: TaskCollection) => taskCollection.getTasks.contains(args)
-          case _ => false
-        }))
+      viewModel().get.copy(
+        focusElementGrid = viewModel().get.getFocusElementGrid.get.setFocusToElement
+          (selectFunc = {
+            case Some(taskCollection: TaskCollection) => taskCollection.getTasks.contains(args)
+            case _ => false
+          }))
     } match
       case Success(value) => Some(value)
       case Failure(exception) => None
@@ -91,6 +97,20 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
                        Some(InputError("Fatal Error: No focus element grid defined!"))
                      else
                        None)
+
+  protected var changeView: Option[ChangeView] = None
+  private def initChangeView: () => Unit = () => changeView = Some(ChangeView.createEvent)
+
+  EditFocusedTask.setHandler((args: Option[CalendarViewModel]) => {
+    if args.isEmpty then false
+    else {val task = args.get.getTaskToEdit
+    if changeView.isEmpty then initChangeView()
+    changeView.get.call[TASKEdit](ViewChangeArgumentWrapper[TASKEdit](TaskEditViewChangeArg(task, Some
+      (CALENDAR))))
+  }}, (args: Option[CalendarViewModel]) => {
+    if args.isEmpty | args.get.getTaskToEdit.isEmpty then Some(InputError("No task to edit."))
+    else None
+  })
 
   ChangeView.addHandler({
     case viewChangeArg: ViewChangeArgument[CALENDAR, CalendarViewModel] =>
@@ -102,7 +122,17 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
     case arg: CalendarViewChangeArg => None
     case _ => Some(InputError("Cannot change view to calendar view."))
   )
-  
+
+  private def modelUpdate(model: Option[Model]): Boolean = {
+    if model.isEmpty then return false
+    calendarViewModelPublisher.getValue match
+      case Some(viewModel) =>
+        Some(CalendarViewModel(viewModel.timeSelection,modelPublisher))
+      case None => Some(CalendarViewModel(modelPublisher = modelPublisher))
+  }
+
+  modelPublisher.addListener(modelUpdate)
+
   private def addDaysToTimeSelection(daysToAdd: Int): Option[CalendarViewModel]
   = {
     Try[CalendarViewModel] {
@@ -111,7 +141,7 @@ class CalendarEventHandler(using calendarViewModelPublisher: Publisher[CalendarV
     } match
       case Success(value) => Some(value)
       case Failure(exception) => None
-    }
+  }
 
   private def addPeriodToTimeSelection(period: Period): Option[CalendarViewModel] = {
     Try[CalendarViewModel] {

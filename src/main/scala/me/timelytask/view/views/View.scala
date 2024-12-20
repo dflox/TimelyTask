@@ -1,6 +1,5 @@
 package me.timelytask.view.views
 
-import com.sun.javafx.sg.prism.NodeEffectInput.RenderType
 import me.timelytask.model.Task
 import me.timelytask.model.settings.ViewType
 import me.timelytask.model.utility.{Key, Space}
@@ -8,22 +7,23 @@ import me.timelytask.util.Publisher
 import me.timelytask.view.events.{ChangeView, Event, MoveFocus, SetFocusTo}
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.ViewModel
-import me.timelytask.view.viewmodel.dialogmodel.{ConfirmDialogModel, DialogModel, InputDialogModel, OptionDialogModel}
+import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.FocusDirection
 
+import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
-trait View[VT <: ViewType, ViewModelType <: ViewModel[VT], RenderType] {
+trait View[VT <: ViewType: ClassTag, ViewModelType <: ViewModel[VT], RenderType] {
 
   val changeView: ChangeView = ChangeView.createEvent
   val moveFocus: Event[FocusDirection] = MoveFocus.createEvent[VT]
   val setFocusTo: Event[Task] = SetFocusTo.createEvent[VT]
 
-  private def renderDialog: (dialogModel: Option[DialogModel[?]]) => Option[?] = 
+  private def renderDialog: (dialogModel: Option[DialogModel[?]]) => Option[?] =
     (dialogModel: Option[DialogModel[?]]) => dialogFactory(dialogModel, currentlyRendered) match
       case Some(dialog: Dialog[?, RenderType]) => dialog()
       case None => None
-  
+
   def dialogFactory: DialogFactory[RenderType]
 
   def keymapPublisher: Publisher[Keymap[VT, ViewModelType, View[VT, ViewModelType, ?]]]

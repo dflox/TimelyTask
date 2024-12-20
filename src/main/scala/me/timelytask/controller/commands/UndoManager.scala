@@ -1,7 +1,5 @@
 package me.timelytask.controller.commands
 
-import me.timelytask.controller.commands.Command
-
 class UndoManager {
   private var undoStack: List[Command[?]] = Nil
   private var redoStack: List[Command[?]] = Nil

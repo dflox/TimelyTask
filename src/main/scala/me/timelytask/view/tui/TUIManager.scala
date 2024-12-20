@@ -62,9 +62,10 @@ class TUIManager(using override val activeViewPublisher: Publisher[ViewType],
     while true do {
       keyInputTask = Some(inputThread.run(getInput))
       val key = keyInputTask.get.await()
-      activeViewPublisher.getValue match {
+      activeViewPublisher.getValue.get match {
         case CALENDAR => calendarView.handleKey(Some(key))
         case TASKEdit => taskEditView.handleKey(Some(key))
+        case _ => ()
       }
     }
   }
