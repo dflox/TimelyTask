@@ -17,17 +17,18 @@ lazy val root = project
     version := "0.1.0-SNAPSHOT",
 
     scalaVersion := scala3Version,
-    libraryDependencies += "org.scalameta" %% "munit" % scalaMetaVersion % Test,
-    libraryDependencies += "com.github.nscala-time" %% "nscala-time" % nscalaTimeVersion,
-    libraryDependencies += "org.jline" % "jline" % jlineVersion,
-    libraryDependencies += "org.scalatest" %% "scalatest" % scalaTestVersion % Test,
-    libraryDependencies += "org.virtuslab" %% "scala-yaml" % scalaYamlVersion % Test,
-    libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion,
-    libraryDependencies += "org.scalatestplus" %% "mockito-3-4" % mockitoVersion % Test,
-    libraryDependencies += "org.scalafx" %% "scalafx" % scalaFxVersion,
+
     libraryDependencies ++= Seq(
-      "io.circe" %% "circe-core",
-      "io.circe" %% "circe-generic",
-      "io.circe" %% "circe-parser"
-    ).map(_ % circeVersion)
+      "org.scalameta" %% "munit" % scalaMetaVersion % Test,
+      "com.github.nscala-time" %% "nscala-time" % nscalaTimeVersion,
+      "org.jline" % "jline" % jlineVersion,
+      "org.scalatest" %% "scalatest" % scalaTestVersion % Test,
+      "org.virtuslab" %% "scala-yaml" % scalaYamlVersion % Test,
+      "org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion,
+      "org.scalatestplus" %% "mockito-3-4" % mockitoVersion % Test,
+      "org.scalafx" %% "scalafx" % scalaFxVersion,
+      "io.circe" %% "circe-core" % circeVersion,
+      "io.circe" %% "circe-generic" % circeVersion,
+      "io.circe" %% "circe-parser" % circeVersion
+    )
   )
