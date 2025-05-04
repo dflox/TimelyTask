@@ -7,8 +7,9 @@ import me.timelytask.view.viewmodel.TaskEditViewModel
 import me.timelytask.view.viewmodel.dialogmodel.{InputDialogModel, OptionDialogModel}
 import me.timelytask.view.views.{DialogFactory, TaskEditView, View}
 
-class TuiTaskEditView(override val render: (String, ViewType) => Unit, tuiModel: Unit => ModelTUI)
-                     (using override val keymapPublisher: Publisher[Keymap[TASKEdit,
+class TuiTaskEditView(override val render: (String, ViewType) => Unit, 
+                      tuiModel: Unit => ModelTUI,
+                      override val keymapPublisher: Publisher[Keymap[TASKEdit,
                        TaskEditViewModel, View[TASKEdit, TaskEditViewModel, ?]]],
                       val viewModelPublisher: Publisher[TaskEditViewModel],
                       override val dialogFactory: DialogFactory[String])

@@ -36,15 +36,15 @@ trait EventCompanion[EventType <: Event[Args], Args] {
 }
 
 trait TypeSensitiveEventCompanion[EventType <: Event[Args], Args] {
-  protected var wrappers: List[TypeSensitiveWrapper[?, Args]] = Nil
+  private var wrappers: List[TypeSensitiveWrapper[?, Args]] = Nil
 
   def addHandler[T: ClassTag](newHandler: Handler[Args], isPossible: Args => Option[InputError])
   : Unit = {
     wrappers = TypeSensitiveWrapper[T, Args](newHandler, isPossible) :: wrappers
   }
 
-  protected class TypeSensitiveWrapper[T: ClassTag, Args](val handler: Handler[Args],
-                                                          val isPossible: Args => Option[InputError]
+  private class TypeSensitiveWrapper[T: ClassTag, Args](val handler: Handler[Args],
+                                                        val isPossible: Args => Option[InputError]
                                                          ) {
     def matchesType[A: ClassTag]: Boolean =
       implicitly[ClassTag[T]].runtimeClass == implicitly[ClassTag[A]].runtimeClass

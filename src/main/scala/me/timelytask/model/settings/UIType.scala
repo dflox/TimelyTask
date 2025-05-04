@@ -1,6 +1,6 @@
 package me.timelytask.model.settings
 
-enum AppType {
+enum UIType {
   case GUI, TUI
 
   override def toString: String = this match {
@@ -10,8 +10,8 @@ enum AppType {
 
 }
 
-object AppType {
-  def fromString(s: String): AppType = s match {
+object UIType {
+  def fromString(s: String): UIType = s match {
     case "gui" => GUI
     case "tui" => TUI
   }

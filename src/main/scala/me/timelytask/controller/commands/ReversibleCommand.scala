@@ -17,7 +17,7 @@ trait ReversibleCommand[Args, StateValue](handler: Handler[Args], args: Args,
   extends Command[Args] {
   private var state: Option[StateValue] = None
 
-  override def doStep(): Boolean = {
+  override def execute: Boolean = {
     state match {
       case Some(s) => false
       case None =>
@@ -33,7 +33,7 @@ trait ReversibleCommand[Args, StateValue](handler: Handler[Args], args: Args,
     }
   }
 
-  override def undoStep: Boolean = {
+  override def undo: Boolean = {
     state match {
       case Some(s) => restoreHandler(args, s)
       case None => false

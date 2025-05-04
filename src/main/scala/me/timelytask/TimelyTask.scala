@@ -1,5 +1,8 @@
 package me.timelytask
 
-object TimelyTask extends App {
-  CoreApplication().run()
+@main
+def main(): Unit = {
+  val timelytask = CoreApplication()
+  timelytask.validateSetup()
+  timelytask.run()
 }

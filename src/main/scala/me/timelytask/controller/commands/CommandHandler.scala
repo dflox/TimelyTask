@@ -1,11 +1,20 @@
 package me.timelytask.controller.commands
 
-class UndoManager {
+import java.util.concurrent.LinkedBlockingQueue
+
+class CommandHandler(commandQueue: LinkedBlockingQueue[Command[?]]) {
   private var undoStack: List[Command[?]] = Nil
   private var redoStack: List[Command[?]] = Nil
-
-  def doStep(command: Command[?]): Boolean = {
-    if command.doStep() then
+  
+  def handle(): Unit = {
+    while(true){
+      val nextCommand = commandQueue.take()
+      this.doStep(nextCommand)
+    }
+  }
+  
+  private def doStep(command: Command[?]): Boolean = {
+    if command.execute then
       undoStack = command :: undoStack
       redoStack = Nil
       true
@@ -13,11 +22,11 @@ class UndoManager {
       false
   }
 
-  def undoStep(): Boolean = {
+  private def undoStep(): Boolean = {
     undoStack match {
       case Nil => false
       case head :: stack =>
-        if head.undoStep then
+        if head.undo then
           undoStack = stack
           redoStack = head :: redoStack
           true
@@ -26,11 +35,11 @@ class UndoManager {
     }
   }
 
-  def redoStep(): Boolean = {
+  private def redoStep(): Boolean = {
     redoStack match {
       case Nil => false
       case head :: stack =>
-        if head.doStep() then
+        if head.redo then
           redoStack = stack
           undoStack = head :: undoStack
           true

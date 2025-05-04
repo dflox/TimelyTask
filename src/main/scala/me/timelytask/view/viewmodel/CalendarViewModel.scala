@@ -62,20 +62,23 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
     case None => Nil
   }, focusedElement: Option[Focusable[?]] = None)
   : FocusElementGrid = {
-    var newFocusElementGrid = new FocusElementGrid(width = timeSelection.dayCount,
+    var newFocusElementGrid = new FocusElementGrid(
+      width = timeSelection.dayCount,
       height = rowCount)
+
     for (row <- 0 until rowCount) {
       val startTime = timeSelection.day.withPeriodAdded(timeSlice, row)
-      (0 until timeSelection.dayCount)
+      (0 until timeSelection.dayCount -1)
         .foreach(day => {
           val timeSliceInterval = new Interval(startTime.withPeriodAdded(1.day, day), timeSlice)
-          tasks.filter(task => timeSliceInterval.contains(task.scheduleDate)) match {
-            case tasksTimeslot if tasksTimeslot.nonEmpty =>
-              newFocusElementGrid = newFocusElementGrid.setElement(day, row,
-                  Some(TaskCollection(tasksTimeslot))).getOrElse
-                (newFocusElementGrid)
+          newFocusElementGrid = newFocusElementGrid.setElement(
+              day,
+              row,
+              Some(TaskCollection(tasks.filter(
+                    task => timeSliceInterval.contains(task.scheduleDate))
+              ))).getOrElse(newFocusElementGrid)
           }
-        })
+        )
     }
 
     if focusedElement.isDefined & focusedElement.isInstanceOf[TaskCollection] then

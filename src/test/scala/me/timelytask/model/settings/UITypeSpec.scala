@@ -6,16 +6,16 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
 
-class AppTypeSpec extends AnyWordSpec {
+class UITypeSpec extends AnyWordSpec {
   "The AppType" should {
     "return the correct string representation" in {
-      AppType.GUI.toString shouldEqual "gui"
-      AppType.TUI.toString shouldEqual "tui"
+      UIType.GUI.toString shouldEqual "gui"
+      UIType.TUI.toString shouldEqual "tui"
     }
 
     "return the correct AppType from a string" in {
-      AppType.fromString("gui") shouldEqual AppType.GUI
-      AppType.fromString("tui") shouldEqual AppType.TUI
+      UIType.fromString("gui") shouldEqual UIType.GUI
+      UIType.fromString("tui") shouldEqual UIType.TUI
     }
   }
 }

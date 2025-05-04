@@ -36,7 +36,10 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
     // Calculate the possible Space that each day has (subtract the timeColumn and the seperator
     // for the days)
     val spacePerColumn = (width - table.head.length - timeSelection.dayCount) /
-      timeSelection.dayCount
+      timeSelection.dayCount match
+      case n if n < 0 => 0
+      case n if n >= 0 => n
+
     val actualWidth = timeColumnLength + timeSelection.dayCount +
       (timeSelection.dayCount * spacePerColumn)
 
@@ -96,13 +99,14 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
     val dateformat = "dd. - dd. MMM. yyyy"
     val headerLetterCount: Int = (title + dateformat)
       .length // the amount of space(letters) the period String takes
+    val renderingWidth = if (actualWidth < headerLetterCount) headerLetterCount +1 else actualWidth
     val builder = new StringBuilder()
     // Create the header
-    builder.append(createLine(actualWidth) + "\n")
+    builder.append(createLine(renderingWidth) + "\n")
     builder.append(colored(title, getTerminalColor(_.text2) + BOLD) +
-      createSpace(actualWidth - headerLetterCount) + colored(timeSelection
+      createSpace(renderingWidth - headerLetterCount) + colored(timeSelection
       .toString("dd.", "dd. MMM yyyy", " - "), getTerminalColor(_.text2) + ITALIC) + "\n")
-    builder.append(createLine(actualWidth) + "\n")
+    builder.append(createLine(renderingWidth) + "\n")
     builder.toString()
   }
 

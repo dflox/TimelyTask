@@ -9,15 +9,17 @@ import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.FocusDirection
-
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
 trait View[VT <: ViewType : ClassTag, ViewModelType <: ViewModel[VT, ViewModelType], RenderType] {
+  def init(): Unit = {
+    viewModelPublisher.addListener(update)
+  }
 
-  val changeView: ChangeView = ChangeView.createEvent
-  val moveFocus: Event[FocusDirection] = MoveFocus.createEvent[VT]
-  val setFocusTo: Event[Task] = SetFocusTo.createEvent[VT]
+//  val changeView: ChangeView = ChangeView.createEvent
+//  val moveFocus: Event[FocusDirection] = MoveFocus.createEvent[VT]
+//  val setFocusTo: Event[Task] = SetFocusTo.createEvent[VT]
 
   private def renderDialog: (dialogModel: Option[DialogModel[?]]) => Option[?] =
     (dialogModel: Option[DialogModel[?]]) => dialogFactory(dialogModel, currentlyRendered) match
@@ -63,6 +65,4 @@ trait View[VT <: ViewType : ClassTag, ViewModelType <: ViewModel[VT, ViewModelTy
         true
       case None => false
   }
-
-  viewModelPublisher.addListener(update)
 }

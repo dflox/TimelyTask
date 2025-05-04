@@ -6,7 +6,7 @@ import me.timelytask.view.viewmodel.dialogmodel.*
 import me.timelytask.view.views.{Dialog, DialogFactory}
 import org.jline.terminal.Terminal
 
-class DialogFactoryTUI(using terminal: Terminal) extends DialogFactory[String] {
+class DialogFactoryTUI(terminal: Terminal) extends DialogFactory[String] {
   override def apply(dialogModel: Option[DialogModel[?]], currentView: Option[String])
   : Option[Dialog[?, String]] = {
     dialogModel match {

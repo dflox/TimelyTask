@@ -2,12 +2,13 @@ package me.timelytask.view
 
 import me.timelytask.model.settings.*
 import me.timelytask.util.Publisher
-import me.timelytask.view.events.NextDay
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.*
 import me.timelytask.view.views.{CalendarView, TaskEditView, View}
 
 trait UIManager[RenderType] {
+  def uiType: UIType
+  
   def activeViewPublisher: Publisher[ViewType]
 
   def calendarKeyMapPublisher: Publisher[Keymap[CALENDAR, CalendarViewModel, View[CALENDAR, 

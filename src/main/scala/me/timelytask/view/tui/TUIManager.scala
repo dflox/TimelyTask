@@ -1,8 +1,9 @@
 package me.timelytask.view.tui
 
-import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
+import me.timelytask.controller.commands.StartApp
+import me.timelytask.model.settings.{CALENDAR, TASKEdit, UIType, ViewType}
 import me.timelytask.model.utility.{Key, Unknown}
-import me.timelytask.util.{ApplicationThread, CancelableTask, Publisher}
+import me.timelytask.util.{CancelableFuture, Publisher}
 import me.timelytask.view.UIManager
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.tui.dialog.DialogFactoryTUI
@@ -14,7 +15,7 @@ import org.jline.utils.InfoCmp.Capability
 
 import java.io.PrintWriter
 
-class TUIManager(using override val activeViewPublisher: Publisher[ViewType],
+class TUIManager(override val activeViewPublisher: Publisher[ViewType],
                  override val calendarKeyMapPublisher: Publisher[Keymap[CALENDAR,
                    CalendarViewModel, View[CALENDAR, CalendarViewModel, ?]]],
                  override val calendarViewModelPublisher: Publisher[CalendarViewModel],
@@ -22,12 +23,17 @@ class TUIManager(using override val activeViewPublisher: Publisher[ViewType],
                    View[TASKEdit, TaskEditViewModel, ?]]],
                  override val taskEditViewModelPublisher: Publisher[TaskEditViewModel])
   extends UIManager[String] {
+  val uiType: UIType = UIType.TUI
 
-  given terminal: Terminal = TerminalBuilder.builder()
-    .system(true)
+  def init(): Unit = {
+    terminal.enterRawMode()
+    calendarView.init()
+    taskEditView.init()
+  }
+
+  val terminal: Terminal = TerminalBuilder.builder()
+    .dumb(false)
     .build()
-
-  terminal.enterRawMode()
 
   override val render: (String, ViewType) => Unit = (str: String, vt: ViewType) => {
     if activeViewPublisher.getValue.getOrElse(() => None) == vt then {
@@ -46,27 +52,37 @@ class TUIManager(using override val activeViewPublisher: Publisher[ViewType],
     }
   }
 
-  val createTuiModel: Unit => ModelTUI = unit => ModelTUI(terminal.getHeight, terminal.getWidth)
+  val createTuiModel: Unit => ModelTUI = unit => if (terminal.getWidth == 0) ModelTUI.default
+                                                 else new ModelTUI(terminal.getHeight,
+                                                   terminal.getWidth)
 
-  given dialogFactoryTUI: DialogFactoryTUI = DialogFactoryTUI()
+  val dialogFactoryTUI: DialogFactoryTUI = new DialogFactoryTUI(terminal)
 
-  val calendarView: CalendarView[String] = TuiCalendarView(render, createTuiModel)
+  val calendarView: CalendarView[String] = new TuiCalendarView(render, createTuiModel,
+    calendarKeyMapPublisher, calendarViewModelPublisher, dialogFactoryTUI)
 
-  val taskEditView: TaskEditView[String] = TuiTaskEditView(render, createTuiModel)
+  val taskEditView: TaskEditView[String] = TuiTaskEditView(render, createTuiModel,
+    taskEditKeyMapPublisher, taskEditViewModelPublisher, dialogFactoryTUI)
 
-  val inputThread = new ApplicationThread[Key]()
-
-  protected var keyInputTask: Option[CancelableTask[Key]] = None
+  protected var keyInputTask: Option[CancelableFuture[Key]] = None
 
   def run(): Unit = {
+    init()
+    StartApp.createCommand(()).execute
     while true do {
-      keyInputTask = Some(inputThread.run(getInput))
-      val key = keyInputTask.get.await()
-      activeViewPublisher.getValue.get match {
-        case CALENDAR => calendarView.handleKey(Some(key))
-        case TASKEdit => taskEditView.handleKey(Some(key))
-        case _ => ()
-      }
+      keyInputTask = Some(
+        CancelableFuture(
+          task = getInput,
+          onSuccess = Some(handleNewKeyInput)
+        ))
+    }
+  }
+
+  def handleNewKeyInput(key: Key): Unit = {
+    activeViewPublisher.getValue.get match {
+      case CALENDAR => calendarView.handleKey(Some(key))
+      case TASKEdit => taskEditView.handleKey(Some(key))
+      case _ => ()
     }
   }
 

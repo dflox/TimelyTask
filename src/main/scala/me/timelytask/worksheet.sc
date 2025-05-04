@@ -17,13 +17,13 @@ val days: List[DateTime] = (0 until numberOfDays).map(today + _.days).toList
 days.foreach(day => println(day.dayOfWeek.getAsText))
 
 //// test json serialization
-//import model.Config
-//import model.settings.FileType.JSON
+//import me.timelytask.model.Config
+//import me.timelytask.model.settings.FileType.JSON
 //import io.circe.generic.auto._
-////
-//val config: Config = Config.defaultConfig
+//////
+//val config: Config = Config.default
 //FileLoader.save[Config](JSON, "./", List(config))
-//
+////
 
 trait testTrait {
   object testObject {
@@ -42,5 +42,3 @@ class2.testObject.x = 20
 
 class1.testObject.testMethod()
 class2.testObject.testMethod()
-
-

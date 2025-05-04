@@ -97,8 +97,8 @@ class FocusElementGrid(elements: Vector[Vector[Option[Focusable[?]]]],
 
   private def getFocusedElementPosition: (Int, Int) = {
     val result = (for {
-      i <- 0 until height
-      j <- 0 until width
+      i <- 0 until width
+      j <- 0 until height
       if elements(i)(j) == focusedElement
     } yield (i, j)).headOption.getOrElse((1, 1))
     result

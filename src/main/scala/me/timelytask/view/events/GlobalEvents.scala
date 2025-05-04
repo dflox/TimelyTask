@@ -171,18 +171,16 @@ case object EditState extends EventCompanion[EditState, UUID] {
 
 case class ChangeView(handlers: List[TypeSensitiveHandler[?,
   ViewChangeArgument[ViewType, ViewModel[ViewType, ?]],
-  ViewChangeArgumentWrapper[ViewType, ViewModel[ViewType, ?], ?]]],
-                      isPossibles: List[ViewChangeArgumentWrapper[ViewType, ViewModel[ViewType,
-                        ?], ?] => Option[InputError]])
+  ViewChangeArgumentWrapper[ViewType, ViewModel[ViewType, ?], ?]]])
   extends MultiHandlerEvent[
     ViewChangeArgument[ViewType, ViewModel[ViewType, ?]],
-    ViewChangeArgumentWrapper[ViewType, ViewModel[ViewType, ?], ?]](handlers, isPossibles)
+    ViewChangeArgumentWrapper[ViewType, ViewModel[ViewType, ?], ?]](handlers)
 
 case object ChangeView extends MultiHandlerEventCompanion[
   ViewChangeArgument[ViewType, ViewModel[ViewType, ?]],
   ViewChangeArgumentWrapper[ViewType, ViewModel[ViewType, ?], ?],
   ChangeView] {
-  override protected def create: ChangeView = ChangeView(handlers, isPossibles)
+  override protected def create: ChangeView = ChangeView(handlers)
 }
 
 //case class ChangeTheme() extends Event[]

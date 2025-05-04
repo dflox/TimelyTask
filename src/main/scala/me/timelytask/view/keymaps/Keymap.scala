@@ -11,8 +11,8 @@ class Keymap[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType], V <:
                      resolver: EventResolver[VT, ViewModelType, V]) {
   def handleKey(key: Option[Key], view: V): Boolean = {
     if key.isEmpty then return false
-    config.mappings.get(key.get).flatMap { eventType =>
-      resolver.resolveAndCallEvent(eventType, view)
+    config.mappings.get(key.get).flatMap { 
+      eventType => resolver.resolveAndCallEvent(eventType, view)
     }.getOrElse(false)
   }
 }

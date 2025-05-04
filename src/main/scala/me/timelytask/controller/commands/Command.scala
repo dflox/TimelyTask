@@ -8,28 +8,28 @@ trait Handler[Args] {
 }
 
 trait Command[Args] {
-  def doStep(): Boolean
+  def execute: Boolean
 
   def redo: Boolean
 
-  def undoStep: Boolean
+  def undo: Boolean
 }
 
 trait UndoableCommand[Args](handler: Handler[Args], args: Args) extends Command[Args] {
   private var done: Boolean = false
 
-  override def doStep(): Boolean = {
+  override def execute: Boolean = {
     if (!done) {
       done = handler.apply(args)
       done
     } else false
   }
 
-  override def undoStep: Boolean = {
+  override def undo: Boolean = {
     false
   }
 
-  override def redo: Boolean = doStep()
+  override def redo: Boolean = execute
 }
 
 
