@@ -11,6 +11,7 @@ val scalaXmlVersion = "2.3.0"
 val mockitoVersion = "3.2.10.0"
 val scalaFxVersion = "24.0.0-R35"
 val macwireVersion = "2.6.6"
+val circeYamlVersion = "0.16.0"
 
 lazy val root = project
   .in(file("."))
@@ -31,6 +32,7 @@ lazy val root = project
       "io.circe" %% "circe-core" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
+      "io.circe" %% "circe-yaml-v12" % circeYamlVersion,
       "com.softwaremill.macwire" %% "macros" % macwireVersion % "provided"
     )
   )

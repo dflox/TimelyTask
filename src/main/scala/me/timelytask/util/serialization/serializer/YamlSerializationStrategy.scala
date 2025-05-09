@@ -1,17 +1,18 @@
 package me.timelytask.util.serialization.serializer
 
-import io.circe.Json
+import io.circe.yaml.v12.parser
+import io.circe.yaml.v12.syntax.AsYaml
 import me.timelytask.util.serialization.{SerializationStrategy, TypeDecoder, TypeEncoder}
 
-class JsonSerializationStrategy extends SerializationStrategy{
+class YamlSerializationStrategy extends SerializationStrategy {
   override def serialize[T](obj: T)(using typeEncoder: TypeEncoder[T]): String = {
-    typeEncoder(obj).spaces2
+    typeEncoder(obj).asYaml.spaces2
   }
 
   override def deserialize[T](str: String)(using typeSerializer: TypeDecoder[T]): Option[T] = {
-    val json = io.circe.parser.parse(str)
-    json match
+    parser.parse(str) match {
       case Left(_) => None
       case Right(json) => typeSerializer(json)
+    }
   }
 }
