@@ -4,13 +4,13 @@ import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.Model
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.TimeSelection
-import me.timelytask.util.Publisher
 import me.timelytask.view.viewmodel.*
 import org.mockito.Mockito.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import me.timelytask.model.modelPublisher
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.viewModelPublisher
 
 class CalendarControllerSpec extends AnyWordSpec

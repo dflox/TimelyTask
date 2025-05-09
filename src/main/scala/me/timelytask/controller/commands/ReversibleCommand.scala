@@ -1,7 +1,7 @@
 package me.timelytask.controller.commands
 
 import me.timelytask.model.*
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 
 trait StoreHandler[Args, StateValue] {
   def apply(args: Args): Option[StateValue]

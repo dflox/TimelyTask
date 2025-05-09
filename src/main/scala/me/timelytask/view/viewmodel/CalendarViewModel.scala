@@ -4,12 +4,12 @@ import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, TaskCollection}
 
 case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaultTimeSelection,
-                             modelPublisher: Publisher[Model],
+                             modelPublisher: PublisherImpl[Model],
                              protected var focusElementGrid: Option[FocusElementGrid] = None)
   extends ViewModel[CALENDAR, CalendarViewModel](modelPublisher) {
 

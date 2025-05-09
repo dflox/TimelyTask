@@ -3,7 +3,7 @@ package me.timelytask
 import me.timelytask.controller.commands.{Command, CommandHandler}
 import me.timelytask.model.Model
 import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.eventHandlers.{CalendarEventHandler, GlobalEventHandler, TaskEditEventHandler}
 import me.timelytask.view.keymaps.{CalendarViewResolver, Keymap, TaskEditViewResolver}
 import me.timelytask.view.tui.TUIManager
@@ -12,23 +12,23 @@ import me.timelytask.view.views.View
 
 import java.util.concurrent.LinkedBlockingQueue
 
-class UiInstance(modelPublisher: Publisher[Model], undoManager: CommandHandler, 
+class UiInstance(modelPublisher: PublisherImpl[Model], undoManager: CommandHandler,
                  commandQueue: LinkedBlockingQueue[Command[?]]) {
 
-  val activeViewPublisher: Publisher[ViewType] = Publisher[ViewType](Some(CALENDAR))
+  val activeViewPublisher: PublisherImpl[ViewType] = PublisherImpl[ViewType](Some(CALENDAR))
 
-  val calendarViewModelPublisher: Publisher[CalendarViewModel] = Publisher[CalendarViewModel](
+  val calendarViewModelPublisher: PublisherImpl[CalendarViewModel] = PublisherImpl[CalendarViewModel](
     None)
 
-  val taskEditViewModelPublisher: Publisher[TaskEditViewModel] = Publisher[TaskEditViewModel](
+  val taskEditViewModelPublisher: PublisherImpl[TaskEditViewModel] = PublisherImpl[TaskEditViewModel](
     None)
 
-  val calendarKeyMapPublisher: Publisher[Keymap[CALENDAR, CalendarViewModel, View[CALENDAR,
-    CalendarViewModel, ?]]] = Publisher[Keymap[CALENDAR, CalendarViewModel, View[CALENDAR,
+  val calendarKeyMapPublisher: PublisherImpl[Keymap[CALENDAR, CalendarViewModel, View[CALENDAR,
+    CalendarViewModel, ?]]] = PublisherImpl[Keymap[CALENDAR, CalendarViewModel, View[CALENDAR,
     CalendarViewModel, ?]]](None)
 
-  val taskEditKeyMapPublisher: Publisher[Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit,
-    TaskEditViewModel, ?]]] = Publisher[Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit,
+  val taskEditKeyMapPublisher: PublisherImpl[Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit,
+    TaskEditViewModel, ?]]] = PublisherImpl[Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit,
     TaskEditViewModel, ?]]](None)
 
   val calendarEventHandler: CalendarEventHandler = new CalendarEventHandler(

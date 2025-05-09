@@ -3,7 +3,8 @@ package me.timelytask.view.tui
 import me.timelytask.controller.commands.StartApp
 import me.timelytask.model.settings.{CALENDAR, TASKEdit, UIType, ViewType}
 import me.timelytask.model.utility.{Key, Unknown}
-import me.timelytask.util.{CancelableFuture, Publisher}
+import me.timelytask.util.CancelableFuture
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.UIManager
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.tui.dialog.DialogFactoryTUI
@@ -15,13 +16,13 @@ import org.jline.utils.InfoCmp.Capability
 
 import java.io.PrintWriter
 
-class TUIManager(override val activeViewPublisher: Publisher[ViewType],
-                 override val calendarKeyMapPublisher: Publisher[Keymap[CALENDAR,
+class TUIManager(override val activeViewPublisher: PublisherImpl[ViewType],
+                 override val calendarKeyMapPublisher: PublisherImpl[Keymap[CALENDAR,
                    CalendarViewModel, View[CALENDAR, CalendarViewModel, ?]]],
-                 override val calendarViewModelPublisher: Publisher[CalendarViewModel],
-                 override val taskEditKeyMapPublisher: Publisher[Keymap[TASKEdit, TaskEditViewModel,
+                 override val calendarViewModelPublisher: PublisherImpl[CalendarViewModel],
+                 override val taskEditKeyMapPublisher: PublisherImpl[Keymap[TASKEdit, TaskEditViewModel,
                    View[TASKEdit, TaskEditViewModel, ?]]],
-                 override val taskEditViewModelPublisher: Publisher[TaskEditViewModel])
+                 override val taskEditViewModelPublisher: PublisherImpl[TaskEditViewModel])
   extends UIManager[String] {
   val uiType: UIType = UIType.TUI
 

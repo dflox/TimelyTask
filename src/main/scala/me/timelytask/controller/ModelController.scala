@@ -2,9 +2,9 @@ package me.timelytask.controller
 
 import me.timelytask.controller.commands.*
 import me.timelytask.model.{Model, Task}
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 
-class ModelController(modelPublisher: Publisher[Model])
+class ModelController(modelPublisher: PublisherImpl[Model])
   extends Controller(modelPublisher) {
 
   override def init(): Unit = {

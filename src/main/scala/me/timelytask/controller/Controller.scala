@@ -1,9 +1,9 @@
 package me.timelytask.controller
 
 import me.timelytask.model.Model
-import me.timelytask.util.{MultiTypeObserver, Publisher}
+import me.timelytask.util.publisher.PublisherImpl
 
-trait Controller(modelPublisher: Publisher[Model]) extends MultiTypeObserver {
+trait Controller(modelPublisher: PublisherImpl[Model]){
   
   val model: () => Option[Model] = () => {
     modelPublisher.getValue

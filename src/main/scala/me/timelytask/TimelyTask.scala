@@ -2,7 +2,6 @@ package me.timelytask
 
 @main
 def main(): Unit = {
-  val timelytask = CoreApplication()
-  timelytask.validateSetup()
-  timelytask.run()
+  val timelyTask = CoreApplication()
+  timelyTask.run()
 }

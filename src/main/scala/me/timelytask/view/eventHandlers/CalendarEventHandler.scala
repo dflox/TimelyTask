@@ -5,7 +5,7 @@ import me.timelytask.controller.commands.{Command, CommandHandler}
 import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
 import me.timelytask.model.utility.{InputError, TimeSelection}
 import me.timelytask.model.{Model, Task}
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.events.*
 import me.timelytask.view.events.argwrapper.ViewChangeArgumentWrapper
 import me.timelytask.view.viewmodel.elemts.{FocusDirection, Focusable, TaskCollection}
@@ -16,10 +16,10 @@ import java.util.concurrent.LinkedBlockingQueue
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
-class CalendarEventHandler(calendarViewModelPublisher: Publisher[CalendarViewModel],
-                           modelPublisher: Publisher[Model],
+class CalendarEventHandler(calendarViewModelPublisher: PublisherImpl[CalendarViewModel],
+                           modelPublisher: PublisherImpl[Model],
                            undoManager: CommandHandler,
-                           activeViewPublisher: Publisher[ViewType],
+                           activeViewPublisher: PublisherImpl[ViewType],
                            commandQueue: LinkedBlockingQueue[Command[?]])
   extends EventHandler[CALENDAR, CalendarViewModel](
     calendarViewModelPublisher,

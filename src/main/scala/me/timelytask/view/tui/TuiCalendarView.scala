@@ -1,17 +1,17 @@
 package me.timelytask.view.tui
 
 import me.timelytask.model.settings.{CALENDAR, ViewType}
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.viewmodel.dialogmodel.OptionDialogModel
 import me.timelytask.view.views.{CalendarView, DialogFactory, View}
 
-class TuiCalendarView(override val render: (String, ViewType) => Unit, 
+class TuiCalendarView(override val render: (String, ViewType) => Unit,
                       tuiModel: Unit => ModelTUI,
-                      override val keymapPublisher: Publisher[Keymap[CALENDAR,
+                      override val keymapPublisher: PublisherImpl[Keymap[CALENDAR,
                        CalendarViewModel, View[CALENDAR, CalendarViewModel, ?]]],
-                      val viewModelPublisher: Publisher[CalendarViewModel],
+                      val viewModelPublisher: PublisherImpl[CalendarViewModel],
                       override val dialogFactory: DialogFactory[String])
   extends CalendarView[String] {
   

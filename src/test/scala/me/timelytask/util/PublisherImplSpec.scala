@@ -1,14 +1,15 @@
 package me.timelytask.util
 
+import me.timelytask.util.publisher.PublisherImpl
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import org.mockito.Mockito.*
 
-class PublisherSpec extends AnyWordSpec with MockitoSugar {
+class PublisherImplSpec extends AnyWordSpec with MockitoSugar {
   "The Publisher" should {
     "add a listener and notify it on buildString" in {
-      val publisher = new Publisher[Int](0)
+      val publisher = new PublisherImpl[Int](0)
       val listener = mock[Int => Unit]
 
       publisher.addListener(listener)
@@ -18,7 +19,7 @@ class PublisherSpec extends AnyWordSpec with MockitoSugar {
     }
 
     "buildString the value and notify all listeners" in {
-      val publisher = new Publisher[String]("initial")
+      val publisher = new PublisherImpl[String]("initial")
       val listener1 = mock[String => Unit]
       val listener2 = mock[String => Unit]
 
@@ -31,7 +32,7 @@ class PublisherSpec extends AnyWordSpec with MockitoSugar {
     }
 
     "retrieve the current value" in {
-      val publisher = new Publisher[Double](3.14)
+      val publisher = new PublisherImpl[Double](3.14)
       publisher.getValue shouldEqual 3.14
 
       publisher.update(2.71)

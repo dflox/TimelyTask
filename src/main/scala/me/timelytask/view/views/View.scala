@@ -3,7 +3,7 @@ package me.timelytask.view.views
 import me.timelytask.model.Task
 import me.timelytask.model.settings.ViewType
 import me.timelytask.model.utility.{Key, Space}
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.events.{ChangeView, Event, MoveFocus, SetFocusTo}
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.ViewModel
@@ -28,9 +28,9 @@ trait View[VT <: ViewType : ClassTag, ViewModelType <: ViewModel[VT, ViewModelTy
 
   def dialogFactory: DialogFactory[RenderType]
 
-  def keymapPublisher: Publisher[Keymap[VT, ViewModelType, View[VT, ViewModelType, ?]]]
+  def keymapPublisher: PublisherImpl[Keymap[VT, ViewModelType, View[VT, ViewModelType, ?]]]
 
-  def viewModelPublisher: Publisher[ViewModelType]
+  def viewModelPublisher: PublisherImpl[ViewModelType]
 
   def render: (RenderType, ViewType) => Unit
 

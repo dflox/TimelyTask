@@ -1,50 +1,34 @@
 package me.timelytask.util
 
-trait MultiTypeObserver {
-  // Method to observe a publisher with a specific handler function
-  def observe[T](publisher: Publisher[T])(handler: Option[T] => Unit, source: Option[Any]): Unit = {
-    publisher.addListener(handler, source)
-  }
-}
+import scala.Option
 
-class Publisher[T](private var value: Option[T]) {
-  private var listeners: List[(Option[T] => Unit, Option[Any])] = List()
+/**
+ * Trait for a generic publisher that can notify listeners of changes.
+ * @tparam T the type of value being published
+ */
+trait Publisher[T] {
 
-  // Method to add a listener function with an optional source identifier
-  def addListener(listener: Option[T] => Unit, source: Option[Any] = None): Unit = {
-    listeners = (listener, source) :: listeners
-  }
+  /** 
+   * Adds a listener function to the publisher with an optional source identifier.
+   * The listener will be called whenever the value changes.
+   * Listener from the same source will be ignored.
+   * @param listener function to be called when the value changes
+   * @param source optional source identifier
+   */
+  def addListener(listener: Option[T] => Unit, source: Option[Any] = 
+  None): Unit
 
-  // Method to update value and notify all listeners, with an optional source identifier
-  def update(newValue: Option[T], source: Option[Any] = None): Unit = {
-    if newValue.isDefined then value = newValue
-    listeners.foreach { case (listener, listenerSource) =>
-      // Execute listener only if it has a different source or no source
-      if (listenerSource != source || listenerSource.isEmpty || source.isEmpty) listener(value)
-    }
-  }
+  /**
+   * Update the value and notify all listeners, with an optional source identifier.
+   * Source identifier is used to ignore listeners from the same source.
+   * @param newValue value to be updated
+   * @param source source identifier
+   */
+  def update(newValue: Option[T], source: Option[Any] = None): Unit
 
-  // Retrieve the current value
-  def getValue: Option[T] = value
-}
-
-class MultiTypePublisher[T](private var value: Option[T]) {
-  private var listeners: List[(Option[T] => Unit, Option[Any])] = List()
-
-  // Method to add a listener function with an optional source identifier
-  def addListener(listener: Option[T] => Unit, source: Option[Any] = None): Unit = {
-    listeners = (listener, source) :: listeners
-  }
-
-  // Method to update value and notify all listeners, with an optional source identifier
-  def update(newValue: Option[T], source: Option[Any] = None): Unit = {
-    value = newValue
-    listeners.foreach { case (listener, listenerSource) =>
-      // Execute listener only if it has a different source or no source
-      if (listenerSource != source || listenerSource.isEmpty || source.isEmpty) listener(value)
-    }
-  }
-
-  // Retrieve the current value
-  def getValue: Option[T] = value
+  /** 
+   * Retrieve the current value
+   * @return
+   */
+  def getValue: Option[T]
 }

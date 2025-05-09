@@ -5,7 +5,7 @@ import me.timelytask.model.builder.TaskBuilder
 import me.timelytask.model.settings.*
 import me.timelytask.model.state.TaskState
 import me.timelytask.model.{Deadline, Model, Task}
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, InputField, OptionInputField}
 
@@ -18,7 +18,7 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
                              lastView: Option[ViewType], isNewTask: Boolean = false,
                              protected var focusElementGrid: Option[FocusElementGrid] = None,
                              dialogModel: Option[DialogModel[?]] = None,
-                             modelPublisher: Publisher[Model])
+                             modelPublisher: PublisherImpl[Model])
   extends ViewModel[TASKEdit, TaskEditViewModel](modelPublisher) {
 
   focusElementGridInit()

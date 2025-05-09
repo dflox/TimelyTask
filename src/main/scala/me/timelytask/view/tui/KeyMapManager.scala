@@ -4,7 +4,7 @@ import me.timelytask.model
 import me.timelytask.model.settings
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.*
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.events.Event
 import org.jline.keymap.KeyMap
 

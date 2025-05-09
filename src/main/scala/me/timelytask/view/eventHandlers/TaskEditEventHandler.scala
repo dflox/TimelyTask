@@ -4,7 +4,7 @@ import me.timelytask.controller.commands.{AddTask, Command, CommandHandler, Edit
 import me.timelytask.model.settings.{TASKEdit, ViewType}
 import me.timelytask.model.utility.InputError
 import me.timelytask.model.{Model, Task}
-import me.timelytask.util.Publisher
+import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.events.{CancelTask, MoveFocus, SaveTask}
 import me.timelytask.view.viewmodel.TaskEditViewModel
 import me.timelytask.view.viewmodel.elemts.FocusDirection
@@ -12,10 +12,10 @@ import me.timelytask.view.viewmodel.elemts.FocusDirection
 import java.util.concurrent.LinkedBlockingQueue
 import scala.util.{Failure, Success, Try}
 
-class TaskEditEventHandler(taskEditViewModelPublisher: Publisher[TaskEditViewModel],
-                           modelPublisher: Publisher[Model],
+class TaskEditEventHandler(taskEditViewModelPublisher: PublisherImpl[TaskEditViewModel],
+                           modelPublisher: PublisherImpl[Model],
                            undoManager: CommandHandler,
-                           activeViewPublisher: Publisher[ViewType],
+                           activeViewPublisher: PublisherImpl[ViewType],
                            commandQueue: LinkedBlockingQueue[Command[?]])
   extends EventHandler[TASKEdit, TaskEditViewModel](
     taskEditViewModelPublisher, modelPublisher, undoManager, activeViewPublisher, commandQueue) {
