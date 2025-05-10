@@ -14,8 +14,8 @@ given TypeEncoder[StartUpConfig] with {
     ("uis")(c => c.uis)(Encoder.encodeList(uiTypeEncoder))
 
   private val encoder: Encoder[StartUpConfig] = Encoder
-    .forProduct2[StartUpConfig, List[UIInstanceConfig], String]("uiInstances", "serializationType")(
-      s => (s.uiInstances, s.serializationType))
+    .forProduct1[StartUpConfig, List[UIInstanceConfig]]("uiInstances")(
+      s => s.uiInstances)
     (Encoder.encodeList[UIInstanceConfig](uiInstanceConfigEncoder))
 
   def apply(obj: StartUpConfig): Json = encoder.apply(obj)

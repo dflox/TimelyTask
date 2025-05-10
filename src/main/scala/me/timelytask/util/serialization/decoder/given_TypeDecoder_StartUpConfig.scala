@@ -14,9 +14,8 @@ given TypeDecoder[StartUpConfig] with {
     ("uis")(typeList => UIInstanceConfig(typeList))(Decoder.decodeList(uiTypeDecoder))
 
   private val decoder: Decoder[StartUpConfig] = Decoder
-    .forProduct2[StartUpConfig, List[UIInstanceConfig], String]("uiInstances", "serializationType")(
-      (uis: List[UIInstanceConfig], serializationType: String) => StartUpConfig(uis,
-        serializationType))
+    .forProduct1[StartUpConfig, List[UIInstanceConfig]]("uiInstances")(
+      (uis: List[UIInstanceConfig]) => StartUpConfig(uis))
     (Decoder.decodeList[UIInstanceConfig](uiInstanceConfigDecoder))
 
   def apply(json: Json): Option[StartUpConfig] = {
