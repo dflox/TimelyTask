@@ -1,6 +1,7 @@
 package me.timelytask
 
 import me.timelytask.controller.commands.{Command, CommandHandler}
+import me.timelytask.core.UiInstanceConfig
 import me.timelytask.model.Model
 import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
 import me.timelytask.util.publisher.PublisherImpl
@@ -12,7 +13,9 @@ import me.timelytask.view.views.View
 
 import java.util.concurrent.LinkedBlockingQueue
 
-class UiInstance(modelPublisher: PublisherImpl[Model], undoManager: CommandHandler,
+class UiInstance(uiInstanceConfig: UiInstanceConfig,
+                 modelPublisher: PublisherImpl[Model], 
+                 undoManager: CommandHandler,
                  commandQueue: LinkedBlockingQueue[Command[?]]) {
 
   val activeViewPublisher: PublisherImpl[ViewType] = PublisherImpl[ViewType](Some(CALENDAR))

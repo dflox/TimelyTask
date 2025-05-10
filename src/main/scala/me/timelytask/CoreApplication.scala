@@ -2,7 +2,7 @@ package me.timelytask
 
 import me.timelytask.controller.commands.{Command, CommandHandler}
 import me.timelytask.controller.{ModelController, PersistenceController}
-import me.timelytask.core.StartUpConfig
+import me.timelytask.core.{StartUpConfig, UiInstanceConfig}
 import me.timelytask.model.Model
 import me.timelytask.model.settings.UIType.TUI
 import me.timelytask.util.FileIO
@@ -14,20 +14,37 @@ import me.timelytask.util.serialization.encoder.given
 import java.util.concurrent.LinkedBlockingQueue
 
 class CoreApplication {
-  val modelPublisher: PublisherImpl[Model] = PublisherImpl[Model](Some(Model.default))
+  private val modelPublisher: PublisherImpl[Model] = PublisherImpl[Model](Some(Model.default))
 
-  val taskController: ModelController = new ModelController(modelPublisher)
+  private val taskController: ModelController = new ModelController(modelPublisher)
 
-  val persistenceController: PersistenceController = new PersistenceController(modelPublisher)
+  private val persistenceController: PersistenceController = new PersistenceController(modelPublisher)
 
-  val commandQueue: LinkedBlockingQueue[Command[?]] = new LinkedBlockingQueue[Command[?]]()
+  private val commandQueue: LinkedBlockingQueue[Command[?]] = new LinkedBlockingQueue[Command[?]]()
 
-  val undoManager: CommandHandler = new CommandHandler(commandQueue)
+  private val undoManager: CommandHandler = new CommandHandler(commandQueue)
 
-  var startUpConfig: Option[StartUpConfig] = None
+  private var startUpConfig: Option[StartUpConfig] = None
 
   private val startUpFileFormat: String = "yaml"
   private val startUpConfigFilePath: String = "startUpConfig." + startUpFileFormat
+
+  def run(): Unit = {
+    if (!tryLoadStartUpConfig()) {
+      resetStartUpConfig()
+      tryLoadStartUpConfig()
+    }
+    validateSetup()
+
+    // Initialize Controllers
+    persistenceController.init()
+    taskController.init()
+
+    val uiInstances = startUpConfig
+      .getOrElse(throwException_StartUpFailed())
+      .uiInstances
+      .map(ui => spawnUiInstance(ui))
+  }
 
   private def tryLoadStartUpConfig(): Boolean = {
     FileIO.readFromFile(startUpConfigFilePath) match
@@ -45,24 +62,23 @@ class CoreApplication {
   }
 
   private def validateSetup(): Unit = {
-    val config = startUpConfig.getOrElse(throw new Exception("StartUpConfig could not be loaded!"))
-    if (config.uiInstances
-      .flatMap(i => i.uis.filter(ui => ui.eq(TUI)))
-      .length > 1) throw new Exception("Only one TUI instance is allowed!")
+    startUpConfig.getOrElse(throwException_StartUpConfigLoadingFailed()).validate()
+  }
+  
+  private def throwException_StartUpFailed(): Nothing = {
+    throw new Exception("UI startup failed because the config is missing")
+  }
+  
+  private def throwException_StartUpConfigLoadingFailed(): Nothing = {
+    throw new Exception("StartUpConfig could not be loaded!")
   }
 
-  def run(): Unit = {
-    if (!tryLoadStartUpConfig()) {
-      resetStartUpConfig()
-      tryLoadStartUpConfig()
-    }
-    validateSetup()
-
-    // Initialize Controllers
-    persistenceController.init()
-    taskController.init()
-
-    val uiInstance: UiInstance = new UiInstance(modelPublisher, undoManager, commandQueue)
-    uiInstance.run()
+  private def spawnUiInstance(uiInstanceConfig: UiInstanceConfig): UiInstance = {
+    val uiInstance: UiInstance = new UiInstance(
+      uiInstanceConfig,
+      modelPublisher,
+      undoManager,
+      commandQueue)
+    uiInstance
   }
 }

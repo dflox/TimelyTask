@@ -1,12 +1,19 @@
 package me.timelytask.core
 
 import me.timelytask.model.settings.UIType
+import me.timelytask.model.settings.UIType.TUI
 
-case class StartUpConfig(uiInstances: List[UIInstanceConfig])
+case class StartUpConfig(uiInstances: List[UiInstanceConfig]) {
+  def validate(): Unit = {
+    if(uiInstances.flatMap (i => i.uis.filter (ui => ui.eq (TUI) ) ).length > 1) 
+      throw new Exception ("Only one TUI instance is allowed!")
+  }
+}
+
 case object StartUpConfig {
   val default: StartUpConfig = StartUpConfig(
-    uiInstances = List(UIInstanceConfig(List(UIType.TUI)))
+    uiInstances = List(UiInstanceConfig(List(UIType.TUI)))
   )
 }
 
-case class UIInstanceConfig(uis: List[UIType])
+case class UiInstanceConfig(uis: List[UIType])

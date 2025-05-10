@@ -1,7 +1,7 @@
 package me.timelytask.util.serialization.decoder
 
 import io.circe.{Decoder, Json}
-import me.timelytask.core.{StartUpConfig, UIInstanceConfig}
+import me.timelytask.core.{StartUpConfig, UiInstanceConfig}
 import me.timelytask.model.settings.UIType
 import me.timelytask.util.serialization.TypeDecoder
 
@@ -9,14 +9,14 @@ given TypeDecoder[StartUpConfig] with {
   private val uiTypeDecoder: Decoder[UIType] = Decoder.forProduct1[UIType, String]("uiType")(
     s => UIType.fromString(s))
 
-  private val uiInstanceConfigDecoder: Decoder[UIInstanceConfig] = Decoder
-    .forProduct1[UIInstanceConfig, List[UIType]]
-    ("uis")(typeList => UIInstanceConfig(typeList))(Decoder.decodeList(uiTypeDecoder))
+  private val uiInstanceConfigDecoder: Decoder[UiInstanceConfig] = Decoder
+    .forProduct1[UiInstanceConfig, List[UIType]]
+    ("uis")(typeList => UiInstanceConfig(typeList))(Decoder.decodeList(uiTypeDecoder))
 
   private val decoder: Decoder[StartUpConfig] = Decoder
-    .forProduct1[StartUpConfig, List[UIInstanceConfig]]("uiInstances")(
-      (uis: List[UIInstanceConfig]) => StartUpConfig(uis))
-    (Decoder.decodeList[UIInstanceConfig](uiInstanceConfigDecoder))
+    .forProduct1[StartUpConfig, List[UiInstanceConfig]]("uiInstances")(
+      (uis: List[UiInstanceConfig]) => StartUpConfig(uis))
+    (Decoder.decodeList[UiInstanceConfig](uiInstanceConfigDecoder))
 
   def apply(json: Json): Option[StartUpConfig] = {
     json.as[StartUpConfig](decoder) match {
