@@ -3,7 +3,6 @@ package me.timelytask.model
 import io.circe.generic.auto.*
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.*
-import org.jline.keymap.KeyMap
 
 case class Config(keymaps: Map[ViewType, KeymapConfig],
                   globalKeymap: KeymapConfig,

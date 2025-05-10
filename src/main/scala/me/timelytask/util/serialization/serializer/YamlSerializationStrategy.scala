@@ -9,10 +9,10 @@ class YamlSerializationStrategy extends SerializationStrategy {
     typeEncoder(obj).asYaml.spaces2
   }
 
-  override def deserialize[T](str: String)(using typeSerializer: TypeDecoder[T]): Option[T] = {
+  override def deserialize[T](str: String)(using typeDecoder: TypeDecoder[T]): Option[T] = {
     parser.parse(str) match {
       case Left(_) => None
-      case Right(json) => typeSerializer(json)
+      case Right(json) => typeDecoder(json)
     }
   }
 }

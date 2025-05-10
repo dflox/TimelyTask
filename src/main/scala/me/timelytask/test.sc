@@ -1,28 +1,32 @@
-//import me.timelytask.controller.PersistenceController
-//import me.timelytask.model.Model
-//import me.timelytask.model.settings.{NextDay, ViewType}
-//import me.timelytask.model.utility.TimeSelection
-//import me.timelytask.util.Publisher
-//import me.timelytask.model.modelPublisher
-//import me. timelytask. model. settings. activeViewPublisher
-//import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel, viewModelPublisher}
-//
-//summon[Publisher[ViewType]]
-//summon[Publisher[ViewModel]]
-//summon[Publisher[Model]]
-//CalendarController
-//PersistenceController
-//
-//val timeSelection = TimeSelection.defaultTimeSelection
-//val calendarViewModel = CalendarViewModel(Model.default, timeSelection)
-//viewModelPublisher.update(calendarViewModel)
-//
-//NextDay.call 
-//viewModelPublisher.getValue.asInstanceOf[CalendarViewModel].timeSelection.day
+import io.circe.{Decoder, Json}
+import io.circe.yaml.v12.parser
+import me.timelytask.core.{StartUpConfig, UIInstanceConfig}
+import me.timelytask.model.settings.UIType
+import me.timelytask.util.serialization.{SerializationStrategy, TypeDecoder}
 
-import com.github.nscala_time.time.Imports.*
+var yamlStr = """uiInstances:
+            |- uis:
+            |  - uiType: tui
+            |serializationType: json""".stripMargin
 
-DateTime.parse("").toString("yyyy.MMMM.dddd HH:mm:ss")
+import me.timelytask.util.serialization.decoder.given
+yamlStr
 
-(0 + 97).toChar
-(2 + 97).toChar
+val uiTypeDecoder: Decoder[UIType]= Decoder.forProduct1[UIType, String]("uiType")(s => UIType
+  .fromString(s))
+
+val uiInstanceConfigDecoder: Decoder[UIInstanceConfig] = Decoder
+  .forProduct1[UIInstanceConfig, List[UIType]]
+  ("uis")(typeList => UIInstanceConfig(typeList))(Decoder.decodeList(uiTypeDecoder))
+
+val decoder: Decoder[StartUpConfig] = Decoder
+  .forProduct2[StartUpConfig, List[UIInstanceConfig], String]("uiInstances", "serializationType")(
+    (uis: List[UIInstanceConfig], serializationType: String) => StartUpConfig(uis,
+      serializationType))
+  (Decoder.decodeList[UIInstanceConfig](uiInstanceConfigDecoder))
+
+val json = parser.parse(yamlStr)
+json.getOrElse(Json.False).as[StartUpConfig](decoder)
+given_TypeDecoder_StartUpConfig(json.getOrElse(Json.False))
+
+SerializationStrategy("yaml").deserialize[StartUpConfig](yamlStr)

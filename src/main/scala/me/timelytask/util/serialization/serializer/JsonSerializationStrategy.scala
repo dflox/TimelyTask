@@ -1,6 +1,6 @@
 package me.timelytask.util.serialization.serializer
 
-import io.circe.Json
+import io.circe.{Json, parser}
 import me.timelytask.util.serialization.{SerializationStrategy, TypeDecoder, TypeEncoder}
 
 class JsonSerializationStrategy extends SerializationStrategy{
@@ -8,10 +8,9 @@ class JsonSerializationStrategy extends SerializationStrategy{
     typeEncoder(obj).spaces2
   }
 
-  override def deserialize[T](str: String)(using typeSerializer: TypeDecoder[T]): Option[T] = {
-    val json = io.circe.parser.parse(str)
-    json match
+  override def deserialize[T](str: String)(using typeDecoder: TypeDecoder[T]): Option[T] = {
+    parser.parse(str) match
       case Left(_) => None
-      case Right(json) => typeSerializer(json)
+      case Right(json) => typeDecoder(json)
   }
 }

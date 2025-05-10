@@ -4,7 +4,7 @@ import me.timelytask.util.serialization.serializer._
 
 trait SerializationStrategy {
   def serialize[T](obj: T)(using typeEncoder: TypeEncoder[T]): String
-  def deserialize[T](str: String)(using typeSerializer: TypeDecoder[T]): Option[T]
+  def deserialize[T](str: String)(using typeDecoder: TypeDecoder[T]): Option[T]
 }
 
 object SerializationStrategy {

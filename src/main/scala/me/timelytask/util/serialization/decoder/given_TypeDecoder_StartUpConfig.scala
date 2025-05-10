@@ -6,9 +6,8 @@ import me.timelytask.model.settings.UIType
 import me.timelytask.util.serialization.TypeDecoder
 
 given TypeDecoder[StartUpConfig] with {
-  private val uiTypeDecoder: Decoder[UIType] = Decoder.decodeString.emapTry { str =>
-    scala.util.Try(UIType.fromString(str))
-  }
+  private val uiTypeDecoder: Decoder[UIType] = Decoder.forProduct1[UIType, String]("uiType")(
+    s => UIType.fromString(s))
 
   private val uiInstanceConfigDecoder: Decoder[UIInstanceConfig] = Decoder
     .forProduct1[UIInstanceConfig, List[UIType]]
