@@ -1,10 +1,13 @@
 package me.timelytask.view.eventHandlers
 
 import com.github.nscala_time.time.Imports.{Period, richInt}
+import com.softwaremill.macwire.autowire
 import me.timelytask.controller.commands.{Command, CommandHandler}
+import me.timelytask.core.CoreModule
 import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
 import me.timelytask.model.utility.{InputError, TimeSelection}
 import me.timelytask.model.{Model, Task}
+import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.events.*
 import me.timelytask.view.events.argwrapper.ViewChangeArgumentWrapper
@@ -16,37 +19,37 @@ import java.util.concurrent.LinkedBlockingQueue
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
-class CalendarEventHandler(calendarViewModelPublisher: PublisherImpl[CalendarViewModel],
-                           modelPublisher: PublisherImpl[Model],
-                           undoManager: CommandHandler,
-                           activeViewPublisher: PublisherImpl[ViewType],
-                           commandQueue: LinkedBlockingQueue[Command[?]])
-  extends EventHandler[CALENDAR, CalendarViewModel](
+class CalendarEventContainerImpl(calendarViewModelPublisher: Publisher[CalendarViewModel],
+                                 activeViewPublisher: Publisher[ViewType],
+                                 coreModule: CoreModule)
+  extends CalendarEventContainer
+  with EventContainer(
     calendarViewModelPublisher,
-    modelPublisher,
-    undoManager,
     activeViewPublisher,
-    commandQueue) {
+    coreModule) {
+  
+  case object NextDay extends Event[Unit](
+    (args: Unit) => addPeriodToTimeSelection(1.days),
+    (args: Unit) => None
+  )
 
-  val viewModel: () => Option[CalendarViewModel] = () => calendarViewModelPublisher.getValue
+  case object PreviousDay extends Event[Unit](
+    (args: Unit) => addPeriodToTimeSelection(-1.days),
+    (args: Unit) => None
+  )
 
-  override def init(): Unit = {
+  case object NextWeek extends Event[Unit](
+    (args: Unit) => addPeriodToTimeSelection(1.weeks),
+    (args: Unit) => None
+  )
 
-    NextDay.setHandler((args: Unit) => {
-      addPeriodToTimeSelection(1.days)
-    }, (args: Unit) => None)
+  case object PreviousWeek extends Event[Unit](
+    (args: Unit) => addPeriodToTimeSelection(-1.weeks),
+    (args: Unit) => None
+  )
 
-    PreviousDay.setHandler((args: Unit) => {
-      addPeriodToTimeSelection(-1.days)
-    }, (args: Unit) => None)
 
-    NextWeek.setHandler((args: Unit) => {
-      addPeriodToTimeSelection(1.weeks)
-    }, (args: Unit) => None)
-
-    PreviousWeek.setHandler((args: Unit) => {
-      addPeriodToTimeSelection(-1.weeks)
-    }, (args: Unit) => None)
+  def initi(): Unit = {
 
     GoToToday.setHandler((args: Unit) => {
       Try[CalendarViewModel] {
@@ -149,16 +152,14 @@ class CalendarEventHandler(calendarViewModelPublisher: PublisherImpl[CalendarVie
 
   private def initChangeView: () => Unit = () => changeView = Some(ChangeView.createEvent)
 
-  private def modelUpdate(model: Option[Model]): Boolean = {
-    if model.isEmpty then return false
-    calendarViewModelPublisher.getValue match
-      case Some(viewModel) =>
-        Some(CalendarViewModel(viewModel.timeSelection, modelPublisher))
-      case None => Some(CalendarViewModel(modelPublisher = modelPublisher))
+  protected override def updateModel(model: Option[Model]): Boolean = {
+    if model.isEmpty then return true
+    viewModel() match {
+      case Some(vm) => Some(CalendarViewModel(vm.timeSelection, model.get))
+      case None => Some(CalendarViewModel(TimeSelection.defaultTimeSelection, model.get))
+    }
   }
-
-  modelPublisher.addListener(modelUpdate)
-
+  
   private def addDaysToTimeSelection(daysToAdd: Int): Option[CalendarViewModel]
   = {
     Try[CalendarViewModel] {

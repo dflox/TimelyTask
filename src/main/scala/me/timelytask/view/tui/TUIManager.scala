@@ -1,32 +1,37 @@
 package me.timelytask.view.tui
 
+import com.softwaremill.macwire.wire
 import me.timelytask.controller.commands.StartApp
 import me.timelytask.model.settings.{CALENDAR, TASKEdit, UIType, ViewType}
 import me.timelytask.model.utility.{Key, Unknown}
-import me.timelytask.util.CancelableFuture
 import me.timelytask.util.publisher.PublisherImpl
+import me.timelytask.util.{CancelableFuture, Publisher}
 import me.timelytask.view.UIManager
+import me.timelytask.view.eventHandlers.{CalendarEventContainer, TaskEditEventContainer}
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.tui.dialog.DialogFactoryTUI
 import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
-import me.timelytask.view.views.{CalendarView, TaskEditView, View}
+import me.timelytask.view.views.*
 import org.jline.keymap.BindingReader
 import org.jline.terminal.{Terminal, TerminalBuilder}
 import org.jline.utils.InfoCmp.Capability
 
 import java.io.PrintWriter
 
-class TUIManager(override val activeViewPublisher: PublisherImpl[ViewType],
-                 override val calendarKeyMapPublisher: PublisherImpl[Keymap[CALENDAR,
-                   CalendarViewModel, View[CALENDAR, CalendarViewModel, ?]]],
-                 override val calendarViewModelPublisher: PublisherImpl[CalendarViewModel],
-                 override val taskEditKeyMapPublisher: PublisherImpl[Keymap[TASKEdit, TaskEditViewModel,
-                   View[TASKEdit, TaskEditViewModel, ?]]],
-                 override val taskEditViewModelPublisher: PublisherImpl[TaskEditViewModel])
+class TUIManager(override val activeViewPublisher: Publisher[ViewType],
+                 override protected val calendarViewModule: CalendarCommonsModule,
+                 override protected val taskEditViewModule: TaskEditCommonsModule
+                )
   extends UIManager[String] {
-  val uiType: UIType = UIType.TUI
 
-  def init(): Unit = {
+  override def shutdown(): Unit = {
+    keyInputTask.foreach(_.cancel())
+    terminal.puts(Capability.clear_screen)
+    terminal.flush()
+    terminal.close()
+  }
+
+  private def init(): Unit = {
     terminal.enterRawMode()
     calendarView.init()
     taskEditView.init()
@@ -57,13 +62,11 @@ class TUIManager(override val activeViewPublisher: PublisherImpl[ViewType],
                                                  else new ModelTUI(terminal.getHeight,
                                                    terminal.getWidth)
 
-  val dialogFactoryTUI: DialogFactoryTUI = new DialogFactoryTUI(terminal)
+  val dialogFactoryTUI: DialogFactoryTUI = wire[DialogFactoryTUI]
 
-  val calendarView: CalendarView[String] = new TuiCalendarView(render, createTuiModel,
-    calendarKeyMapPublisher, calendarViewModelPublisher, dialogFactoryTUI)
+  val calendarView: CalendarView[String] = wire[TuiCalendarView]
 
-  val taskEditView: TaskEditView[String] = TuiTaskEditView(render, createTuiModel,
-    taskEditKeyMapPublisher, taskEditViewModelPublisher, dialogFactoryTUI)
+  val taskEditView: TaskEditView[String] = wire[TuiTaskEditView]
 
   protected var keyInputTask: Option[CancelableFuture[Key]] = None
 

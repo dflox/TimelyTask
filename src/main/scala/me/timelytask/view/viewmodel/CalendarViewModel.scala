@@ -4,17 +4,15 @@ import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
+import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, TaskCollection}
 
 case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaultTimeSelection,
-                             modelPublisher: PublisherImpl[Model],
+                             override val model: Model,
                              protected var focusElementGrid: Option[FocusElementGrid] = None)
-  extends ViewModel[CALENDAR, CalendarViewModel](modelPublisher) {
-
-  import CalendarViewModel.*
-
+  extends ViewModel[CALENDAR, CalendarViewModel] {
 
   // Variables
   val format = "m"
@@ -57,10 +55,7 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
   }
 
   def buildFocusElementGrid(timeSlice: Period, rowCount: Int, timeSelection: TimeSelection =
-  timeSelection, tasks: List[Task] = model() match {
-    case Some(model) => model.tasks
-    case None => Nil
-  }, focusedElement: Option[Focusable[?]] = None)
+  timeSelection, tasks: List[Task] = model.tasks, focusedElement: Option[Focusable[?]] = None)
   : FocusElementGrid = {
     var newFocusElementGrid = new FocusElementGrid(
       width = timeSelection.dayCount,

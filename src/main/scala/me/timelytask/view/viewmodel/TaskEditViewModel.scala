@@ -18,18 +18,18 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
                              lastView: Option[ViewType], isNewTask: Boolean = false,
                              protected var focusElementGrid: Option[FocusElementGrid] = None,
                              dialogModel: Option[DialogModel[?]] = None,
-                             modelPublisher: PublisherImpl[Model])
-  extends ViewModel[TASKEdit, TaskEditViewModel](modelPublisher) {
+                             override val model: Model)
+  extends ViewModel[TASKEdit, TaskEditViewModel] {
 
   focusElementGridInit()
 
   private def focusElementGridInit(): Unit = {
     Try[Task] {
-      model().get.tasks.find(_.uuid.equals(taskID)).get
+      model.tasks.find(_.uuid.equals(taskID)).get
     } match {
       case Failure(_) =>
       case Success(t) =>
-        val elements = createElements(t, model().get)
+        val elements = createElements(t, model)
         focusElementGrid = Some(FocusElementGrid(elements, elements(0)(0)))
     }
   }

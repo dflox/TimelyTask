@@ -1,29 +1,24 @@
 package me.timelytask.view
 
 import me.timelytask.model.settings.*
+import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
+import me.timelytask.view.eventHandlers.{CalendarEventContainer, TaskEditEventContainer}
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.*
-import me.timelytask.view.views.{CalendarView, TaskEditView, View}
+import me.timelytask.view.views.*
 
 trait UIManager[RenderType] {
-  def uiType: UIType
+  def shutdown(): Unit
   
-  def activeViewPublisher: PublisherImpl[ViewType]
+  def activeViewPublisher: Publisher[ViewType]
 
-  def calendarKeyMapPublisher: PublisherImpl[Keymap[CALENDAR, CalendarViewModel, View[CALENDAR, 
-    CalendarViewModel, ?]]]
-
-  def taskEditKeyMapPublisher: PublisherImpl[Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit, 
-    TaskEditViewModel, ?]]]
-
-  def calendarViewModelPublisher: PublisherImpl[CalendarViewModel]
-
-  def taskEditViewModelPublisher: PublisherImpl[TaskEditViewModel]
+  protected val calendarViewModule: CalendarCommonsModule
+  protected val taskEditViewModule: TaskEditCommonsModule
 
   val calendarView: CalendarView[RenderType]
   val taskEditView: TaskEditView[RenderType]
-
+  
   def render: (RenderType, ViewType) => Unit
 
   def run(): Unit

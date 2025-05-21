@@ -1,50 +1,54 @@
 package me.timelytask.view.views
 
+import com.softwaremill.macwire.{wire, wireWith}
 import me.timelytask.model.Task
-import me.timelytask.model.settings.ViewType
+import me.timelytask.model.settings.{KeymapConfig, ViewType}
 import me.timelytask.model.utility.{Key, Space}
-import me.timelytask.util.publisher.PublisherImpl
+import me.timelytask.util.Publisher
+import me.timelytask.view.eventHandlers.EventContainer
 import me.timelytask.view.events.{ChangeView, Event, MoveFocus, SetFocusTo}
-import me.timelytask.view.keymaps.Keymap
+import me.timelytask.view.keymaps.{Keymap, KeymapImpl}
 import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.FocusDirection
+
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
-trait View[VT <: ViewType : ClassTag, ViewModelType <: ViewModel[VT, ViewModelType], RenderType] {
+trait View[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType], RenderType]
+(protected val viewTypeCommonsModule: ViewTypeCommonsModule[VT, ViewModelType]) {
+  import viewTypeCommonsModule.*
+  
   def init(): Unit = {
+    registerKeymapUpdater(keymapUpdateListener())
     viewModelPublisher.addListener(update)
   }
-
-//  val changeView: ChangeView = ChangeView.createEvent
-//  val moveFocus: Event[FocusDirection] = MoveFocus.createEvent[VT]
-//  val setFocusTo: Event[Task] = SetFocusTo.createEvent[VT]
-
+  
   private def renderDialog: (dialogModel: Option[DialogModel[?]]) => Option[?] =
     (dialogModel: Option[DialogModel[?]]) => dialogFactory(dialogModel, currentlyRendered) match
       case Some(dialog: Dialog[?, RenderType]) => dialog()
       case None => None
 
+  private def keymapUpdateListener(): KeymapConfig => Unit = km => keymap = {
+    Some(wireWith[KeymapImpl[VT, ViewModelType]](() => KeymapImpl[VT, ViewModelType](km,
+      eventResolver)))
+  }
+  
   def dialogFactory: DialogFactory[RenderType]
 
-  def keymapPublisher: PublisherImpl[Keymap[VT, ViewModelType, View[VT, ViewModelType, ?]]]
-
-  def viewModelPublisher: PublisherImpl[ViewModelType]
-
+  private var keymap: Option[Keymap[VT, ViewModelType]] = None 
+  
   def render: (RenderType, ViewType) => Unit
 
   protected var currentlyRendered: Option[RenderType] = None
-
-  def getCurrentlyRendered: Option[RenderType] = currentlyRendered
-
-  def viewModel: Option[ViewModelType] = viewModelPublisher.getValue
+  
+  private def viewModel: Option[ViewModelType] = viewModelPublisher.getValue
 
   def handleKey(key: Option[Key]): Boolean = {
     val (test, keyTested) = testIfFocusedElementIsTriggered(key)
     if test then return true
     Try[Boolean] {
-      keymapPublisher.getValue.get.handleKey(keyTested, this)
+      keymap.get.handleKey(keyTested)
     } match
       case Success(value) => value
       case Failure(exception) => throw new Exception("Keymap not found")

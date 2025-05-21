@@ -1,9 +1,9 @@
 package me.timelytask.controller
 
 import me.timelytask.model.Model
-import me.timelytask.util.publisher.PublisherImpl
+import me.timelytask.util.Publisher
 
-trait Controller(modelPublisher: PublisherImpl[Model]){
+trait Controller(modelPublisher: Publisher[Model]){
   
   val model: () => Option[Model] = () => {
     modelPublisher.getValue

@@ -1,68 +1,65 @@
 package me.timelytask
 
-import me.timelytask.controller.commands.{Command, CommandHandler}
-import me.timelytask.core.UiInstanceConfig
-import me.timelytask.model.Model
-import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
+import com.softwaremill.macwire.wire
+import me.timelytask.core.{CoreModule, UiInstanceConfig}
+import me.timelytask.model.settings.UIType.TUI
+import me.timelytask.model.settings.{UIType, ViewType}
+import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
-import me.timelytask.view.eventHandlers.{CalendarEventHandler, GlobalEventHandler, TaskEditEventHandler}
-import me.timelytask.view.keymaps.{CalendarViewResolver, Keymap, TaskEditViewResolver}
+import me.timelytask.view.UIManager
+import me.timelytask.view.eventHandlers.{CalendarEventContainer, CalendarEventContainerImpl, TaskEditEventContainer, TaskEditEventContainerImpl}
 import me.timelytask.view.tui.TUIManager
 import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
-import me.timelytask.view.views.View
+import me.timelytask.view.views.{CalendarCommonsModule, CalendarCommonsModuleImpl, TaskEditCommonsModule, TaskEditCommonsModuleImpl}
 
-import java.util.concurrent.LinkedBlockingQueue
+//TODO: create an interface for the UiInstance so the implementation is independent. Make sure 
+// that only the interface is ever used anywhere.
 
-class UiInstance(uiInstanceConfig: UiInstanceConfig,
-                 modelPublisher: PublisherImpl[Model], 
-                 undoManager: CommandHandler,
-                 commandQueue: LinkedBlockingQueue[Command[?]]) {
+class UiInstance(private val uiInstanceConfig: UiInstanceConfig,
+                 private val coreModule: CoreModule) {
 
-  val activeViewPublisher: PublisherImpl[ViewType] = PublisherImpl[ViewType](Some(CALENDAR))
+  def shutdown(): Unit = {
+    uiManager.foreach(_.shutdown())
+  }
+  
+  val activeViewPublisher: Publisher[ViewType] = wire[PublisherImpl[ViewType]]
+  //val globalEventHandler: GlobalEventHandler = wire[GlobalEventHandler]
+  
+  //CalendarView
+  val calendarViewModelPublisher: Publisher[CalendarViewModel] =
+    wire[PublisherImpl[CalendarViewModel]]
+  val calendarEventContainer: CalendarEventContainer = wire[CalendarEventContainerImpl]
+  private val calendarViewModule: CalendarCommonsModule = wire[CalendarCommonsModuleImpl]
 
-  val calendarViewModelPublisher: PublisherImpl[CalendarViewModel] = PublisherImpl[CalendarViewModel](
-    None)
-
-  val taskEditViewModelPublisher: PublisherImpl[TaskEditViewModel] = PublisherImpl[TaskEditViewModel](
-    None)
-
-  val calendarKeyMapPublisher: PublisherImpl[Keymap[CALENDAR, CalendarViewModel, View[CALENDAR,
-    CalendarViewModel, ?]]] = PublisherImpl[Keymap[CALENDAR, CalendarViewModel, View[CALENDAR,
-    CalendarViewModel, ?]]](None)
-
-  val taskEditKeyMapPublisher: PublisherImpl[Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit,
-    TaskEditViewModel, ?]]] = PublisherImpl[Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit,
-    TaskEditViewModel, ?]]](None)
-
-  val calendarEventHandler: CalendarEventHandler = new CalendarEventHandler(
-    calendarViewModelPublisher, modelPublisher, undoManager, activeViewPublisher, commandQueue)
-
-  val taskEditEventHandler: TaskEditEventHandler = new TaskEditEventHandler(
-    taskEditViewModelPublisher, modelPublisher, undoManager, activeViewPublisher, commandQueue)
-
-  val globalEventHandler: GlobalEventHandler = new GlobalEventHandler(calendarViewModelPublisher,
-    taskEditViewModelPublisher, modelPublisher, undoManager, activeViewPublisher)
+  //TaskEditView
+  val taskEditViewModelPublisher: Publisher[TaskEditViewModel] = wire[PublisherImpl[TaskEditViewModel]]
+  val taskEditEventContainer: TaskEditEventContainer = wire[TaskEditEventContainerImpl]
+  private val taskEditViewModule: TaskEditCommonsModule = wire[TaskEditCommonsModuleImpl]
+  
+  private val uiManager: Vector[UIManager[?]] = Vector.empty
 
   def run(): Unit = {
     init()
-    val tuiManager: TUIManager = TUIManager(activeViewPublisher, calendarKeyMapPublisher,
-      calendarViewModelPublisher, taskEditKeyMapPublisher, taskEditViewModelPublisher)
-    //val uiThread = new ApplicationThread[Unit]()
-    //uiThread.run(tuiManager.run()).await()
-    tuiManager.run()
+    
+    uiInstanceConfig.uis.foreach(ui => addUiManager(ui))
+    
+    uiManager.foreach(manager => manager.run())
   }
 
-  private def init(): Unit = {
-    calendarEventHandler.init()
-    taskEditEventHandler.init()
-    
-    if modelPublisher.getValue.isEmpty then return
-    calendarKeyMapPublisher.update(Some(Keymap[CALENDAR, CalendarViewModel, View[CALENDAR,
-      CalendarViewModel, ?]](modelPublisher.getValue.get.config.keymaps(CALENDAR), new
-        CalendarViewResolver())))
+  private def addUiManager(uiType: UIType): Unit = {
+    uiType match {
+      case TUI => uiManager.appended(wire[TUIManager])
+      case _ =>  throwUnknownManagerException(uiType)
+    }
+  }
+  
+  private def throwUnknownManagerException(UIType: UIType): Unit = {
+    throw new Exception(s"For UIType $UIType is no UIManager configured.")
+  } 
 
-    taskEditKeyMapPublisher.update(Some(Keymap[TASKEdit, TaskEditViewModel, View[TASKEdit,
-      TaskEditViewModel, ?]](modelPublisher.getValue.get.config.keymaps(TASKEdit), new
-        TaskEditViewResolver())))
+  private def init(): Unit = {
+    // Initialize the event containers
+    calendarEventContainer.init()
+    taskEditEventContainer.init()
   }
 }
