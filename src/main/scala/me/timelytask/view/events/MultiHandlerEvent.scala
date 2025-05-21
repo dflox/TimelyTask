@@ -2,6 +2,7 @@ package me.timelytask.view.events
 
 import me.timelytask.model.utility.InputError
 import me.timelytask.view.events.argwrapper.ArgWrapper
+
 import scala.reflect.ClassTag
 import scala.util.Try
 

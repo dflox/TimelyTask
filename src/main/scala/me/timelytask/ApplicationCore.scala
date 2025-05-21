@@ -1,8 +1,8 @@
 package me.timelytask
 
 import com.softwaremill.macwire.wire
-import me.timelytask.controller.commands.{Command, CommandHandler, CommandHandlerImpl}
 import me.timelytask.controller.*
+import me.timelytask.controller.commands.{Command, CommandHandler, CommandHandlerImpl}
 import me.timelytask.core.{CoreModule, CoreModuleImpl, StartUpConfig, UiInstanceConfig}
 import me.timelytask.model.Model
 import me.timelytask.util.publisher.PublisherImpl

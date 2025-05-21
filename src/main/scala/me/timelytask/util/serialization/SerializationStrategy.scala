@@ -1,6 +1,6 @@
 package me.timelytask.util.serialization
 
-import me.timelytask.util.serialization.serializer._
+import me.timelytask.util.serialization.serializer.*
 
 trait SerializationStrategy {
   def serialize[T](obj: T)(using typeEncoder: TypeEncoder[T]): String
