@@ -11,9 +11,10 @@ trait Handler[Args] {
 }
 
 trait Event[Args](handler: Handler[Args],
-                  isPossible: Args => Option[InputError]) {
-  def call(args: Args): Boolean = {
-    if (isPossible(args).nonEmpty) handler(args)
+                  isPossible: Args => Option[InputError],
+                  args: Args) {
+  def call: Boolean = {
+    if (isPossible(args).isEmpty) handler(args)
     else false
   }
 }

@@ -7,6 +7,7 @@ import me.timelytask.model.settings.{CALENDAR, UIType, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.UIManager
+import me.timelytask.view.eventHandlers.{EventHandler, EventHandlerImpl}
 import me.timelytask.view.tui.TUIManager
 import me.timelytask.view.views.{CalendarCommonsModule, CalendarCommonsModuleImpl, TaskEditCommonsModule, TaskEditCommonsModuleImpl}
 
@@ -18,9 +19,11 @@ class UiInstance(private val uiInstanceConfig: UiInstanceConfig,
 
   def shutdown(): Unit = {
     uiManager.foreach(_.shutdown())
+    eventHandler.shutdown()
   }
   
   val activeViewPublisher: Publisher[ViewType] = wire[PublisherImpl[ViewType]]
+  val eventHandler: EventHandler = wire[EventHandlerImpl]
   //val globalEventHandler: GlobalEventHandler = wire[GlobalEventHandler]
   
   //CalendarView

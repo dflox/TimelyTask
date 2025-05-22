@@ -13,8 +13,6 @@ class KeymapImpl[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType]]
   
   override def handleKey(key: Option[Key]): Boolean = {
     if key.isEmpty then return false
-    keymapConfig.mappings.get(key.get).flatMap {
-      eventType => eventResolver.resolveAndCallEvent(eventType)
-    }.getOrElse(false)
+    keymapConfig.mappings.get(key.get).exists(eventResolver.resolveAndCallEvent)
   }
 }

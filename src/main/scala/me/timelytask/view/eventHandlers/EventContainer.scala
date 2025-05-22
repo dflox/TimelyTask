@@ -8,12 +8,12 @@ import me.timelytask.view.viewmodel.ViewModel
 
 trait EventContainer[T <: ViewType, M <: ViewModel[T, M]](viewModelPublisher: Publisher[M],
                                                           activeViewPublisher: Publisher[ViewType],
+                                                          eventHandler: EventHandler,
                                                           coreModule: CoreModule) {
 
   def init(): Unit = {
     coreModule.registerModelUpdater(updateModel)
   }
-  
   
   protected def updateModel(model: Option[Model]): Boolean
 

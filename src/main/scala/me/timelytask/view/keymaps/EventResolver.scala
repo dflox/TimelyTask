@@ -7,5 +7,5 @@ import me.timelytask.view.views.View
 
 trait EventResolver[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType]] {
   protected val eventContainer: EventContainer[VT, ViewModelType]
-  def resolveAndCallEvent(eventType: EventTypeId): Option[Boolean]
+  def resolveAndCallEvent(eventType: EventTypeId): Boolean
 }

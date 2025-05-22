@@ -13,14 +13,11 @@ class CommandHandlerImpl extends CommandHandler {
   
   private def commandExecutor(): Unit = {
     while (true) {
-      val nextCommand = commandQueue.take()
-      this.doStep(nextCommand)
+      this.doStep(commandQueue.take())
     }
   }
   
-  override def handle(command: Command[?]): Unit = {
-    commandQueue.add(command)
-  }
+  override def handle(command: Command[?]): Unit = commandQueue.add(command)
 
   private def doStep(command: Command[?]): Boolean = {
     if command.execute then

@@ -14,6 +14,7 @@ trait ViewTypeCommonsModule[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewM
 (
   protected val coreModule: CoreModule,
   val activeViewPublisher: Publisher[ViewType],
+  protected val eventHandler: EventHandler 
 ) {
   lazy val viewModelPublisher: Publisher[ViewModelType] = wire[PublisherImpl[ViewModelType]]
   lazy val eventContainer: EventContainer[VT, ViewModelType]
@@ -25,7 +26,7 @@ trait ViewTypeCommonsModule[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewM
 
 trait CalendarCommonsModule extends ViewTypeCommonsModule[CALENDAR, CalendarViewModel]{
   override lazy val eventContainer: CalendarEventContainer = wireWith[CalendarEventContainerImpl](
-    () => CalendarEventContainerImpl(viewModelPublisher,activeViewPublisher, coreModule))
+    () => CalendarEventContainerImpl(viewModelPublisher,activeViewPublisher, eventHandler, coreModule))
   override lazy val eventResolver: EventResolver[CALENDAR, CalendarViewModel] = 
     wire[CalendarEventResolver]
 
@@ -34,12 +35,15 @@ trait CalendarCommonsModule extends ViewTypeCommonsModule[CALENDAR, CalendarView
 }
 
 class CalendarCommonsModuleImpl(coreModule: CoreModule,
-                                activeViewPublisher: Publisher[ViewType])
-  extends CalendarCommonsModule with ViewTypeCommonsModule[CALENDAR, CalendarViewModel](coreModule, activeViewPublisher)
+                                activeViewPublisher: Publisher[ViewType],
+                                eventHandler: EventHandler)
+  extends CalendarCommonsModule with ViewTypeCommonsModule[CALENDAR, CalendarViewModel]
+    (coreModule, activeViewPublisher, eventHandler)
 
 trait TaskEditCommonsModule extends ViewTypeCommonsModule[TASKEdit, TaskEditViewModel] {
   override lazy val eventContainer: TaskEditEventContainer = wireWith[TaskEditEventContainerImpl](
-    () => TaskEditEventContainerImpl(viewModelPublisher,activeViewPublisher, coreModule))
+    () => TaskEditEventContainerImpl(viewModelPublisher,activeViewPublisher, eventHandler, 
+      coreModule))
   override lazy val eventResolver: EventResolver[TASKEdit, TaskEditViewModel] = 
     wire[TaskEditEventResolver]
     
@@ -48,5 +52,7 @@ trait TaskEditCommonsModule extends ViewTypeCommonsModule[TASKEdit, TaskEditView
 }
 
 class TaskEditCommonsModuleImpl(coreModule: CoreModule,
-                                 activeViewPublisher: Publisher[ViewType])
-  extends TaskEditCommonsModule with ViewTypeCommonsModule[TASKEdit, TaskEditViewModel](coreModule, activeViewPublisher)
+                                 activeViewPublisher: Publisher[ViewType],
+                                eventHandler: EventHandler)
+  extends TaskEditCommonsModule with ViewTypeCommonsModule[TASKEdit, TaskEditViewModel]
+    (coreModule, activeViewPublisher, eventHandler)
