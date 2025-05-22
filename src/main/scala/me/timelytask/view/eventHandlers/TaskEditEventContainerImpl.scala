@@ -1,17 +1,10 @@
 package me.timelytask.view.eventHandlers
 
-import me.timelytask.controller.commands.{AddTask, Command, CommandHandler, EditTask}
 import me.timelytask.core.CoreModule
-import me.timelytask.model.settings.{TASKEdit, ViewType}
-import me.timelytask.model.utility.InputError
+import me.timelytask.model.settings.ViewType
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
-import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.TaskEditViewModel
-import me.timelytask.view.viewmodel.elemts.FocusDirection
-
-import java.util.concurrent.LinkedBlockingQueue
-import scala.util.{Failure, Success, Try}
 
 class TaskEditEventContainerImpl(taskEditViewModelPublisher: Publisher[TaskEditViewModel],
                                  activeViewPublisher: Publisher[ViewType],
@@ -22,7 +15,7 @@ class TaskEditEventContainerImpl(taskEditViewModelPublisher: Publisher[TaskEditV
     taskEditViewModelPublisher, activeViewPublisher, eventHandler, coreModule) {
 
   //  def initi(): Unit = {
-  //    
+  //
   //    SaveTask.setHandler((taskEditViewModel: TaskEditViewModel) => {
   //      if taskEditViewModel.isNewTask then
   //        coreModule.controllers.modelController.addTask(taskEditViewModel.task)
@@ -33,7 +26,7 @@ class TaskEditEventContainerImpl(taskEditViewModelPublisher: Publisher[TaskEditV
   //    }, (taskEditViewModel: TaskEditViewModel) => {
   //      taskEditViewModel.task.isValid match {
   //        case None =>
-  //          if taskEditViewModel.isNewTask ^ 
+  //          if taskEditViewModel.isNewTask ^
   //            !taskEditViewModel.model.tasks.exists(_.uuid == taskEditViewModel.task.uuid) then
   //            None
   //          else
@@ -48,7 +41,7 @@ class TaskEditEventContainerImpl(taskEditViewModelPublisher: Publisher[TaskEditV
   //    CancelTask.setHandler((taskEditViewModel: TaskEditViewModel) => false,
   //      (taskEditViewModel: TaskEditViewModel) => Some(InputError
   //        ("Unsupported Event: CancelTask")))
-  //    
+  //
   //
   //    //  ChangeView.addHandler({
   //    //    case viewChangeArg: ViewChangeArgument[TASKEdit, TaskEditViewModel] =>
@@ -75,17 +68,18 @@ class TaskEditEventContainerImpl(taskEditViewModelPublisher: Publisher[TaskEditV
   //      (args: FocusDirection) => if viewModel().isEmpty | viewModel().get.getFocusElementGrid
   //      .isEmpty
   //                                then
-  //                                  Some(InputError("Fatal Error: No focus element grid 
+  //                                  Some(InputError("Fatal Error: No focus element grid
   //                                  defined!"))
   //                                else
   //                                  None)
   //  }
 
   override protected def updateModel(model: Option[Model]): Boolean = {
-    if model.isEmpty then return false
-    val task = model.get.tasks.find(_.uuid == viewModel().get.task.uuid)
-    if task.isEmpty then return false
-    if task.get == viewModel().get.task then return false
-    Some(viewModel().get.copy(task = task.get))
+    return false
+//    if model.isEmpty then return false
+//    val task = model.get.tasks.find(_.uuid == viewModel().get.task.uuid)
+//    if task.isEmpty then return false
+//    if task.get == viewModel().get.task then return false
+//    Some(viewModel().get.copy(task = task.get))
   }
 }

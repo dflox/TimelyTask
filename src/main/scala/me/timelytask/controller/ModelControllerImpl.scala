@@ -7,26 +7,8 @@ import me.timelytask.util.Publisher
 class ModelControllerImpl(modelPublisher: Publisher[Model], commandHandler: CommandHandler)
   extends Controller(modelPublisher, commandHandler)
   with ModelController {
-  
+
   def init(): Unit = {
-    AddTask.setHandler(new InversibleHandler[Task] {
-      override def apply(args: Task): Boolean = {
-        if model().isEmpty then {
-          false
-        } else {
-          Some(model().get.copy(tasks = args :: model().get.tasks))
-        }
-      }
-
-      override def unapply(args: Task): Boolean = {
-        if model().isEmpty then {
-          false
-        } else {
-          Some(model().get.copy(tasks = model().get.tasks.filterNot(_.uuid.equals(args.uuid))))
-        }
-      }
-    })
-
     EditTask.setHandler(
       (args: Task) => exchangeTask(args).nonEmpty,
       new StoreHandler[Task, Task] {
@@ -56,7 +38,32 @@ class ModelControllerImpl(modelPublisher: Publisher[Model], commandHandler: Comm
     }
   }
 
-  override def addTask(task: Task): Unit = ???
+  override def addTask(task: Task): Unit = commandHandler.handle(new InversibleCommand[Task](
+    new InversibleHandler[Task] {
+      override def apply(args: Task): Boolean = addNewTask(args)
+
+      override def unapply(args: Task): Boolean = deleteTask(args)
+    },
+    task
+  ) {})
+
+  private def addNewTask(task: Task): Boolean = {
+    if model().isEmpty then {
+      false
+    } else {
+      Some(model().get.copy(tasks = task :: model().get.tasks))
+    }
+  }
+
+  private def deleteTask(task: Task): Boolean = {
+    if model().isEmpty then {
+      false
+    } else {
+      Some(model().get.copy(tasks = model().get.tasks.filterNot(_.uuid.equals(task.uuid))))
+    }
+  }
+
+
 
   override def removeTask(task: Task): Unit = ???
 

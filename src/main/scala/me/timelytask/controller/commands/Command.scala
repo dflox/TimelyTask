@@ -3,6 +3,7 @@ package me.timelytask.controller.commands
 import me.timelytask.model.Model
 import me.timelytask.util.publisher.PublisherImpl
 
+@FunctionalInterface
 trait Handler[Args] {
   def apply(args: Args): Boolean
 }

@@ -8,7 +8,7 @@ import me.timelytask.util.Publisher
 
 trait ControllerModule(private val modelPublisher: Publisher[Model], private val coreModule: CoreModule) {
   
-  lazy private val commandHandler: CommandHandler = wire[CommandHandlerImpl]
+  lazy val commandHandler: CommandHandler = wire[CommandHandlerImpl]
 
   lazy val modelController: ModelController = wire[ModelControllerImpl]
 

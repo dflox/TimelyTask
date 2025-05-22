@@ -14,10 +14,11 @@ import me.timelytask.view.events.argwrapper.ViewChangeArgumentWrapper
 import me.timelytask.view.viewmodel.elemts.{FocusDirection, Focusable, TaskCollection}
 import me.timelytask.view.viewmodel.viewchanger.TaskEditViewChangeArg
 import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel, ViewModel}
+import org.joda.time.DateTime
 
 import java.util.concurrent.LinkedBlockingQueue
 import scala.reflect.ClassTag
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Random, Success, Try}
 
 class CalendarEventContainerImpl(calendarViewModelPublisher: Publisher[CalendarViewModel],
                                  activeViewPublisher: Publisher[ViewType],
@@ -183,4 +184,50 @@ class CalendarEventContainerImpl(calendarViewModelPublisher: Publisher[CalendarV
       case Success(value) => Some(value)
       case Failure(exception) => None
   }
+
+  override def addRandomTask(): Unit = eventHandler.handle(new Event[Unit](
+    (args: Unit) => {
+      coreModule.controllers.modelController.addTask(randomTask())
+      true
+    },
+    (args: Unit) => None,
+    ()
+  ){})
+
+  private def randomTask(): Task = {
+    new Task(
+      "Random Task",
+      "Random Task Description",
+      scheduleDate = DateTime.now()
+        .withTime(8, 0, 0, 0)
+        .plusMinutes(Random.nextInt(60*10))// random time today
+    )
+  }
+
+  override def undo(): Unit = eventHandler.handle(new Event[Unit](
+    (args: Unit) => {
+      coreModule.controllers.commandHandler.undo()
+      true
+    },
+    (args: Unit) => None,
+    ()
+  ){})
+  
+  override def redo(): Unit = eventHandler.handle(new Event[Unit](
+    (args: Unit) => {
+      coreModule.controllers.commandHandler.redo()
+      true
+    },
+    (args: Unit) => None,
+    ()
+  ){})
+  
+  override def shutdown(): Unit = eventHandler.handle(new Event[Unit](
+    (args: Unit) => {
+      coreModule.controllers.coreController.shutdownApplication()
+      true
+    },
+    (args: Unit) => None,
+    ()
+  ){})
 }

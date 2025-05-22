@@ -22,6 +22,7 @@ class CommandHandlerImpl extends CommandHandler {
   private def doStep(command: Command[?]): Boolean = {
     if command.execute then
       command match {
+        case cmd: CommandHandlerCommand => ()
         case cmd: UndoableCommand[?] => undoStack = Nil
         case _ => undoStack = command :: undoStack
       }
@@ -33,7 +34,7 @@ class CommandHandlerImpl extends CommandHandler {
 
   //TODO: Write Methods to create Undo and Redo Commands.
   
-  private def undoStep(): Boolean = {
+  private def undoStep(args: Unit): Boolean = {
     undoStack match {
       case Nil => false
       case head :: stack =>
@@ -46,7 +47,7 @@ class CommandHandlerImpl extends CommandHandler {
     }
   }
 
-  private def redoStep(): Boolean = {
+  private def redoStep(args: Unit): Boolean = {
     redoStack match {
       case Nil => false
       case head :: stack =>
@@ -57,5 +58,24 @@ class CommandHandlerImpl extends CommandHandler {
         else
           false
     }
+  }
+
+  override def undo(): Unit = commandQueue.add(new UndoableCommand[Unit](undoStep, ()) {})
+
+  override def redo(): Unit = commandQueue.add(new UndoableCommand[Unit](redoStep, ()) {})
+
+  private trait CommandHandlerCommand(handler: Handler[Unit]) extends Command[Unit] {
+    private var done: Boolean = false
+
+    override def execute: Boolean = {
+      if (!done) {
+        done = handler.apply(())
+        done
+      } else false
+    }
+
+    override def undo: Boolean = false
+
+    override def redo: Boolean = false
   }
 }
