@@ -1,28 +1,20 @@
 package me.timelytask
 
 import com.softwaremill.macwire.wire
-import me.timelytask.controller.*
-import me.timelytask.controller.commands.{Command, CommandHandler, CommandHandlerImpl}
-import me.timelytask.core.{CoreModule, CoreModuleImpl, StartUpConfig, UiInstanceConfig}
-import me.timelytask.model.Model
-import me.timelytask.util.publisher.PublisherImpl
+import me.timelytask.core.{CoreModule, CoreModuleImpl, StartUpConfig}
+import me.timelytask.util.FileIO
 import me.timelytask.util.serialization.SerializationStrategy
 import me.timelytask.util.serialization.decoder.given
 import me.timelytask.util.serialization.encoder.given
-import me.timelytask.util.{FileIO, Publisher}
-
-import java.util.concurrent.LinkedBlockingQueue
 
 class ApplicationCore {
   
-  private val coreModule: CoreModule = wire[CoreModuleImpl]
+  private lazy val coreModule: CoreModule = wire[CoreModuleImpl]
   
   private var startUpConfig: Option[StartUpConfig] = None
 
   private val startUpFileFormat: String = "yaml"
   private val startUpConfigFilePath: String = "startUpConfig." + startUpFileFormat
-  
-  private var uiInstances: Vector[UiInstance] = Vector.empty 
 
   def run(): Unit = {
     if (!tryLoadStartUpConfig()) {
@@ -31,11 +23,7 @@ class ApplicationCore {
     }
     validateSetup()
     
-    //TODO: move instance creation to the CoreController.
-    val uiInstances = startUpConfig
-      .getOrElse(throwException_StartUpFailed())
-      .uiInstances
-      .map(ui => spawnUiInstance(ui))
+    coreModule.controllers.coreController.startUpApplication(startUpConfig)
   }
 
   private def tryLoadStartUpConfig(): Boolean = {
@@ -59,13 +47,5 @@ class ApplicationCore {
   
   private def throwException_StartUpConfigLoadingFailed(): Nothing = {
     throw new Exception("StartUpConfig could not be loaded!")
-  }
-
-  private def throwException_StartUpFailed(): Nothing = {
-    throw new Exception("UI startup failed because the config is missing")
-  }
-  
-  private def spawnUiInstance(uiInstanceConfig: UiInstanceConfig): UiInstance = {
-    new UiInstance(uiInstanceConfig, coreModule)
   }
 }

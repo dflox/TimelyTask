@@ -7,6 +7,8 @@ import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
 
 trait CoreModule{
+  private lazy val self: CoreModule = this
+  
   private lazy val modelPublisher: Publisher[Model] = wire[PublisherImpl[Model]]
   
   lazy val controllers: ControllerModule = wire[ControllerModuleImpl]

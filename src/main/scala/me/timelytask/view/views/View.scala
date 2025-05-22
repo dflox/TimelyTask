@@ -1,18 +1,12 @@
 package me.timelytask.view.views
 
-import com.softwaremill.macwire.{wire, wireWith}
-import me.timelytask.model.Task
+import com.softwaremill.macwire.wireWith
 import me.timelytask.model.settings.{KeymapConfig, ViewType}
 import me.timelytask.model.utility.{Key, Space}
-import me.timelytask.util.Publisher
-import me.timelytask.view.eventHandlers.EventContainer
-import me.timelytask.view.events.{ChangeView, Event, MoveFocus, SetFocusTo}
 import me.timelytask.view.keymaps.{Keymap, KeymapImpl}
 import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
-import me.timelytask.view.viewmodel.elemts.FocusDirection
 
-import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
 trait View[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType], RenderType]

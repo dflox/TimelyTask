@@ -15,6 +15,7 @@ trait Command[Args] {
   def undo: Boolean
 }
 
+
 trait UndoableCommand[Args](handler: Handler[Args], args: Args) extends Command[Args] {
   private var done: Boolean = false
 

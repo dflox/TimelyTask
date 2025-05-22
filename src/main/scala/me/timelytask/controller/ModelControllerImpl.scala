@@ -4,11 +4,11 @@ import me.timelytask.controller.commands.*
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
 
-class ModelControllerImpl(modelPublisher: Publisher[Model])
-  extends Controller(modelPublisher)
+class ModelControllerImpl(modelPublisher: Publisher[Model], commandHandler: CommandHandler)
+  extends Controller(modelPublisher, commandHandler)
   with ModelController {
-
-  override def init(): Unit = {
+  
+  def init(): Unit = {
     AddTask.setHandler(new InversibleHandler[Task] {
       override def apply(args: Task): Boolean = {
         if model().isEmpty then {
@@ -55,4 +55,10 @@ class ModelControllerImpl(modelPublisher: Publisher[Model])
       else None
     }
   }
+
+  override def addTask(task: Task): Unit = ???
+
+  override def removeTask(task: Task): Unit = ???
+
+  override def updateTask(task: Task): Unit = ???
 }

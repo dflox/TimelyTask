@@ -1,35 +1,21 @@
 package me.timelytask.controller
 
-import me.timelytask.controller.commands.{Exit, Handler, SaveAndExit, StartApp}
+import me.timelytask.controller.commands.CommandHandler
 import me.timelytask.model.Model
 import me.timelytask.util.Publisher
-import me.timelytask.util.publisher.PublisherImpl
-import me.timelytask.view.viewmodel.ViewModel
 
-class PersistenceControllerImpl(modelPublisher: Publisher[Model])
-  extends Controller(modelPublisher)
+class PersistenceControllerImpl(modelPublisher: Publisher[Model],
+                                commandHandler: CommandHandler)
+  extends Controller(modelPublisher, commandHandler)
   with PersistenceController {
 
-  override def init(): Unit = {
-    StartApp.setHandler((args: Unit) => {
-      modelPublisher.update(Some(Model.default))
-      true
-    })
+  override private[controller] def init(): Unit = modelPublisher.addListener(saveToDB)
 
-    SaveAndExit.setHandler((args: Unit) => {
-      if (save()) {
-        Exit.createCommand(()).execute
-      } else {
-        false
-      }
-    })
-  }
+  private def saveToDB(model: Option[Model]): Unit = model.map((m) => ())
 
-  private def save(): Boolean = {
-    true
-  }
+  private[controller] def loadModelFromDB(): Unit = modelPublisher.update(Some(Model.default))
 
-  private def load(): Boolean = {
-    true
-  }
+  override def SaveModelTo(serializationType: String): Unit = ???
+
+  override def LoadModel(serializationType: String): Unit = ???
 }

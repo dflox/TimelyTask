@@ -3,7 +3,7 @@ package me.timelytask
 import com.softwaremill.macwire.wire
 import me.timelytask.core.{CoreModule, UiInstanceConfig}
 import me.timelytask.model.settings.UIType.TUI
-import me.timelytask.model.settings.{UIType, ViewType}
+import me.timelytask.model.settings.{CALENDAR, UIType, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.UIManager
@@ -26,29 +26,22 @@ class UiInstance(private val uiInstanceConfig: UiInstanceConfig,
   //val globalEventHandler: GlobalEventHandler = wire[GlobalEventHandler]
   
   //CalendarView
-  val calendarViewModelPublisher: Publisher[CalendarViewModel] =
-    wire[PublisherImpl[CalendarViewModel]]
-  val calendarEventContainer: CalendarEventContainer = wire[CalendarEventContainerImpl]
-  private val calendarViewModule: CalendarCommonsModule = wire[CalendarCommonsModuleImpl]
+  private lazy val calendarViewModule: CalendarCommonsModule = wire[CalendarCommonsModuleImpl]
 
   //TaskEditView
-  val taskEditViewModelPublisher: Publisher[TaskEditViewModel] = wire[PublisherImpl[TaskEditViewModel]]
-  val taskEditEventContainer: TaskEditEventContainer = wire[TaskEditEventContainerImpl]
-  private val taskEditViewModule: TaskEditCommonsModule = wire[TaskEditCommonsModuleImpl]
+  private lazy val taskEditViewModule: TaskEditCommonsModule = wire[TaskEditCommonsModuleImpl]
   
-  private val uiManager: Vector[UIManager[?]] = Vector.empty
+  private var uiManager: Vector[UIManager[?]] = Vector.empty
 
   def run(): Unit = {
     init()
-    
-    uiInstanceConfig.uis.foreach(ui => addUiManager(ui))
-    
-    uiManager.foreach(manager => manager.run())
+    uiInstanceConfig.uis.foreach(addUiManager)
+    uiManager.foreach(_.run())
   }
 
   private def addUiManager(uiType: UIType): Unit = {
     uiType match {
-      case TUI => uiManager.appended(wire[TUIManager])
+      case TUI => uiManager = uiManager.appended(wire[TUIManager])
       case _ =>  throwUnknownManagerException(uiType)
     }
   }
@@ -57,9 +50,11 @@ class UiInstance(private val uiInstanceConfig: UiInstanceConfig,
     throw new Exception(s"For UIType $UIType is no UIManager configured.")
   } 
 
+  //TODO: Make start view dynamically configurable via startUpConfig -> serialization necessary...
   private def init(): Unit = {
     // Initialize the event containers
-    calendarEventContainer.init()
-    taskEditEventContainer.init()
+    activeViewPublisher.update(Some(CALENDAR))
+    calendarViewModule.eventContainer.init()
+    taskEditViewModule.eventContainer.init()
   }
 }

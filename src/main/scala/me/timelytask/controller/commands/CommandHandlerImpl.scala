@@ -8,7 +8,8 @@ class CommandHandlerImpl extends CommandHandler {
   private val commandQueue: LinkedBlockingQueue[Command[?]] = new LinkedBlockingQueue[Command[?]]()
   private var undoStack: List[Command[?]] = Nil
   private var redoStack: List[Command[?]] = Nil
-  private val runner: CancelableFuture[Unit] = CancelableFuture[Unit](commandExecutor())
+  override private[controller] val runner: CancelableFuture[Unit] =
+    CancelableFuture[Unit](commandExecutor())
   
   private def commandExecutor(): Unit = {
     while (true) {
@@ -23,7 +24,10 @@ class CommandHandlerImpl extends CommandHandler {
 
   private def doStep(command: Command[?]): Boolean = {
     if command.execute then
-      undoStack = command :: undoStack
+      command match {
+        case cmd: UndoableCommand[?] => undoStack = Nil
+        case _ => undoStack = command :: undoStack
+      }
       redoStack = Nil
       true
     else

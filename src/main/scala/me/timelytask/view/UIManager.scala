@@ -19,7 +19,7 @@ trait UIManager[RenderType] {
   val calendarView: CalendarView[RenderType]
   val taskEditView: TaskEditView[RenderType]
   
-  def render: (RenderType, ViewType) => Unit
+  def render(renderType: RenderType, viewType: ViewType): Unit
 
   def run(): Unit
 }

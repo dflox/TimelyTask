@@ -24,10 +24,10 @@ class TaskEditEventContainerImpl(taskEditViewModelPublisher: Publisher[TaskEditV
   def initi(): Unit = {
     
     SaveTask.setHandler((taskEditViewModel: TaskEditViewModel) => {
-      coreModule.controllers.commandHandler.handle(if taskEditViewModel.isNewTask then
-                         AddTask.createCommand(taskEditViewModel.task)
-                       else
-                         EditTask.createCommand(taskEditViewModel.task))
+      if taskEditViewModel.isNewTask then
+        coreModule.controllers.modelController.addTask(taskEditViewModel.task)
+      else
+        coreModule.controllers.modelController.updateTask(taskEditViewModel.task)
       activeViewPublisher.update(taskEditViewModel.lastView)
       true
     }, (taskEditViewModel: TaskEditViewModel) => {
