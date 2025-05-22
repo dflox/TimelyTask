@@ -7,9 +7,7 @@ import me.timelytask.model.settings.{CALENDAR, UIType, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.UIManager
-import me.timelytask.view.eventHandlers.{CalendarEventContainer, CalendarEventContainerImpl, TaskEditEventContainer, TaskEditEventContainerImpl}
 import me.timelytask.view.tui.TUIManager
-import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
 import me.timelytask.view.views.{CalendarCommonsModule, CalendarCommonsModuleImpl, TaskEditCommonsModule, TaskEditCommonsModuleImpl}
 
 //TODO: create an interface for the UiInstance so the implementation is independent. Make sure 

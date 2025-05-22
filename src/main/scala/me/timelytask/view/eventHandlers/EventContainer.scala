@@ -1,14 +1,10 @@
 package me.timelytask.view.eventHandlers
 
-import me.timelytask.controller.commands.{Command, CommandHandler}
 import me.timelytask.core.CoreModule
 import me.timelytask.model.Model
 import me.timelytask.model.settings.ViewType
 import me.timelytask.util.Publisher
-import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.ViewModel
-
-import java.util.concurrent.LinkedBlockingQueue
 
 trait EventContainer[T <: ViewType, M <: ViewModel[T, M]](viewModelPublisher: Publisher[M],
                                                           activeViewPublisher: Publisher[ViewType],

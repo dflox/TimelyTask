@@ -1,6 +1,5 @@
 package me.timelytask.controller
 
-import me.timelytask.controller.commands.Command
 import me.timelytask.core.StartUpConfig
 
 trait CoreController {

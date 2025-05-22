@@ -2,10 +2,6 @@ package me.timelytask.view
 
 import me.timelytask.model.settings.*
 import me.timelytask.util.Publisher
-import me.timelytask.util.publisher.PublisherImpl
-import me.timelytask.view.eventHandlers.{CalendarEventContainer, TaskEditEventContainer}
-import me.timelytask.view.keymaps.Keymap
-import me.timelytask.view.viewmodel.*
 import me.timelytask.view.views.*
 
 trait UIManager[RenderType] {
