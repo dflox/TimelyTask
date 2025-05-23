@@ -4,6 +4,7 @@ import me.timelytask.util.CancelableFuture
 import me.timelytask.view.events.Event
 
 import java.util.concurrent.LinkedBlockingQueue
+import scala.concurrent.duration.{Duration, SECONDS}
 
 //TODO: Ensure on shutdown of UIInstance: 1. runner is cancelled 2. eventQueue is empty -> await 
 // for runner to finish cleaning the event queue 
@@ -23,7 +24,7 @@ class EventHandlerImpl extends EventHandler {
 
   override def shutdown(): Unit = {
     running = false
-    runner.await()
+    runner.await(Duration(1, SECONDS))
     while (!eventQueue.isEmpty) {
       eventQueue.take().call
     }

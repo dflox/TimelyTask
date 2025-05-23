@@ -37,8 +37,13 @@ class CancelableFuture[ReturnType](
    *
    * @return The result of the future
    */
-  def await(): ReturnType = {
-    Await.result(future, Duration.Inf)
+  def await(duration: Duration = Duration.Inf): Option[ReturnType] = {
+    Try[ReturnType]{
+      Await.result(future, duration)
+    } match {
+      case Success(value) => Some(value)
+      case Failure(exception) => None
+    }
   }
 
   /**
