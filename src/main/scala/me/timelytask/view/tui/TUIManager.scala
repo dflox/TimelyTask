@@ -54,7 +54,7 @@ class TUIManager(override val activeViewPublisher: Publisher[ViewType],
                                                  else new ModelTUI(terminal.getHeight,
                                                    terminal.getWidth)
 
-  private val dialogFactoryTUI: DialogFactoryTUI = wire[DialogFactoryTUI]
+  private lazy val dialogFactoryTUI: DialogFactoryTUI = wire[DialogFactoryTUI]
 
   val calendarView: CalendarView[String] = wireWith[TuiCalendarView](
     () => new TuiCalendarView(render, createTuiModel, dialogFactoryTUI, calendarViewModule))

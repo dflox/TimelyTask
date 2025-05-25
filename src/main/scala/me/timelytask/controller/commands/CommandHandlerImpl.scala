@@ -23,10 +23,13 @@ class CommandHandlerImpl extends CommandHandler {
     if command.execute then
       command match {
         case cmd: CommandHandlerCommand => ()
-        case cmd: UndoableCommand[?] => undoStack = Nil
-        case _ => undoStack = command :: undoStack
+        case cmd: UndoableCommand[?] =>
+          undoStack = Nil
+          redoStack = Nil
+        case _ =>
+          undoStack = command :: undoStack
+          redoStack = Nil
       }
-      redoStack = Nil
       true
     else
       false
@@ -60,9 +63,9 @@ class CommandHandlerImpl extends CommandHandler {
     }
   }
 
-  override def undo(): Unit = commandQueue.add(new UndoableCommand[Unit](undoStep, ()) {})
+  override def undo(): Unit = commandQueue.add(new CommandHandlerCommand(undoStep) {})
 
-  override def redo(): Unit = commandQueue.add(new UndoableCommand[Unit](redoStep, ()) {})
+  override def redo(): Unit = commandQueue.add(new CommandHandlerCommand(redoStep) {})
 
   private trait CommandHandlerCommand(handler: Handler[Unit]) extends Command[Unit] {
     private var done: Boolean = false
