@@ -22,8 +22,8 @@ class UiInstance(private val uiInstanceConfig: UiInstanceConfig,
     eventHandler.shutdown()
   }
   
-  val activeViewPublisher: Publisher[ViewType] = wire[PublisherImpl[ViewType]]
-  val eventHandler: EventHandler = wire[EventHandlerImpl]
+  lazy val activeViewPublisher: Publisher[ViewType] = wire[PublisherImpl[ViewType]]
+  lazy val eventHandler: EventHandler = wire[EventHandlerImpl]
   //val globalEventHandler: GlobalEventHandler = wire[GlobalEventHandler]
   
   //CalendarView
