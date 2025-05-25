@@ -1,6 +1,6 @@
 package me.timelytask.core
 
-import me.timelytask.model.settings.UIType
+import me.timelytask.model.settings.{CALENDAR, UIType, ViewType}
 import me.timelytask.model.settings.UIType.TUI
 
 case class StartUpConfig(uiInstances: List[UiInstanceConfig]) {
@@ -12,8 +12,8 @@ case class StartUpConfig(uiInstances: List[UiInstanceConfig]) {
 
 case object StartUpConfig {
   val default: StartUpConfig = StartUpConfig(
-    uiInstances = List(UiInstanceConfig(List(UIType.TUI)))
+    uiInstances = List(UiInstanceConfig(List(UIType.TUI), CALENDAR))
   )
 }
 
-case class UiInstanceConfig(uis: List[UIType])
+case class UiInstanceConfig(uis: List[UIType], startView: ViewType)

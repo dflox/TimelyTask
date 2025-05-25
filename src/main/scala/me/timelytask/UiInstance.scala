@@ -50,11 +50,10 @@ class UiInstance(private val uiInstanceConfig: UiInstanceConfig,
   private def throwUnknownManagerException(UIType: UIType): Unit = {
     throw new Exception(s"For UIType $UIType is no UIManager configured.")
   } 
-
-  //TODO: Make start view dynamically configurable via startUpConfig -> serialization necessary...
+  
   private def init(): Unit = {
     // Initialize the event containers
-    activeViewPublisher.update(Some(CALENDAR))
+    activeViewPublisher.update(Some(uiInstanceConfig.startView))
     calendarViewModule.eventContainer.init()
     taskEditViewModule.eventContainer.init()
   }
