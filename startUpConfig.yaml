@@ -1,0 +1,4 @@
+uiInstances:
+  - uis:
+      - uiType: tui
+    startView: calendar

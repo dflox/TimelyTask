@@ -1,4 +1,0 @@
-package view
-
-class InputHandler {
-}
