@@ -12,14 +12,10 @@ class GuiCalendarView(override val render: (Scene, ViewType) => Unit,
   extends CalendarView[Scene]
     with View[CALENDAR, CalendarViewModel, Scene](viewTypeCommonsModule) {
 
-  private val rootPane = new BorderPane()
-  private val scene = new Scene(rootPane)
-  currentlyRendered = Some(scene)
-
   override def update(viewModel: Option[CalendarViewModel]): Boolean = {
     if viewModel.isEmpty then return false
 
-    CalendarViewGuiFactory.updateContent(viewModel.get, rootPane)
+    currentlyRendered = CalendarViewGuiFactory.updateContent(viewModel.get, currentlyRendered)
 
     render(currentlyRendered.get, CALENDAR)
     true

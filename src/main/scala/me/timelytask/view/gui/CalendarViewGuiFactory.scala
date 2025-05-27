@@ -1,6 +1,7 @@
 package me.timelytask.view.gui
 
 import me.timelytask.view.viewmodel.CalendarViewModel
+import scalafx.scene.Scene
 import scalafx.scene.layout.BorderPane
 
 object CalendarViewGuiFactory {
@@ -11,8 +12,9 @@ object CalendarViewGuiFactory {
    * @param viewModel Das ViewModel mit den anzuzeigenden Kalenderdaten
    * @param rootPane Das BorderPane, das aktualisiert werden soll
    */
-  def updateContent(viewModel: CalendarViewModel, rootPane: BorderPane): Unit = {
+  def updateContent(viewModel: CalendarViewModel, currentScene: Option[Scene]): Option[Scene] = {
     // Hier wird später die Logik implementiert, um das BorderPane
     // mit den Kalenderdaten aus dem ViewModel zu füllen
+    None
   }
 }
