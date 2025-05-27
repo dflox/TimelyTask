@@ -1,6 +1,7 @@
 package me.timelytask
 
-import com.softwaremill.macwire.wire
+import com.softwaremill.macwire.{wire, wireWith}
+import me.timelytask.core.validators.{GuiValidationStep, StartUpValidator, StartUpValidatorImpl, TuiValidationStep, ValidationStep}
 import me.timelytask.core.{CoreModule, CoreModuleImpl, StartUpConfig}
 import me.timelytask.util.FileIO
 import me.timelytask.util.serialization.SerializationStrategy
@@ -12,6 +13,8 @@ class ApplicationCore {
   private lazy val coreModule: CoreModule = wire[CoreModuleImpl]
   
   private var startUpConfig: Option[StartUpConfig] = None
+  
+  private val startUpValidator: StartUpValidator = wire[StartUpValidatorImpl]
 
   private val startUpFileFormat: String = "yaml"
   private val startUpConfigFilePath: String = "startUpConfig." + startUpFileFormat
@@ -21,7 +24,7 @@ class ApplicationCore {
       resetStartUpConfig()
       tryLoadStartUpConfig()
     }
-    validateSetup()
+    startUpValidator.validate(startUpConfig)
     
     coreModule.controllers.coreController.startUpApplication(startUpConfig)
   }
@@ -39,13 +42,5 @@ class ApplicationCore {
     val configStr = SerializationStrategy(startUpFileFormat)
       .serialize[StartUpConfig](defaultStartUpConfig)
     FileIO.writeToFile(startUpConfigFilePath, configStr)
-  }
-
-  private def validateSetup(): Unit = {
-    startUpConfig.getOrElse(throwException_StartUpConfigLoadingFailed()).validate()
-  }
-  
-  private def throwException_StartUpConfigLoadingFailed(): Nothing = {
-    throw new Exception("StartUpConfig could not be loaded!")
   }
 }
