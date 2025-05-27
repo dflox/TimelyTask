@@ -13,7 +13,7 @@ object TaskEditViewGuiFactory {
    * @param viewModel Das ViewModel mit den anzuzeigenden Task-Bearbeitungsdaten
    * @param rootPane Das BorderPane, das aktualisiert werden soll
    */
-  def updateContent(viewModel: TaskEditViewModel, rootPane: BorderPane): Unit = {
+  def updateContent(viewModel: TaskEditViewModel, rootPane: Option[BorderPane]): Unit = {
     // Header mit Titel
     val headerLabel = new Label("Aufgabe bearbeiten") {
       font = Font.font("Arial", FontWeight.Bold, 20)
@@ -73,7 +73,7 @@ object TaskEditViewGuiFactory {
     }
 
     // Setze die Komponenten im BorderPane
-    rootPane.top = header
-    rootPane.center = formLayout
+    rootPane.get.top = header
+    rootPane.get.center = formLayout
   }
 }

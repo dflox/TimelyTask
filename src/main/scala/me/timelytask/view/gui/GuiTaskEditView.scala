@@ -12,14 +12,13 @@ class GuiTaskEditView(override val render: (Scene, ViewType) => Unit,
   extends TaskEditView[Scene]
     with View[TASKEdit, TaskEditViewModel, Scene](viewTypeCommonsModule) {
 
-  private val rootPane = new BorderPane()
-  private val scene = new Scene(rootPane)
-  currentlyRendered = Some(scene)
+  currentlyRendered = None
 
   override def update(viewModel: Option[TaskEditViewModel]): Boolean = {
+    return false
     if viewModel.isEmpty then return false
 
-    TaskEditViewGuiFactory.updateContent(viewModel.get, rootPane)
+    TaskEditViewGuiFactory.updateContent(viewModel.get, None)
 
     render(currentlyRendered.get, TASKEdit)
     true

@@ -2,12 +2,13 @@ package me.timelytask
 
 import com.softwaremill.macwire.wire
 import me.timelytask.core.{CoreModule, UiInstanceConfig}
-import me.timelytask.model.settings.UIType.TUI
+import me.timelytask.model.settings.UIType.{GUI, TUI}
 import me.timelytask.model.settings.{CALENDAR, UIType, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.UIManager
 import me.timelytask.view.eventHandlers.{EventHandler, EventHandlerImpl, GlobalEventContainer, GlobalEventContainerImpl}
+import me.timelytask.view.gui.GuiManager
 import me.timelytask.view.tui.TUIManager
 import me.timelytask.view.views.{CalendarCommonsModule, CalendarCommonsModuleImpl, TaskEditCommonsModule, TaskEditCommonsModuleImpl}
 
@@ -44,6 +45,7 @@ class UiInstance(private val uiInstanceConfig: UiInstanceConfig,
   private def addUiManager(uiType: UIType): Unit = {
     uiType match {
       case TUI => uiManager = uiManager.appended(wire[TUIManager])
+      case GUI => uiManager = uiManager.appended(wire[GuiManager])
       case _ =>  throwUnknownManagerException(uiType)
     }
   }
