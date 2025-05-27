@@ -17,14 +17,14 @@ trait EventContainer[T <: ViewType, M <: ViewModel[T, M]](viewModelPublisher: Pu
   
   protected def updateModel(model: Option[Model]): Boolean
 
-  val viewModel: () => Option[M] = () => viewModelPublisher.getValue
+  protected val viewModel: () => Option[M] = () => viewModelPublisher.getValue
 
-  val model: () => Option[Model] = () => viewModelPublisher.getValue match {
+  protected val model: () => Option[Model] = () => viewModelPublisher.getValue match {
     case Some(value) => Some(value.model)
     case None => None
   }
   
-  given Conversion[Option[M], Boolean] with {
+  protected given Conversion[Option[M], Boolean] with {
     def apply(option: Option[M]): Boolean = {
       viewModelPublisher.update(option)
       option.isDefined

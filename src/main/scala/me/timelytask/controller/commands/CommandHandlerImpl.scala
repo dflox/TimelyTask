@@ -34,8 +34,6 @@ class CommandHandlerImpl extends CommandHandler {
     else
       false
   }
-
-  //TODO: Write Methods to create Undo and Redo Commands.
   
   private def undoStep(args: Unit): Boolean = {
     undoStack match {

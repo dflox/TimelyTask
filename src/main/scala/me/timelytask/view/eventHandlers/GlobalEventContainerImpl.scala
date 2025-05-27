@@ -9,19 +9,19 @@ import me.timelytask.view.viewmodel.{CalendarViewModel, TaskEditViewModel}
 
 // TODO: Adapt this class to the new event handling system, add GlobalEventResolver and extend 
 //  the Keymap to include the global events
-class GlobalEventHandler(calendarViewModelPublisher: Publisher[CalendarViewModel],
-                         taskEditViewModelPublisher: Publisher[TaskEditViewModel],
-                         modelPublisher: Publisher[Model],
-                         undoManager: CommandHandler,
-                         activeViewPublisher: Publisher[ViewType]) {
-  
+class GlobalEventContainerImpl(calendarViewModelPublisher: Publisher[CalendarViewModel],
+                               taskEditViewModelPublisher: Publisher[TaskEditViewModel],
+                               modelPublisher: Publisher[Model],
+                               undoManager: CommandHandler,
+                               activeViewPublisher: Publisher[ViewType]) extends GlobalEventContainer {
+
   private val eventHandler: EventHandler = new EventHandlerImpl()
-  
-  def undo(): Unit = {
+
+  override def undo(): Unit = {
     val event = new Event[Unit](
       (args: Unit) => {
         undoManager.undo()
-        true 
+        true
       },
       (args: Unit) => None,
       ()
@@ -29,7 +29,7 @@ class GlobalEventHandler(calendarViewModelPublisher: Publisher[CalendarViewModel
     eventHandler.handle(event)
   }
 
-  def redo(): Unit = {
+  override def redo(): Unit = {
     val event = new Event[Unit](
       (args: Unit) => {
         undoManager.redo()
@@ -40,8 +40,8 @@ class GlobalEventHandler(calendarViewModelPublisher: Publisher[CalendarViewModel
     ) {}
     eventHandler.handle(event)
   }
-  
-  def switchToView(viewType: ViewType): Unit = {
+
+  override def switchToView(viewType: ViewType): Unit = {
     val event = new Event[ViewType](
       (args: ViewType) => {
         activeViewPublisher.update(Some(args))
@@ -53,8 +53,8 @@ class GlobalEventHandler(calendarViewModelPublisher: Publisher[CalendarViewModel
     eventHandler.handle(event)
   }
 
-  def shutdown(): Unit = {
+  override def shutdown(): Unit = {
     eventHandler.shutdown()
   }
-  
+
 }
