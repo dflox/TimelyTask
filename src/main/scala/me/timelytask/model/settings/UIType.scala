@@ -1,7 +1,5 @@
 package me.timelytask.model.settings
 
-import me.timelytask.view.UIManager
-
 enum UIType {
   case GUI, TUI
 
