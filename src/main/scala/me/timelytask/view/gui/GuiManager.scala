@@ -1,12 +1,14 @@
 package me.timelytask.view.gui
 
 import com.softwaremill.macwire.{wire, wireWith}
-import me.timelytask.model.settings.ViewType
+import me.timelytask.model.settings.{CALENDAR, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.view.UIManager
 import me.timelytask.view.gui.dialog.DialogFactoryImpl
+import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.{CalendarCommonsModule, CalendarView, DialogFactory, TaskEditCommonsModule, TaskEditView}
 import scalafx.application.Platform
+import scalafx.Includes.*
 import scalafx.scene.Scene
 import scalafx.stage.Stage
 
@@ -39,12 +41,20 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
     calendarView.init()
     taskEditView.init()
 
+    // CALENDAR als aktive View
+    activeViewPublisher.update(Some(CALENDAR))
+
     Platform.runLater {
+      val initialScene = new Scene(800, 600)
+      calendarView.render(initialScene, CALENDAR)      
+      
       stage = Some(new Stage {
         title = "TimelyTask GUI"
-        scene = new Scene(800, 600)
+        scene = initialScene
       })
       stage.foreach(_.show())
+
+      //calendarView.update()
     }
   }
 }
