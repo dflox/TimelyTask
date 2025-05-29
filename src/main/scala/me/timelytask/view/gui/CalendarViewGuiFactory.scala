@@ -1,6 +1,7 @@
 package me.timelytask.view.gui
 
 import me.timelytask.view.viewmodel.CalendarViewModel
+import me.timelytask.view.views.CalendarCommonsModule
 import scalafx.geometry.{HPos, Insets, Pos, VPos}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ButtonBar, Label, TextArea}
@@ -13,7 +14,7 @@ object CalendarViewGuiFactory {
   private val endTimeHour = 19  // Ende vor 19 Uhr
   private val numberOfTimeSlots = endTimeHour - startTimeHour
 
-  def updateContent(viewModel: CalendarViewModel, currentScene: Option[Scene]): Pane = {
+  def updateContent(viewModel: CalendarViewModel, currentScene: Option[Scene], viewTypeCommonsModule: CalendarCommonsModule): Pane = {
     // Hauptlayout erstellen
     val rootPane = new BorderPane()
 
