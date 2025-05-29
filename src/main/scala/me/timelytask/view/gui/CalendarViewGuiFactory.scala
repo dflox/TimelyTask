@@ -4,7 +4,7 @@ import me.timelytask.view.viewmodel.CalendarViewModel
 import scalafx.geometry.{HPos, Insets, Pos, VPos}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ButtonBar, Label, TextArea}
-import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, RowConstraints, VBox}
+import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, Pane, RowConstraints, VBox}
 import scalafx.scene.text.{Font, FontWeight}
 
 object CalendarViewGuiFactory {
@@ -13,7 +13,7 @@ object CalendarViewGuiFactory {
   private val endTimeHour = 19  // Ende vor 19 Uhr
   private val numberOfTimeSlots = endTimeHour - startTimeHour
 
-  def updateContent(viewModel: CalendarViewModel, currentScene: Option[Scene]): Option[Scene] = {
+  def updateContent(viewModel: CalendarViewModel, currentScene: Option[Scene]): Pane = {
     // Hauptlayout erstellen
     val rootPane = new BorderPane()
 
@@ -49,16 +49,8 @@ object CalendarViewGuiFactory {
     // Komponenten im BorderPane anordnen
     rootPane.top = header
     rootPane.center = calendarGrid
-
-    // Scene erstellen oder aktualisieren
-    val scene = currentScene match {
-      case Some(existingScene) =>
-        existingScene.root = rootPane
-        existingScene
-      case None => new Scene(rootPane, 900, 700)
-    }
-
-    Some(scene)
+    
+    rootPane
   }
 
   private def createCalendarGrid(viewModel: CalendarViewModel): GridPane = {
