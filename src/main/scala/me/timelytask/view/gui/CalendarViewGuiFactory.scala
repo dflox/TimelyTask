@@ -12,13 +12,12 @@ import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight}
 
 import java.time.LocalDate
-// import java.time.DayOfWeek // No longer needed here
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.Locale
 
 object CalendarViewGuiFactory {
 
-  private val dayAbbreviations = Seq("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So")
   private val startTimeHour = 8
   private val endTimeHour = 19
   private val numberOfTimeSlots = endTimeHour - startTimeHour
@@ -28,7 +27,6 @@ object CalendarViewGuiFactory {
   private val dayFormatter = DateTimeFormatter.ofPattern("dd.", germanLocale)
   private val dayMonthYearFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", germanLocale)
 
-  // Helper function
   private def toJavaLocalDate(dateTime: DateTime): LocalDate = {
     LocalDate.of(dateTime.getYear, dateTime.getMonthOfYear, dateTime.getDayOfMonth)
   }
@@ -43,23 +41,20 @@ object CalendarViewGuiFactory {
     val timeSelection: TimeSelection = viewModel.timeSelection
     val daySpanList: List[DateTime] = timeSelection.getDaySpan
 
-    val (firstDayOfDisplayedPeriodLocalDate, lastDayOfDisplayedPeriodLocalDate, dateSpanStringToDisplay) = {
+    val (_, _, dateSpanStringToDisplay) = {
       if (daySpanList.nonEmpty) {
         val firstD = toJavaLocalDate(daySpanList.head)
         val lastD = toJavaLocalDate(daySpanList.last)
 
-        val startDayText = firstD.format(dayFormatter) // "dd."
-        val endDayMonthYearText = lastD.format(dayMonthYearFormatter) // "dd.MM.yyyy"
+        val startDayText = firstD.format(dayFormatter)
+        val endDayMonthYearText = lastD.format(dayMonthYearFormatter)
         (firstD, lastD, s"${startDayText} - ${endDayMonthYearText}")
       } else {
-        // Fallback
         System.err.println("CalendarViewGuiFactory: timeSelection.getDaySpan is empty. Displaying empty date range.")
         (LocalDate.now(), LocalDate.now(), "Keine Daten - Keine Daten")
       }
     }
 
-
-    // --- Header Elements ---
     val headerLabel = new Label("Wochenkalender") {
       font = Font.font("Arial", FontWeight.Bold, 20)
     }
@@ -69,10 +64,8 @@ object CalendarViewGuiFactory {
       textFill = Color.Grey
     }
 
-    // --- Navigationsbuttons mit Event-Handlern ---
     val todayBtn = new Button("Heute") {
       onAction = _ => {
-        // TODO: Implement viewTypeCommonsModule.eventContainer.goToToday()
         println("Heute button clicked - goToToday action pending implementation")
       }
     }
@@ -112,7 +105,6 @@ object CalendarViewGuiFactory {
       children = Seq(headerLabel, dateSpanLabel, navBar)
     }
 
-    // Create calendar grid using dates from viewModel's timeSelection
     val calendarGrid = createCalendarGrid(viewModel)
 
     rootPane.top = header
@@ -125,10 +117,13 @@ object CalendarViewGuiFactory {
       hgap = 2; vgap = 2; padding = Insets(5)
     }
 
+    val weekDates: Seq[LocalDate] = viewModel.timeSelection.getDaySpan.map(toJavaLocalDate)
+
     grid.columnConstraints.add(new ColumnConstraints {
       halignment = HPos.Right; minWidth = 50; prefWidth = 60
     })
-    dayAbbreviations.foreach { _ =>
+
+    (0 until weekDates.length).foreach { _ =>
       grid.columnConstraints.add(new ColumnConstraints {
         minWidth = 80; prefWidth = 110; hgrow = scalafx.scene.layout.Priority.Always
       })
@@ -143,17 +138,14 @@ object CalendarViewGuiFactory {
       })
     }
 
-    val weekDates: Seq[LocalDate] = viewModel.timeSelection.getDaySpan.map(toJavaLocalDate)
-
     if (weekDates.isEmpty) {
       System.err.println("CalendarViewGuiFactory: No dates from timeSelection to display in grid.")
-    } else if (weekDates.length != dayAbbreviations.length) {
-      System.err.println(s"Warning: Mismatch between number of dates from TimeSelection (${weekDates.length}) " +
-        s"and fixed day abbreviations (${dayAbbreviations.length}). Grid day headers might be misaligned or truncated.")
     }
 
-    dayAbbreviations.zip(weekDates).zipWithIndex.foreach { case ((dayAbbrev, date), colIdx) =>
-      val dayDateText = s"$dayAbbrev. ${date.format(dayMonthFormatter)}"
+    weekDates.zipWithIndex.foreach { case (date, colIdx) =>
+      val dayOfWeekShortName = date.getDayOfWeek.getDisplayName(TextStyle.SHORT, germanLocale)
+      val dayDateText = s"$dayOfWeekShortName ${date.format(dayMonthFormatter)}"
+
       val dayLabel = new Label(dayDateText) {
         font = Font.font(null, FontWeight.Bold, 14); alignmentInParent = Pos.Center; maxWidth = Double.MaxValue
       }
@@ -161,7 +153,6 @@ object CalendarViewGuiFactory {
       grid.children.add(dayLabel)
     }
 
-    // Create time slot labels on the left
     (0 until numberOfTimeSlots).foreach { hourOffset =>
       val hour = startTimeHour + hourOffset
       val timeLabel = new Label(f"$hour%02d:00") {
@@ -171,14 +162,12 @@ object CalendarViewGuiFactory {
       grid.children.add(timeLabel)
     }
 
-    // Create empty cells for tasks.
     for {
       (date, dayCol) <- weekDates.zipWithIndex
       timeRow <- 0 until numberOfTimeSlots
     } {
       val cell = new TextArea {
         wrapText = true; editable = false
-        // TODO: Populate with actual task data from viewModel based on 'date' and 'timeRow'
       }
       GridPane.setColumnIndex(cell, dayCol + 1); GridPane.setRowIndex(cell, timeRow + 1)
       grid.children.add(cell)
