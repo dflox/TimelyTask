@@ -34,7 +34,6 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
 
   def getTaskToEdit: Option[Task] = taskToEdit
 
-
   override def interact(inputGetter: Option[DialogModel[?]] => Option[?])
   : Option[CalendarViewModel] = {
 
