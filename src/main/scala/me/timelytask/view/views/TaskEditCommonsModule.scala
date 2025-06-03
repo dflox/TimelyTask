@@ -15,6 +15,6 @@ trait TaskEditCommonsModule extends ViewTypeCommonsModule[TASKEdit, TaskEditView
   override lazy val eventResolver: EventResolver[TASKEdit, TaskEditViewModel] =
     wire[TaskEditEventResolver]
 
-  override def mapKeymapConfig(listener: KeymapConfig => Unit): Option[Model] => Unit =
+  override def mapViewKeymapConfig(listener: KeymapConfig => Unit): Option[Model] => Unit =
     model => model.map(m => listener(m.config.keymaps(TASKEdit)))
 }

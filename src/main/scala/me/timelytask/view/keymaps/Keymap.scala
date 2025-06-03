@@ -8,5 +8,6 @@ import me.timelytask.view.views.View
 trait Keymap[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType]] {
   protected val keymapConfig: KeymapConfig
   protected val eventResolver: EventResolver[VT, ViewModelType]
+  protected val globalEventResolver: GlobalEventResolver
   def handleKey(key: Option[Key]): Boolean
 }

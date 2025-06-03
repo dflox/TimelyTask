@@ -36,7 +36,6 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
     commandHandler.runner.await()
   }
 
-  //TODO: change uiInstances to vector in the StartUpConfig
   private def createUiInstances(startUpConfig: Option[StartUpConfig]): Unit = {
     uiInstances = startUpConfig
       .getOrElse(throwException_StartUpFailed())

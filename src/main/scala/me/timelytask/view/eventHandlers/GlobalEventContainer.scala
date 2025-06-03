@@ -8,7 +8,15 @@ trait GlobalEventContainer {
 
   def redo(): Unit
 
-  def switchToView(viewType: ViewType): Unit
+  def switchToView(): Unit
+  
+  def newWindow(): Unit
+  
+  def newInstance(): Unit
+  
+  def addRandomTask(): Unit
+  
+  def newTask(): Unit
 
-  def shutdown(): Unit
+  def shutdownApplication(): Unit
 }

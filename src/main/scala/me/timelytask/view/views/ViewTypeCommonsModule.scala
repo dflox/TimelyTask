@@ -14,16 +14,17 @@ trait ViewTypeCommonsModule[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewM
 (
   protected val coreModule: CoreModule,
   val activeViewPublisher: Publisher[ViewType],
-  protected val eventHandler: EventHandler
+  protected val eventHandler: EventHandler,
+  val globalEventContainer: GlobalEventContainer
 ) {
   lazy val viewModelPublisher: Publisher[ViewModelType] = wire[PublisherImpl[ViewModelType]]
-
+  
   lazy val eventContainer: EventContainer[VT, ViewModelType]
 
   lazy val eventResolver: EventResolver[VT, ViewModelType]
 
   def registerKeymapUpdater(listener: KeymapConfig => Unit): Unit =
-    coreModule.registerModelUpdater(mapKeymapConfig(listener))
+    coreModule.registerModelUpdater(mapViewKeymapConfig(listener))
 
-  protected def mapKeymapConfig(listener: KeymapConfig => Unit): Option[Model] => Unit
+  protected def mapViewKeymapConfig(listener: KeymapConfig => Unit): Option[Model] => Unit
 }

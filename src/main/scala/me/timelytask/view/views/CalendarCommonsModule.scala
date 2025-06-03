@@ -11,10 +11,10 @@ trait CalendarCommonsModule extends ViewTypeCommonsModule[CALENDAR, CalendarView
   override lazy val eventContainer: CalendarEventContainer = wireWith[CalendarEventContainerImpl](
     () => CalendarEventContainerImpl(viewModelPublisher, activeViewPublisher, eventHandler,
       coreModule))
-  
+
   override lazy val eventResolver: EventResolver[CALENDAR, CalendarViewModel] =
     wire[CalendarEventResolver]
 
-  override def mapKeymapConfig(listener: KeymapConfig => Unit): Option[Model] => Unit =
-    model => model.map(m => listener(m.config.keymaps(CALENDAR)))
+  override def mapViewKeymapConfig(listener: KeymapConfig => Unit): Option[Model] => Unit =
+    model => model.map(m => listener(m.config.keymaps(CALENDAR).addMapping(m.config.globalKeymap)))
 }

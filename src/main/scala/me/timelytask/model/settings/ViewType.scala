@@ -12,6 +12,8 @@ object ViewType {
     case "settings" => SETTINGS
     case "taskedit" => TASKEdit
   }
+  
+  def getAll: Vector[ViewType] = Vector(CALENDAR, TABLE, KANBAN, SETTINGS)
 }
 
 trait CALENDAR extends ViewType

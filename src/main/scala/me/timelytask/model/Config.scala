@@ -21,7 +21,6 @@ object Config {
             ShiftLeft -> EventTypeId("PreviousDay"),
             CtrlRight -> EventTypeId("NextWeek"),
             CtrlLeft -> EventTypeId("PreviousWeek"),
-            Z -> EventTypeId("Undo"),
             T -> EventTypeId("GoToToday"),
             W -> EventTypeId("ShowWholeWeek"),
             CtrlPlus -> EventTypeId("ShowMoreDays"),
@@ -56,10 +55,14 @@ object Config {
     ),
     globalKeymap = KeymapConfig(
       mappings = Map(
-        CtrlZ -> EventTypeId("Undo"),
-        CtrlY -> EventTypeId("Redo"),
-        CtrlN -> EventTypeId("AddRandomTask"),
-        CtrlQ -> EventTypeId("Exit")
+        Z -> EventTypeId("Undo"),
+        Y -> EventTypeId("Redo"),
+        R -> EventTypeId("AddRandomTask"),
+        CtrlQ -> EventTypeId("Exit"),
+        CtrlG -> EventTypeId("NewWindow"),
+        CtrlI -> EventTypeId("NewInstance"),
+        N -> EventTypeId("NewTask"),
+        G -> EventTypeId("SwitchToView")
       )
     ),
     defaultStartView = CALENDAR,

@@ -11,12 +11,4 @@ trait CalendarEventContainer extends EventContainer[CALENDAR, CalendarViewModel]
   def nextWeek(): Unit
 
   def previousWeek(): Unit
-  
-  def undo(): Unit
-  
-  def redo(): Unit
-  
-  def addRandomTask(): Unit
-  
-  def shutdown(): Unit
 }

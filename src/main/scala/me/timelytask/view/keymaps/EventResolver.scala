@@ -1,7 +1,7 @@
 package me.timelytask.view.keymaps
 
 import me.timelytask.model.settings.{EventTypeId, ViewType}
-import me.timelytask.view.eventHandlers.EventContainer
+import me.timelytask.view.eventHandlers.{EventContainer, GlobalEventContainer}
 import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.views.View
 

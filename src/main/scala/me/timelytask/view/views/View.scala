@@ -1,9 +1,9 @@
 package me.timelytask.view.views
 
-import com.softwaremill.macwire.wireWith
+import com.softwaremill.macwire.{wire, wireWith}
 import me.timelytask.model.settings.{KeymapConfig, ViewType}
 import me.timelytask.model.utility.{Key, Space}
-import me.timelytask.view.keymaps.{Keymap, KeymapImpl}
+import me.timelytask.view.keymaps.{GlobalEventResolverImpl, Keymap, KeymapImpl}
 import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 
@@ -25,7 +25,7 @@ trait View[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType], Render
 
   private def keymapUpdateListener(): KeymapConfig => Unit = km => keymap = {
     Some(wireWith[KeymapImpl[VT, ViewModelType]](() => KeymapImpl[VT, ViewModelType](km,
-      eventResolver)))
+      eventResolver, wireWith[GlobalEventResolverImpl](() => GlobalEventResolverImpl(globalEventContainer)))))
   }
   
   def dialogFactory: DialogFactory[RenderType]
