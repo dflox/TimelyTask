@@ -1,14 +1,14 @@
 package me.timelytask.view.gui
 
 import com.github.nscala_time.time.Imports.{DateTime, Interval, Period}
-import me.timelytask.model.Task // Import the Task class
+import me.timelytask.model.Task
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.CalendarCommonsModule
 import scalafx.geometry.{HPos, Insets, Pos, VPos}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ButtonBar, Label, TextArea}
-import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, Pane, RowConstraints, VBox}
+import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, HBox, Pane, RowConstraints, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight}
 
@@ -60,7 +60,8 @@ object CalendarViewGuiFactory {
         val endDayMonthYearText = lastD.format(dayMonthYearFormatter)
         (firstD, lastD, s"${startDayText} - ${endDayMonthYearText}")
       } else {
-        System.err.println("CalendarViewGuiFactory: timeSelection.getDaySpan is empty. Displaying empty date range.")
+        System.err.println(
+          "CalendarViewGuiFactory: timeSelection.getDaySpan is empty. Displaying empty date range.")
         (LocalDate.now(), LocalDate.now(), "Keine Daten - Keine Daten")
       }
     }
@@ -96,15 +97,18 @@ object CalendarViewGuiFactory {
     val newTaskBtn = new Button("Neue Task") {
     }
 
-    val navBar = new ButtonBar {
-      buttons = Seq(
-        todayBtn,
-        prevWeekBtn,
-        prevDayBtn,
-        nextDayBtn,
-        nextWeekBtn,
-        newTaskBtn
-      )
+    val navBar = new HBox() {
+      alignment = Pos.Center
+      children = new ButtonBar {
+        buttons = Seq(
+          todayBtn,
+          prevWeekBtn,
+          prevDayBtn,
+          nextDayBtn,
+          nextWeekBtn,
+          newTaskBtn
+        )
+      }
     }
 
     val header = new VBox(5) {

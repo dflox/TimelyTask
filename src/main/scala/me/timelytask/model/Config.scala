@@ -23,8 +23,8 @@ object Config {
             CtrlLeft -> EventTypeId("PreviousWeek"),
             T -> EventTypeId("GoToToday"),
             W -> EventTypeId("ShowWholeWeek"),
-            CtrlPlus -> EventTypeId("ShowMoreDays"),
-            CtrlMinus -> EventTypeId("ShowLessDays")
+            Plus -> EventTypeId("ShowMoreDays"),
+            Minus -> EventTypeId("ShowLessDays")
           )
         )
       },
