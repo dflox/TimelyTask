@@ -22,7 +22,7 @@ class GuiCalendarView(override val render: (Scene, ViewType) => Unit,
         case Some(existingScene) =>
           existingScene.root = newRootPane
           Some(existingScene)
-        case None => val scene = new Scene(newRootPane, 900, 700)
+        case None => val scene = new Scene(newRootPane)
           render(scene, CALENDAR)
           Some(scene)
       }

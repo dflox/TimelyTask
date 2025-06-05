@@ -48,6 +48,8 @@ object CalendarViewGuiFactory {
                    ): Pane = {
     val rootPane = new BorderPane()
 
+    rootPane.setPrefSize(1000, 800)
+
     val timeSelection: TimeSelection = viewModel.timeSelection
     val daySpanList: List[DateTime] = timeSelection.getDaySpan
 
@@ -94,7 +96,39 @@ object CalendarViewGuiFactory {
       onAction = _ => viewTypeCommonsModule.eventContainer.nextWeek()
     }
 
-    val newTaskBtn = new Button("Neue Task") {
+    val newTaskBtn = new Button("Neue Random Task") {
+      onAction = _ => viewTypeCommonsModule.globalEventContainer.addRandomTask()
+    }
+
+    val newWindowBtn = new Button("Neues Fenster") {
+      onAction = _ => viewTypeCommonsModule.globalEventContainer.newWindow()
+    }
+
+    val newInstanceBtn = new Button("Neue Instanz") {
+      onAction = _ => viewTypeCommonsModule.globalEventContainer.newInstance()
+    }
+
+    val undoBtn = new Button("Undo") {
+      onAction = _ => viewTypeCommonsModule.globalEventContainer.undo()
+    }
+
+    val redoBtn = new Button("Redo") {
+      onAction = _ => viewTypeCommonsModule.globalEventContainer.redo()
+    }
+
+    val shutdownApplicationBtn = new Button("App beenden") {
+      onAction = _ => viewTypeCommonsModule.globalEventContainer.shutdownApplication()
+    }
+
+    val globalNavBar = new HBox() {
+      alignment = Pos.Center
+      children = Seq(
+        undoBtn,
+        redoBtn,
+        newWindowBtn,
+        newInstanceBtn,
+        shutdownApplicationBtn
+      )
     }
 
     val navBar = new HBox() {
@@ -114,7 +148,7 @@ object CalendarViewGuiFactory {
     val header = new VBox(5) {
       alignment = Pos.Center
       padding = Insets(10)
-      children = Seq(headerLabel, dateSpanLabel, navBar)
+      children = Seq(headerLabel, dateSpanLabel, globalNavBar, navBar)
     }
 
     val calendarGrid = createCalendarGrid(viewModel)
@@ -139,7 +173,7 @@ object CalendarViewGuiFactory {
 
     val weekDates: Seq[LocalDate] = viewModel.timeSelection.getDaySpan.map(toJavaLocalDate)
 
-    val allTasks: List[Task] = List.empty[Task] //Task über ViewModel holen
+    val allTasks: List[Task] = viewModel.model.tasks
 
     grid.columnConstraints.add(new ColumnConstraints {
       halignment = HPos.Right; minWidth = 50; prefWidth = 60

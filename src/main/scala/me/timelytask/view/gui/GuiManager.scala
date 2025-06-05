@@ -36,18 +36,23 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
     if activeViewPublisher.getValue.contains(viewType) then {
       Platform.runLater {
         stage.foreach(_.setScene(scene))
+        stage.foreach(_.sizeToScene())
+        stage.foreach(_.centerOnScreen())
       }
     }
   }
 
   override def run(): Unit = {
     Platform.runLater {
-      val initialScene = new Scene(800, 600)
+      val initialScene = new Scene(300, 300)
       calendarView.render(initialScene, CALENDAR)      
       
       stage = Some(new Stage {
-        title = "TimelyTask GUI"
+        title = "TimelyTask"
         scene = initialScene
+        onCloseRequest = _ => {
+          calendarViewModule.globalEventContainer.closeInstance()
+        }
       })
       stage.foreach(_.show())
       calendarView.init()
