@@ -15,18 +15,24 @@ import me.timelytask.view.views.{CalendarCommonsModule, CalendarCommonsModuleImp
 //TODO: create an interface for the UiInstance so the implementation is independent. Make sure 
 // that only the interface is ever used anywhere.
 
-class UiInstance(private val uiInstanceConfig: UiInstanceConfig,
-                 private val coreModule: CoreModule) {
+class UiInstance(protected val uiInstanceConfig: UiInstanceConfig,
+                 protected val coreModule: CoreModule) {
+
+  private val self = this
 
   def shutdown(): Unit = {
     uiManager.foreach(_.shutdown())
     eventHandler.shutdown()
   }
+
+  def addUi(uiType: UIType): Unit = {
+    addUiManager(uiType)
+  }
   
-  lazy val activeViewPublisher: Publisher[ViewType] = wire[PublisherImpl[ViewType]]
-  lazy val eventHandler: EventHandler = wire[EventHandlerImpl]
-  
-  lazy val globalEventContainer: GlobalEventContainer = wire[GlobalEventContainerImpl]
+  private lazy val activeViewPublisher: Publisher[ViewType] = wire[PublisherImpl[ViewType]]
+  private lazy val eventHandler: EventHandler = wire[EventHandlerImpl]
+
+  private lazy val globalEventContainer: GlobalEventContainer = wire[GlobalEventContainerImpl]
   
   //CalendarView
   private lazy val calendarViewModule: CalendarCommonsModule = wire[CalendarCommonsModuleImpl]
@@ -39,14 +45,21 @@ class UiInstance(private val uiInstanceConfig: UiInstanceConfig,
   def run(): Unit = {
     init()
     uiInstanceConfig.uis.foreach(addUiManager)
-    uiManager.foreach(_.run())
   }
 
   private def addUiManager(uiType: UIType): Unit = {
     uiType match {
-      case TUI => uiManager = uiManager.appended(wire[TUIManager])
-      case GUI => uiManager = uiManager.appended(wire[GuiManager])
-      case _ =>  throwUnknownManagerException(uiType)
+      case TUI => uiManager = {
+        val tuiManager= wire[TUIManager]
+        tuiManager.run()
+        uiManager.appended(tuiManager)
+      }
+      case GUI => uiManager = {
+        val guiManager = wire[GuiManager]
+        guiManager.run()
+        uiManager.appended(guiManager)
+      }
+      case null => throwUnknownManagerException(uiType)
     }
   }
   

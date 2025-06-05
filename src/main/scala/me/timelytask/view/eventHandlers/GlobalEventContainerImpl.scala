@@ -1,7 +1,9 @@
 package me.timelytask.view.eventHandlers
 
+import me.timelytask.UiInstance
 import me.timelytask.core.CoreModule
 import me.timelytask.model.Task
+import me.timelytask.model.settings.UIType.GUI
 import me.timelytask.model.settings.{TABLE, TASKEdit, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.Event
@@ -12,7 +14,9 @@ import scala.util.Random
 // TODO: add GlobalEventResolver and extend the Keymap to include the global events
 class GlobalEventContainerImpl(coreModule: CoreModule,
                                eventHandler: EventHandler,
-                               activeViewPublisher: Publisher[ViewType]) extends GlobalEventContainer {
+                               activeViewPublisher: Publisher[ViewType],
+                               uiInstance: UiInstance ) extends
+                                                                          GlobalEventContainer {
 
   override def undo(): Unit = eventHandler.handle(new Event[Unit](
     (args: Unit) => {
@@ -56,9 +60,23 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
     ()
   ){})
 
-  override def newWindow(): Unit = ???
+  override def newWindow(): Unit = eventHandler.handle(new Event[Unit](
+    (args: Unit) => {
+      uiInstance.addUi(GUI)
+      true
+    },
+    (args: Unit) => None,
+    ()
+  ){})
 
-  override def newInstance(): Unit = ???
+  override def newInstance(): Unit = eventHandler.handle(new Event[Unit](
+    (args: Unit) => {
+      coreModule.controllers.coreController.newInstance()
+      true
+    },
+    (args: Unit) => None,
+    ()
+  ){})
 
   override def addRandomTask(): Unit = eventHandler.handle(new Event[Unit](
     (args: Unit) => {
@@ -80,4 +98,13 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
   }
 
   override def newTask(): Unit = ()  //TODO
+
+  override def closeInstance(): Unit = eventHandler.handle(new Event[Unit](
+    (args: Unit) => {
+      coreModule.controllers.coreController.closeInstance(uiInstance)
+      true
+    },
+    (args: Unit) => None,
+    ()
+  ){})
 }

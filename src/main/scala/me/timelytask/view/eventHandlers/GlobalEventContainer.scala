@@ -1,7 +1,5 @@
 package me.timelytask.view.eventHandlers
 
-import me.timelytask.model.settings.ViewType
-
 trait GlobalEventContainer {
 
   def undo(): Unit
@@ -19,4 +17,6 @@ trait GlobalEventContainer {
   def newTask(): Unit
 
   def shutdownApplication(): Unit
+  
+  def closeInstance(): Unit
 }

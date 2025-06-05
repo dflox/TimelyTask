@@ -134,6 +134,21 @@ case object CtrlPlus extends Key
 
 case object CtrlMinus extends Key
 
+case object CtrlSpace extends Key
+
+case object CtrlF1 extends Key
+case object CtrlF2 extends Key
+case object CtrlF3 extends Key
+case object CtrlF4 extends Key
+case object CtrlF5 extends Key
+case object CtrlF6 extends Key
+case object CtrlF7 extends Key
+case object CtrlF8 extends Key
+case object CtrlF9 extends Key
+case object CtrlF10 extends Key
+case object CtrlF11 extends Key
+case object CtrlF12 extends Key
+
 // Letter keys
 case object A extends Key
 

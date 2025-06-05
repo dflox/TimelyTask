@@ -2,7 +2,9 @@ package me.timelytask.controller
 
 import me.timelytask.UiInstance
 import me.timelytask.controller.commands.*
-import me.timelytask.core.{CoreModule, StartUpConfig}
+import me.timelytask.core.{CoreModule, StartUpConfig, UiInstanceConfig}
+import me.timelytask.model.settings.CALENDAR
+import me.timelytask.model.settings.UIType.GUI
 
 class CoreControllerImpl(private val commandHandler: CommandHandler,
                          private val persistenceController: PersistenceController,
@@ -46,4 +48,18 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
   private def throwException_StartUpFailed(): Nothing = {
     throw new Exception("UI startup failed because the config is missing")
   }
+
+  override def newInstance(): Unit = uiInstances = {
+    val newUiInstance = new UiInstance(standardNewUiInstanceConfig, coreModule)
+    newUiInstance.run()
+    uiInstances.appended(newUiInstance)
+  }
+
+  override def closeInstance(uiInstance: UiInstance): Unit = {
+    uiInstances = uiInstances.filterNot(_ == uiInstance)
+    if(uiInstances.isEmpty) this.shutdownApplication()
+    else uiInstance.shutdown()
+  }
+
+  private val standardNewUiInstanceConfig: UiInstanceConfig = UiInstanceConfig(List(GUI), CALENDAR)
 }

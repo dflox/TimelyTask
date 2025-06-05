@@ -5,7 +5,7 @@ import me.timelytask.util.Publisher
 import me.timelytask.view.views.*
 
 trait UIManager[RenderType] {
-  def shutdown(): Unit
+  def shutdown(afterShutdownAction: () => Unit = () => ()): Unit
   
   protected val activeViewPublisher: Publisher[ViewType]
   protected val calendarViewModule: CalendarCommonsModule

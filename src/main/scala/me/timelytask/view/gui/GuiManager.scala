@@ -18,8 +18,11 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
   extends UIManager[Scene] {
   private var stage: Option[Stage] = None
 
-  override def shutdown(): Unit = {
-    stage.foreach(_.close())
+  override def shutdown(afterShutdownAction: () => Unit = () => ()): Unit = {
+    Platform.runLater {
+      stage.foreach(_.close())
+    }
+    afterShutdownAction()
   }
 
   private val dialogFactory: DialogFactory[Scene] = wire[DialogFactoryImpl]
@@ -38,12 +41,6 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
   }
 
   override def run(): Unit = {
-    calendarView.init()
-    taskEditView.init()
-
-    // CALENDAR als aktive View
-    activeViewPublisher.update(Some(CALENDAR))
-
     Platform.runLater {
       val initialScene = new Scene(800, 600)
       calendarView.render(initialScene, CALENDAR)      
@@ -53,8 +50,9 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
         scene = initialScene
       })
       stage.foreach(_.show())
-
-      //calendarView.update()
+      calendarView.init()
+      taskEditView.init()
     }
+
   }
 }

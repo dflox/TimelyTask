@@ -79,6 +79,23 @@ object KeyMapManager {
     keyMap.bind(CtrlX, "\u0018")
     keyMap.bind(CtrlY, "\u0019") // funktioniert oft nicht
     keyMap.bind(CtrlZ, "\u001a") // funktioniert oft nicht
+    
+    keyMap.bind(CtrlSpace, "\u0000")
+    keyMap.bind(CtrlPlus, "\u001b[1;5+")
+    keyMap.bind(CtrlMinus, "\u001b[1;5-")
+    
+    keyMap.bind(CtrlF1, "\u001b[1;5P")
+    keyMap.bind(CtrlF2, "\u001b[1;5Q")
+    keyMap.bind(CtrlF3, "\u001b[1;5R")
+    keyMap.bind(CtrlF4, "\u001b[1;5S")
+    keyMap.bind(CtrlF5, "\u001b[15;5~")
+    keyMap.bind(CtrlF6, "\u001b[17;5~")
+    keyMap.bind(CtrlF7, "\u001b[18;5~")
+    keyMap.bind(CtrlF8, "\u001b[19;5~")
+    keyMap.bind(CtrlF9, "\u001b[20;5~")
+    keyMap.bind(CtrlF10, "\u001b[21;5~")
+    keyMap.bind(CtrlF11, "\u001b[23;5~")
+    keyMap.bind(CtrlF12, "\u001b[24;5~")
 
     // Shift combinations
     keyMap.bind(ShiftUp, "\u001b[1;2A")

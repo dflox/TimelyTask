@@ -19,9 +19,10 @@ class GlobalEventResolverImpl( override protected val eventContainer: GlobalEven
       case EventTypeId("Undo") => eventContainer.undo()
       case EventTypeId("Redo") => eventContainer.redo()
       case EventTypeId("AddRandomTask") => eventContainer.addRandomTask()
-      case EventTypeId("Exit") => eventContainer.shutdownApplication()
-      case EventTypeId("NewWindow") => eventContainer.newWindow()
+      case EventTypeId("ShutdownApplication") => eventContainer.shutdownApplication()
+      case EventTypeId("NewGuiWindow") => eventContainer.newWindow()
       case EventTypeId("NewInstance") => eventContainer.newInstance()
+      case EventTypeId("CloseInstance") => eventContainer.closeInstance()
       case EventTypeId("NewTask") => eventContainer.newTask()
       case EventTypeId("SwitchToView") => eventContainer.switchToView()
       case _ => false

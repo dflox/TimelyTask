@@ -58,9 +58,10 @@ object Config {
         Z -> EventTypeId("Undo"),
         Y -> EventTypeId("Redo"),
         R -> EventTypeId("AddRandomTask"),
-        CtrlQ -> EventTypeId("Exit"),
-        CtrlG -> EventTypeId("NewWindow"),
+        CtrlF4 -> EventTypeId("ShutdownApplication"),
+        CtrlG -> EventTypeId("NewGuiWindow"),
         CtrlI -> EventTypeId("NewInstance"),
+        CtrlX -> EventTypeId("CloseInstance"),
         N -> EventTypeId("NewTask"),
         G -> EventTypeId("SwitchToView")
       )

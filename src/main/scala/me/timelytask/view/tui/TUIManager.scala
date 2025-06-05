@@ -19,11 +19,12 @@ class TUIManager(override val activeViewPublisher: Publisher[ViewType],
                 )
   extends UIManager[String] {
 
-  override def shutdown(): Unit = {
+  override def shutdown(afterShutdownAction: () => Unit = () => ()): Unit = {
     stopInput()
     terminal.puts(Capability.clear_screen)
     terminal.flush()
     terminal.close()
+    afterShutdownAction()
   }
 
   private def init(): Unit = {
