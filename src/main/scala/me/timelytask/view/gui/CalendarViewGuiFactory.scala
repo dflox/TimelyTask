@@ -1,6 +1,7 @@
 package me.timelytask.view.gui
 
 import com.github.nscala_time.time.Imports.{DateTime, Interval, Period}
+import me.timelytask.model.Task // Import the Task class
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.CalendarCommonsModule
@@ -31,6 +32,15 @@ object CalendarViewGuiFactory {
     LocalDate.of(dateTime.getYear, dateTime.getMonthOfYear, dateTime.getDayOfMonth)
   }
 
+  /**
+   * Updates or creates the content pane for the calendar view.
+   *
+   * @param viewModel The CalendarViewModel containing data for the view, including tasks.
+   *                  It is assumed that `viewModel` has a property `tasks: List[Task]`.
+   * @param currentScene The current scene, if any.
+   * @param viewTypeCommonsModule Common module for calendar view interactions.
+   * @return A Pane representing the calendar view.
+   */
   def updateContent(
                      viewModel: CalendarViewModel,
                      currentScene: Option[Scene],
@@ -67,6 +77,7 @@ object CalendarViewGuiFactory {
     val todayBtn = new Button("Heute") {
       onAction = _ => {
         println("Heute button clicked - goToToday action pending implementation")
+        // Example: viewTypeCommonsModule.eventContainer.goToToday()
       }
     }
     val prevWeekBtn = new Button("<< Woche") {
@@ -83,9 +94,6 @@ object CalendarViewGuiFactory {
     }
 
     val newTaskBtn = new Button("Neue Task") {
-      onAction = _ => {
-        // switch to TaskEditViewGui
-      }
     }
 
     val navBar = new ButtonBar {
@@ -112,26 +120,39 @@ object CalendarViewGuiFactory {
     rootPane
   }
 
+  /**
+   * Creates the main grid for the calendar, including day headers, time slots, and task cells.
+   *
+   * @param viewModel The CalendarViewModel containing time selection and tasks.
+   *                  It is assumed that `viewModel` has a property `tasks: List[Task]`.
+   * @return A GridPane representing the calendar layout.
+   */
   private def createCalendarGrid(viewModel: CalendarViewModel): GridPane = {
     val grid = new GridPane {
       hgap = 2; vgap = 2; padding = Insets(5)
+      // Debugging layout: style = "-fx-grid-lines-visible: true"
     }
 
     val weekDates: Seq[LocalDate] = viewModel.timeSelection.getDaySpan.map(toJavaLocalDate)
+
+    val allTasks: List[Task] = List.empty[Task] //Task über ViewModel holen
 
     grid.columnConstraints.add(new ColumnConstraints {
       halignment = HPos.Right; minWidth = 50; prefWidth = 60
     })
 
+    // Columns for days
     (0 until weekDates.length).foreach { _ =>
       grid.columnConstraints.add(new ColumnConstraints {
         minWidth = 80; prefWidth = 110; hgrow = scalafx.scene.layout.Priority.Always
       })
     }
 
+    // Row for day headers
     grid.rowConstraints.add(new RowConstraints {
       minHeight = 30; prefHeight = 40; valignment = VPos.Center
     })
+    // Rows for time slots
     (0 until numberOfTimeSlots).foreach { _ =>
       grid.rowConstraints.add(new RowConstraints {
         minHeight = 40; prefHeight = 50; vgrow = scalafx.scene.layout.Priority.Always
@@ -142,6 +163,7 @@ object CalendarViewGuiFactory {
       System.err.println("CalendarViewGuiFactory: No dates from timeSelection to display in grid.")
     }
 
+    // Day header labels (e.g., Mo 01.07)
     weekDates.zipWithIndex.foreach { case (date, colIdx) =>
       val dayOfWeekShortName = date.getDayOfWeek.getDisplayName(TextStyle.SHORT, germanLocale)
       val dayDateText = s"$dayOfWeekShortName ${date.format(dayMonthFormatter)}"
@@ -153,6 +175,7 @@ object CalendarViewGuiFactory {
       grid.children.add(dayLabel)
     }
 
+    // CTime labels (e.g., 08:00)
     (0 until numberOfTimeSlots).foreach { hourOffset =>
       val hour = startTimeHour + hourOffset
       val timeLabel = new Label(f"$hour%02d:00") {
@@ -162,14 +185,36 @@ object CalendarViewGuiFactory {
       grid.children.add(timeLabel)
     }
 
+    // Cells
     for {
       (date, dayCol) <- weekDates.zipWithIndex
       timeRow <- 0 until numberOfTimeSlots
     } {
-      val cell = new TextArea {
-        wrapText = true; editable = false
+      val hour = startTimeHour + timeRow
+      val cellStartDateTime = new DateTime(date.getYear, date.getMonthValue, date.getDayOfMonth, hour, 0, 0)
+      val cellEndDateTime = cellStartDateTime.plusHours(1)
+      val cellInterval = new Interval(cellStartDateTime, cellEndDateTime)
+
+      val tasksInCell: List[Task] = allTasks.filter { task =>
+        val taskStartDateTime = task.scheduleDate
+        val taskEndDateTime = taskStartDateTime.plus(task.tedDuration)
+        val taskInterval = new Interval(taskStartDateTime, taskEndDateTime)
+
+        taskInterval.overlaps(cellInterval)
       }
-      GridPane.setColumnIndex(cell, dayCol + 1); GridPane.setRowIndex(cell, timeRow + 1)
+
+      val cellContent = tasksInCell.map(_.name).mkString("\n") // Display task names, one per line
+
+      val cell = new TextArea {
+        text = cellContent
+        wrapText = true
+        editable = false
+        if (tasksInCell.nonEmpty) {
+          style = "-fx-control-inner-background: #e0f7fa;" // light cyan/blue background
+        }
+      }
+      GridPane.setColumnIndex(cell, dayCol + 1)
+      GridPane.setRowIndex(cell, timeRow + 1)
       grid.children.add(cell)
     }
     grid
