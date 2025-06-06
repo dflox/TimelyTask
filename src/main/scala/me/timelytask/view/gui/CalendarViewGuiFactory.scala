@@ -1,6 +1,6 @@
 package me.timelytask.view.gui
 
-import com.github.nscala_time.time.Imports.{DateTime, Interval, Period}
+import com.github.nscala_time.time.Imports.{DateTime, Interval, Period} // Interval might become unused
 import me.timelytask.model.Task
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.viewmodel.CalendarViewModel
@@ -213,7 +213,7 @@ object CalendarViewGuiFactory {
       grid.children.add(dayLabel)
     }
 
-    // CTime labels (e.g., 08:00)
+    // Time labels (e.g., 08:00)
     (0 until numberOfTimeSlots).foreach { hourOffset =>
       val hour = startTimeHour + hourOffset
       val timeLabel = new Label(f"$hour%02d:00") {
@@ -228,17 +228,16 @@ object CalendarViewGuiFactory {
       (date, dayCol) <- weekDates.zipWithIndex
       timeRow <- 0 until numberOfTimeSlots
     } {
+      // `hour` is the starting hour for the current cell's time slot (e.g., 8 for 8:00-9:00)
       val hour = startTimeHour + timeRow
-      val cellStartDateTime = new DateTime(date.getYear, date.getMonthValue, date.getDayOfMonth, hour, 0, 0)
-      val cellEndDateTime = cellStartDateTime.plusHours(1)
-      val cellInterval = new Interval(cellStartDateTime, cellEndDateTime)
 
       val tasksInCell: List[Task] = allTasks.filter { task =>
-        val taskStartDateTime = task.scheduleDate
-        val taskEndDateTime = taskStartDateTime.plus(task.tedDuration)
-        val taskInterval = new Interval(taskStartDateTime, taskEndDateTime)
+        val taskStartJodaDateTime: DateTime = task.scheduleDate
 
-        taskInterval.overlaps(cellInterval)
+        val taskStartDateJava: LocalDate = toJavaLocalDate(taskStartJodaDateTime)
+        val taskStartActualHour: Int = taskStartJodaDateTime.getHourOfDay
+
+        taskStartDateJava.equals(date) && taskStartActualHour == hour
       }
 
       val cellContent = tasksInCell.map(_.name).mkString("\n") // Display task names, one per line
