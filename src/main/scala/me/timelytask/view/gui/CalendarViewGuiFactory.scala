@@ -4,7 +4,7 @@ import com.github.nscala_time.time.Imports.{DateTime, Interval, Period}
 import me.timelytask.model.Task
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.viewmodel.CalendarViewModel
-import me.timelytask.view.views.CalendarCommonsModule
+import me.timelytask.view.views.commonsModules.CalendarCommonsModule
 import scalafx.geometry.{HPos, Insets, Pos, VPos}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ButtonBar, Label, TextArea}

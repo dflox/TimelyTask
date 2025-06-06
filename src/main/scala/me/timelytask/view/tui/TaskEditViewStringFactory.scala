@@ -1,6 +1,6 @@
 package me.timelytask.view.tui
 
-import me.timelytask.controller.ThemeManager.{getTerminalBgColor, getTerminalColor}
+import me.timelytask.util.color.ThemeApplier.{getTerminalBgColor, getTerminalColor}
 import me.timelytask.model.Task
 import me.timelytask.model.settings.TASKEdit
 import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.colored

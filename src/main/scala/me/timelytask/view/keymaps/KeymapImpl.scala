@@ -2,7 +2,7 @@ package me.timelytask.view.keymaps
 
 import me.timelytask.model.settings.{KeymapConfig, ViewType}
 import me.timelytask.model.utility.Key
-import me.timelytask.view.events.Event
+import me.timelytask.view.events.event.Event
 import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.views.View
 

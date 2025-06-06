@@ -3,6 +3,7 @@ package me.timelytask.view.gui
 import me.timelytask.model.settings.{TASKEdit, ViewType}
 import me.timelytask.view.viewmodel.TaskEditViewModel
 import me.timelytask.view.views.*
+import me.timelytask.view.views.commonsModules.TaskEditCommonsModule
 import scalafx.scene.Scene
 import scalafx.scene.layout.BorderPane
 

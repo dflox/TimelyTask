@@ -6,6 +6,7 @@ import me.timelytask.model.utility.{Key, Space}
 import me.timelytask.view.keymaps.{GlobalEventResolverImpl, Keymap, KeymapImpl}
 import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
+import me.timelytask.view.views.commonsModules.ViewTypeCommonsModule
 
 import scala.util.{Failure, Success, Try}
 

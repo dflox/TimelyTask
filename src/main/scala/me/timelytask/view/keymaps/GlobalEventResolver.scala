@@ -1,7 +1,7 @@
 package me.timelytask.view.keymaps
 
 import me.timelytask.model.settings.EventTypeId
-import me.timelytask.view.eventHandlers.GlobalEventContainer
+import me.timelytask.view.events.container.GlobalEventContainer
 
 trait GlobalEventResolver {
   protected val eventContainer: GlobalEventContainer

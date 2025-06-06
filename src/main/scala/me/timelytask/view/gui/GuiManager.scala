@@ -3,10 +3,10 @@ package me.timelytask.view.gui
 import com.softwaremill.macwire.{wire, wireWith}
 import me.timelytask.model.settings.{CALENDAR, ViewType}
 import me.timelytask.util.Publisher
-import me.timelytask.view.UIManager
 import me.timelytask.view.gui.dialog.DialogFactoryImpl
 import me.timelytask.view.viewmodel.CalendarViewModel
-import me.timelytask.view.views.{CalendarCommonsModule, CalendarView, DialogFactory, TaskEditCommonsModule, TaskEditView}
+import me.timelytask.view.views.commonsModules.{CalendarCommonsModule, TaskEditCommonsModule}
+import me.timelytask.view.views.{CalendarView, DialogFactory, TaskEditView, UIManager}
 import scalafx.application.Platform
 import scalafx.Includes.*
 import scalafx.scene.Scene

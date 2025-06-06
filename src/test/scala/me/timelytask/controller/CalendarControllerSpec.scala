@@ -14,7 +14,7 @@ import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.viewModelPublisher
 
 class CalendarControllerSpec extends AnyWordSpec
-                             with MockitoSugar with CoreInitializer {
+                             with MockitoSugar {
 
   "The CalendarController" should {
 

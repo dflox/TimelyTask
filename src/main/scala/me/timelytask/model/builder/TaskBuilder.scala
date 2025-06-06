@@ -1,4 +1,3 @@
-// src/main/scala/me/timelytask/model/TaskBuilder.scala
 package me.timelytask.model.builder
 
 import com.github.nscala_time.time.Imports.*

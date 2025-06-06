@@ -3,6 +3,7 @@ package me.timelytask.view.gui
 import me.timelytask.model.settings.{CALENDAR, ViewType}
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.*
+import me.timelytask.view.views.commonsModules.CalendarCommonsModule
 import scalafx.application.Platform
 import scalafx.scene.Scene
 

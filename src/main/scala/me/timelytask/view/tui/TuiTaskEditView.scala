@@ -7,6 +7,7 @@ import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.TaskEditViewModel
 import me.timelytask.view.viewmodel.dialogmodel.{InputDialogModel, OptionDialogModel}
 import me.timelytask.view.views.*
+import me.timelytask.view.views.commonsModules.TaskEditCommonsModule
 
 class TuiTaskEditView(override val render: (String, ViewType) => Unit,
                       private val tuiModel: Unit => ModelTUI,

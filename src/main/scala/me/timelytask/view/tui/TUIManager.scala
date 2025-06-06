@@ -4,9 +4,9 @@ import com.softwaremill.macwire.{wire, wireWith}
 import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
 import me.timelytask.model.utility.{Key, Unknown}
 import me.timelytask.util.{CancelableFuture, Publisher}
-import me.timelytask.view.UIManager
 import me.timelytask.view.tui.dialog.DialogFactoryTUI
 import me.timelytask.view.views.*
+import me.timelytask.view.views.commonsModules.{CalendarCommonsModule, TaskEditCommonsModule}
 import org.jline.keymap.BindingReader
 import org.jline.terminal.{Terminal, TerminalBuilder}
 import org.jline.utils.InfoCmp.Capability

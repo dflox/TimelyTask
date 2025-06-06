@@ -1,7 +1,7 @@
 package me.timelytask.controller
 
-import me.timelytask.UiInstance
 import me.timelytask.core.StartUpConfig
+import me.timelytask.view.UiInstance
 
 trait CoreController {
   def shutdownApplication(): Unit

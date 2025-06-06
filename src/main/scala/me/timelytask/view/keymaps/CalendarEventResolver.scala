@@ -1,7 +1,7 @@
 package me.timelytask.view.keymaps
 
 import me.timelytask.model.settings.{CALENDAR, EventTypeId}
-import me.timelytask.view.eventHandlers.CalendarEventContainer
+import me.timelytask.view.events.container.CalendarEventContainer
 import me.timelytask.view.viewmodel.CalendarViewModel
 
 class CalendarEventResolver(override protected val eventContainer: CalendarEventContainer) 
