@@ -1,8 +1,8 @@
-package me.timelytask.view.tui.dialog
+package me.timelytask.view.views.viewImpl.tui.dialog
 
 import com.github.nscala_time.time.Imports.DateTime
-import me.timelytask.view.tui.dialog.*
 import me.timelytask.view.viewmodel.dialogmodel.*
+import me.timelytask.view.views.viewImpl.tui.dialog.{ConfirmDialogTUI, DateInputDialogTUI}
 import me.timelytask.view.views.{Dialog, DialogFactory}
 import org.jline.terminal.Terminal
 

@@ -5,7 +5,7 @@ import me.timelytask.view.events.EventHandler
 import me.timelytask.view.events.event.Event
 
 import java.util.concurrent.LinkedBlockingQueue
-import scala.concurrent.duration.{Duration, MILLISECONDS, SECONDS}
+import scala.concurrent.duration.{Duration, MILLISECONDS}
 
 class EventHandlerImpl extends EventHandler {
   private val eventQueue: LinkedBlockingQueue[Event[?]] = new LinkedBlockingQueue[Event[?]]()

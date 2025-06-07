@@ -1,7 +1,7 @@
 package me.timelytask.controller.controllersImpl
 
 import me.timelytask.controller.commands.*
-import me.timelytask.controller.{Controller, ModelController}
+import me.timelytask.controller.ModelController
 import me.timelytask.model.{Model, Task}
 import me.timelytask.util.Publisher
 

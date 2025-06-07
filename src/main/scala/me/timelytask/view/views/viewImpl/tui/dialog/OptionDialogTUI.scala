@@ -1,7 +1,7 @@
-package me.timelytask.view.tui.dialog
+package me.timelytask.view.views.viewImpl.tui.dialog
 
-import me.timelytask.view.tui.TuiUtils.{createLine, cutText}
 import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, OptionDialogModel}
+import me.timelytask.view.views.viewImpl.tui.TuiUtils.{createLine, cutText}
 import org.jline.terminal.Terminal
 
 class OptionDialogTUI[T](override val dialogModel: Option[OptionDialogModel[T]],

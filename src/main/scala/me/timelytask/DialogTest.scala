@@ -1,6 +1,6 @@
 //package me.timelytask
 //
-//import me.timelytask.view.tui.dialog.DialogFactoryTUI
+//import me.timelytask.view.views.viewImpl.tui.dialog.DialogFactoryTUI
 //import me.timelytask.view.viewmodel.dialogmodel.{ConfirmDialogModel, OptionDialogModel, 
 // InputDialogModel}
 //import org.jline.terminal.{Terminal, TerminalBuilder}

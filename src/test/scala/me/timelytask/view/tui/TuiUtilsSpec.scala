@@ -1,7 +1,8 @@
 package me.timelytask.view.tui
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.view.tui.TuiUtils.*
+import me.timelytask.view.views.viewImpl.tui.TuiUtils
+import me.timelytask.view.views.viewImpl.tui.TuiUtils.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 

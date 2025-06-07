@@ -1,4 +1,4 @@
-package me.timelytask.controller
+package me.timelytask.controller.controllersImpl
 
 import me.timelytask.controller.commands.CommandHandler
 import me.timelytask.model.Model

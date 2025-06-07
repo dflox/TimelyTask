@@ -1,8 +1,8 @@
 import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
-import me.timelytask.view.tui.CalendarViewStringFactory
 import me.timelytask.view.viewmodel.CalendarViewModel
+import me.timelytask.view.views.viewImpl.tui.CalendarViewStringFactory
 
 val processStart: DateTime = DateTime.now()
 val processEnd: DateTime = processStart + (1.hours + 10.minutes + 5.seconds)

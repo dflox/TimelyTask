@@ -1,9 +1,10 @@
-package me.timelytask.view.tui
+package me.timelytask.view.views.viewImpl.tui
 
 import me.timelytask.model.settings.{CALENDAR, ViewType}
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.*
 import me.timelytask.view.views.commonsModules.CalendarCommonsModule
+import me.timelytask.view.views.viewImpl.tui.{CalendarViewStringFactory, ModelTUI}
 
 class TuiCalendarView(override val render: (String, ViewType) => Unit,
                       private val tuiModel: Unit => ModelTUI,

@@ -10,11 +10,11 @@ import me.timelytask.view.events.EventHandler
 import me.timelytask.view.events.container.GlobalEventContainer
 import me.timelytask.view.events.container.contailerImpl.GlobalEventContainerImpl
 import me.timelytask.view.events.handler.EventHandlerImpl
-import me.timelytask.view.gui.GuiManager
-import me.timelytask.view.tui.TUIManager
 import me.timelytask.view.views.UIManager
 import me.timelytask.view.views.commonsModules.commonsModuleImpl.{CalendarCommonsModuleImpl, TaskEditCommonsModuleImpl}
 import me.timelytask.view.views.commonsModules.{CalendarCommonsModule, TaskEditCommonsModule}
+import me.timelytask.view.views.viewImpl.gui.GuiManager
+import me.timelytask.view.views.viewImpl.tui.TUIManager
 
 //TODO: create an interface for the UiInstance so the implementation is independent. Make sure 
 // that only the interface is ever used anywhere.

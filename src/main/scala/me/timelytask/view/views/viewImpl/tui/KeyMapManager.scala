@@ -1,4 +1,4 @@
-package me.timelytask.view.tui
+package me.timelytask.view.views.viewImpl.tui
 
 import me.timelytask.model
 import me.timelytask.model.settings

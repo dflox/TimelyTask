@@ -1,4 +1,4 @@
-package me.timelytask.view.gui.dialog
+package me.timelytask.view.views.viewImpl.gui.dialog
 
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.views.{Dialog, DialogFactory}

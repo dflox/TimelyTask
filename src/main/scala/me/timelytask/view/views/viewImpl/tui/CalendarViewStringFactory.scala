@@ -1,12 +1,12 @@
-package me.timelytask.view.tui
+package me.timelytask.view.views.viewImpl.tui
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.util.color.ThemeApplier.{getTerminalBgColor, getTerminalColor}
 import me.timelytask.model.Task
 import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.{BOLD, ITALIC, colored}
 import me.timelytask.model.utility.TimeSelection
-import me.timelytask.view.tui.TuiUtils.*
+import me.timelytask.util.color.ThemeApplier.{getTerminalBgColor, getTerminalColor}
+import TuiUtils.*
 import me.timelytask.view.viewmodel.elemts.TaskCollection
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 

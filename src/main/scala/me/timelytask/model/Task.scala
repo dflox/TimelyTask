@@ -1,3 +1,4 @@
+
 // src/main/scala/me/timelytask/model/Task.scala
 package me.timelytask.model
 

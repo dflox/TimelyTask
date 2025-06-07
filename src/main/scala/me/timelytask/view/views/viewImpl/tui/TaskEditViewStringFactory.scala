@@ -1,12 +1,13 @@
-package me.timelytask.view.tui
+package me.timelytask.view.views.viewImpl.tui
 
-import me.timelytask.util.color.ThemeApplier.{getTerminalBgColor, getTerminalColor}
 import me.timelytask.model.Task
 import me.timelytask.model.settings.TASKEdit
 import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.colored
-import me.timelytask.view.tui.TuiUtils.{alignTop, columnSpacer, createLine, createSpace}
+import me.timelytask.util.color.ThemeApplier.{getTerminalBgColor, getTerminalColor}
+import TuiUtils.{alignTop, columnSpacer, createLine, createSpace}
 import me.timelytask.view.viewmodel.*
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, InputField, OptionInputField}
+import me.timelytask.view.views.viewImpl.tui.{ModelTUI, StringFactory}
 
 object TaskEditViewStringFactory extends StringFactory[TASKEdit, TaskEditViewModel] {
 

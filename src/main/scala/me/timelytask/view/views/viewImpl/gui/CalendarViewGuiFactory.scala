@@ -1,6 +1,6 @@
-package me.timelytask.view.gui
+package me.timelytask.view.views.viewImpl.gui
 
-import com.github.nscala_time.time.Imports.{DateTime, Interval, Period} // Interval might become unused
+import com.github.nscala_time.time.Imports.{DateTime, Interval, Period}
 import me.timelytask.model.Task
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.viewmodel.CalendarViewModel
@@ -8,13 +8,12 @@ import me.timelytask.view.views.commonsModules.CalendarCommonsModule
 import scalafx.geometry.{HPos, Insets, Pos, VPos}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ButtonBar, Label, TextArea}
-import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, HBox, Pane, RowConstraints, VBox}
+import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight}
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
+import java.time.format.{DateTimeFormatter, TextStyle}
 import java.util.Locale
 
 object CalendarViewGuiFactory {

@@ -1,11 +1,11 @@
-package me.timelytask.view.gui
+package me.timelytask.view.views.viewImpl.gui
 
 import me.timelytask.view.viewmodel.TaskEditViewModel
-import scalafx.geometry.{Insets, Pos, HPos}
-import scalafx.scene.control.{Button, ButtonBar, ComboBox, DatePicker, Label, TextArea, TextField}
-import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, Priority, RowConstraints, VBox}
-import scalafx.scene.text.{Font, FontWeight, Text}
 import scalafx.collections.ObservableBuffer
+import scalafx.geometry.{HPos, Insets, Pos}
+import scalafx.scene.control.*
+import scalafx.scene.layout.*
+import scalafx.scene.text.{Font, FontWeight, Text}
 
 object TaskEditViewGuiFactory {
   /**

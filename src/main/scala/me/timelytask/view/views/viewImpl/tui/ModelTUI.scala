@@ -1,4 +1,4 @@
-package me.timelytask.view.tui
+package me.timelytask.view.views.viewImpl.tui
 
 case class ModelTUI(terminalHeight: Int,
                     terminalWidth: Int) {

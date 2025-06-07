@@ -1,4 +1,4 @@
-package me.timelytask.view.gui
+package me.timelytask.view.views.viewImpl.gui
 
 import me.timelytask.model.settings.{TASKEdit, ViewType}
 import me.timelytask.view.viewmodel.TaskEditViewModel

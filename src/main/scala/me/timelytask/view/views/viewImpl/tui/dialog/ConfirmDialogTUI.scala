@@ -1,6 +1,6 @@
-package me.timelytask.view.tui.dialog
+package me.timelytask.view.views.viewImpl.tui.dialog
 
-import me.timelytask.view.tui.TuiUtils.createLine
+import me.timelytask.view.views.viewImpl.tui.TuiUtils.createLine
 import me.timelytask.view.viewmodel.dialogmodel.{ConfirmDialogModel, DialogModel}
 import org.jline.terminal.Terminal
 

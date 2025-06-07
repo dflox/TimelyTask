@@ -1,9 +1,10 @@
-package me.timelytask.view.gui
+package me.timelytask.view.views.viewImpl.gui
 
 import me.timelytask.model.settings.{CALENDAR, ViewType}
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.*
 import me.timelytask.view.views.commonsModules.CalendarCommonsModule
+import me.timelytask.view.views.viewImpl.gui.CalendarViewGuiFactory
 import scalafx.application.Platform
 import scalafx.scene.Scene
 
