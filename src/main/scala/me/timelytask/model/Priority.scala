@@ -1,6 +1,7 @@
 package me.timelytask.model
 
-import java.awt.Color
+import scalafx.scene.paint.Color
+
 import java.util.UUID
 
 case class Priority(name: String, description: String, rank: Int, color: Color,
