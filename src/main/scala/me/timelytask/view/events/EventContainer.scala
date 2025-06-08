@@ -12,7 +12,7 @@ trait EventContainer[T <: ViewType, M <: ViewModel[T, M]](viewModelPublisher: Pu
                                                           coreModule: CoreModule) {
 
   def init(): Unit = {
-    coreModule.registerModelUpdater(updateModel)
+    coreModule.registerModelListener(updateModel)
   }
   
   protected def updateModel(model: Option[Model]): Boolean

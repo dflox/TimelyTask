@@ -13,7 +13,7 @@ trait CoreModule{
   
   lazy val controllers: ControllerModule = wire[ControllerModuleImpl]
   
-  def registerModelUpdater(listener: Option[Model] => Unit): Unit = modelPublisher.addListener(listener)
+  def registerModelListener(listener: Option[Model] => Unit): Unit = modelPublisher.addListener(listener)
 }
 
 class CoreModuleImpl extends CoreModule

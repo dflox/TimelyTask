@@ -12,6 +12,6 @@ case class Model(tasks: List[Task],
 }
 
 object Model {
-  val default: Model = new Model(List[Task](), HashSet[Tag](), HashSet[Priority](),
+  val emptyModel: Model = new Model(List[Task](), HashSet[Tag](), HashSet[Priority](),
     HashSet[TaskState](), Config.default)
 }

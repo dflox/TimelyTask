@@ -25,7 +25,7 @@ trait ViewTypeCommonsModule[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewM
   lazy val eventResolver: EventResolver[VT, ViewModelType]
 
   def registerKeymapUpdater(listener: KeymapConfig => Unit): Unit =
-    coreModule.registerModelUpdater(mapViewKeymapConfig(listener))
+    coreModule.registerModelListener(mapViewKeymapConfig(listener))
 
   protected def mapViewKeymapConfig(listener: KeymapConfig => Unit): Option[Model] => Unit
 }

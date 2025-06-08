@@ -14,7 +14,7 @@ class PersistenceControllerImpl(modelPublisher: Publisher[Model],
 
   private def saveToDB(model: Option[Model]): Unit = model.map((m) => ())
 
-  private[controller] def loadModelFromDB(): Unit = modelPublisher.update(Some(Model.default))
+  private[controller] def loadModelFromDB(): Unit = modelPublisher.update(Some(Model.emptyModel))
 
   override def SaveModelTo(serializationType: String): Unit = ???
 
