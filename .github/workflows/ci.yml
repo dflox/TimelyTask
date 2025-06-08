@@ -19,6 +19,7 @@ jobs:
       - name: Generate Cache Key
         id: cache-key
         run: echo "key=$(echo ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }})" >> $GITHUB_ENV
+             echo "::set-output name=key::${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}"
 
       - name: Cache SBT Dependencies
         uses: actions/cache@v3
