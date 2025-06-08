@@ -16,10 +16,14 @@ jobs:
     outputs:
       cache-key: ${{ steps.cache-key.outputs.key }}
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Generate Cache Key
         id: cache-key
-        run: echo "key=$(echo ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }})" >> $GITHUB_ENV
-             echo "::set-output name=key::${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}"
+        run: |
+          CACHE_KEY="${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}"
+          echo "key=$CACHE_KEY" >> $GITHUB_OUTPUT
 
       - name: Cache SBT Dependencies
         uses: actions/cache@v3
@@ -62,6 +66,9 @@ jobs:
       - name: Check Java Version
         run: java -version
 
+      - name: Setup SBT
+        uses: sbt/setup-sbt@v1
+
       - name: Restore Cached Dependencies
         uses: actions/cache@v3
         with:
@@ -70,6 +77,8 @@ jobs:
             ~/.sbt
             ~/.coursier
           key: ${{ needs.cache.outputs.cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
 
       - name: Run Tests
         run: sbt clean test
@@ -93,6 +102,9 @@ jobs:
           java-version: 11
           distribution: temurin
 
+      - name: Setup SBT
+        uses: sbt/setup-sbt@v1
+
       - name: Restore Cached Dependencies
         uses: actions/cache@v3
         with:
@@ -101,6 +113,8 @@ jobs:
             ~/.sbt
             ~/.coursier
           key: ${{ needs.cache.outputs.cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
 
       - name: Generate Coverage Report and Upload to Coveralls
         run: |
