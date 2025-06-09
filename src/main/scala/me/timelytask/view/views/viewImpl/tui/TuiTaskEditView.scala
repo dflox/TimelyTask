@@ -5,7 +5,6 @@ import me.timelytask.util.Publisher
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.TaskEditViewModel
-import me.timelytask.view.viewmodel.dialogmodel.{InputDialogModel, OptionDialogModel}
 import me.timelytask.view.views.*
 import me.timelytask.view.views.commonsModules.TaskEditCommonsModule
 import me.timelytask.view.views.viewImpl.tui.{ModelTUI, TaskEditViewStringFactory}
@@ -13,7 +12,7 @@ import me.timelytask.view.views.viewImpl.tui.{ModelTUI, TaskEditViewStringFactor
 class TuiTaskEditView(override val render: (String, ViewType) => Unit,
                       private val tuiModel: Unit => ModelTUI,
                       override val dialogFactory: DialogFactory[String],
-                      override val viewTypeCommonsModule: TaskEditCommonsModule)
+                      viewTypeCommonsModule: TaskEditCommonsModule)
   extends TaskEditView[String]
   with View[TASKEdit, TaskEditViewModel, String](viewTypeCommonsModule) {
 

@@ -1,15 +1,17 @@
 package me.timelytask.view.views.viewImpl.tui
 
-import com.softwaremill.macwire.{wire, wireWith}
-import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
-import me.timelytask.model.utility.{Key, Unknown}
-import me.timelytask.util.{CancelableFuture, Publisher}
+import com.softwaremill.macwire.{ wire, wireWith }
+import me.timelytask.model.settings.{ CALENDAR, TASKEdit, ViewType }
+import me.timelytask.model.utility.{ Key, Unknown }
+import me.timelytask.util.{ CancelableFuture, Publisher }
 import me.timelytask.view.views.*
-import me.timelytask.view.views.commonsModules.{CalendarCommonsModule, TaskEditCommonsModule}
+import me.timelytask.view.views.commonsModules.{
+  CalendarCommonsModule,
+  TaskEditCommonsModule
+}
 import me.timelytask.view.views.viewImpl.tui.dialog.DialogFactoryTUI
-import me.timelytask.view.views.viewImpl.tui.{KeyMapManager, ModelTUI, TuiCalendarView}
 import org.jline.keymap.BindingReader
-import org.jline.terminal.{Terminal, TerminalBuilder}
+import org.jline.terminal.{ Terminal, TerminalBuilder }
 import org.jline.utils.InfoCmp.Capability
 
 import java.io.PrintWriter
@@ -75,10 +77,10 @@ class TUIManager(override val activeViewPublisher: Publisher[ViewType],
   }
 
   private def startInput(): Unit = {
-    keyInputTask = Some(CancelableFuture(task = getInput()))
+    keyInputTask = Some(CancelableFuture(task = inputGetter()))
   }
 
-  private def getInput(): Unit = {
+  private def inputGetter(): Unit = {
     while (true) {
       handleNewKeyInput(getNextKey)
     }

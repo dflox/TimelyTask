@@ -9,16 +9,16 @@ import org.jline.terminal.Terminal
 class DialogFactoryTUI(terminal: Terminal) extends DialogFactory[String] {
   override def apply(dialogModel: Option[DialogModel[?]], currentView: Option[String])
   : Option[Dialog[?, String]] = {
-    dialogModel match {
-      case dialogModel: Option[OptionDialogModel[_]] => Some(OptionDialogTUI(dialogModel,
-        currentView, terminal))
-      case dialogModel: Option[ConfirmDialogModel] => Some(ConfirmDialogTUI(dialogModel,
-        currentView, terminal))
-      case dialogModel: Option[InputDialogModel[String]] => Some(TextInputDialogTUI(dialogModel,
-        currentView, terminal))
-      case dialogModel: Option[InputDialogModel[DateTime]] => Some(DateInputDialogTUI(dialogModel,
-        currentView, terminal))
-      case _ => None
+    dialogModel.map {
+      case dialogModel: OptionDialogModel[?] => OptionDialogTUI(Some(dialogModel),
+        currentView, terminal)
+      case dialogModel: ConfirmDialogModel => ConfirmDialogTUI(Some(dialogModel),
+        currentView, terminal)
+      case dialogModel: InputDialogModelString => TextInputDialogTUI(Some(dialogModel),
+        currentView, terminal)
+      case dialogModel: InputDialogModelDateTime => DateInputDialogTUI(Some(dialogModel),
+        currentView, terminal)
+      case dialogModel: InputDialogModelPeriod => ???
     }
   }
 }

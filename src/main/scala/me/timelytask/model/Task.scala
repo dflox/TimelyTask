@@ -1,5 +1,3 @@
-
-// src/main/scala/me/timelytask/model/Task.scala
 package me.timelytask.model
 
 import com.github.nscala_time.time.Imports.*
@@ -8,6 +6,7 @@ import me.timelytask.model.state.{ClosedState, DeletedState, OpenState, TaskStat
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
+import scala.util.{Try, Success, Failure}
 
 case class Task(name: String = "",
                 description: String = "",
@@ -27,14 +26,12 @@ case class Task(name: String = "",
 
   private def getState[TS <: TaskState](stateFinder: UUID => Option[TaskState], state: Option[UUID])
   : Option[TS] = {
-    // get the state of the task (State Pattern)
-    state match
-      case Some(s) => stateFinder(s) match
-        case Some(ts) => ts match
-          case ts: TS => Some(ts)
-          case _ => None
-        case None => None
-      case None => None
+    Try[Option[TS]]{
+      state.map(s => stateFinder(s).asInstanceOf[TS])
+    } match {
+      case Success(value) => value
+      case Failure(_) => None
+    }
   }
 
   def start(stateFinder: UUID => Option[TaskState], openState: Option[UUID]): Option[Task] = {

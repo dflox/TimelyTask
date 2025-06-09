@@ -19,8 +19,8 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
 
   // variables used to set the specific time format
   val startAt: LocalTime = new LocalTime(6, 45, 0) // The time the Rows start at
-  val minWidthTimeColoumn = 7 // The minimum width of the time column
-  val minWidthColoumn = 3
+  private val minWidthTimeColoumn = 7 // The minimum width of the time column
+  private val minWidthColoumn = 3
   val minTerminalWidth: Int = 2 + minWidthTimeColoumn +
     timeSelection.dayCount * (minWidthColoumn + 1)
   val headerHeight = 5
@@ -73,7 +73,7 @@ case class CalendarViewModel(timeSelection: TimeSelection = TimeSelection.defaul
         )
     }
 
-    if focusedElement.isDefined & focusedElement.isInstanceOf[TaskCollection] then
+    if focusedElement.isDefined && focusedElement.get.isInstanceOf[TaskCollection] then
       newFocusElementGrid = newFocusElementGrid.setFocusToElement(focusedElement).getOrElse(
         newFocusElementGrid.setFocusToElement(
           newFocusElementGrid.elementsList.find(focusable => {
