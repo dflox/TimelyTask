@@ -1,7 +1,12 @@
 package me.timelytask.view.viewmodel.elemts
 
-import com.github.nscala_time.time.Imports.{DateTime, Period}
-import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, InputDialogModel, InputDialogModelDateTime, InputDialogModelPeriod, InputDialogModelString}
+import com.github.nscala_time.time.Imports.{ DateTime, Period }
+import me.timelytask.view.viewmodel.dialogmodel.{
+  InputDialogModel,
+  InputDialogModelDateTime,
+  InputDialogModelPeriod,
+  InputDialogModelString
+}
 
 trait InputField[T](override val description: String, val defaultInput: Option[T], val
 displayFunc: T => String)

@@ -1,8 +1,6 @@
 package me.timelytask.view.views.viewImpl.tui.dialog
 
-import com.github.nscala_time.time.Imports.DateTime
 import me.timelytask.view.viewmodel.dialogmodel.*
-import me.timelytask.view.views.viewImpl.tui.dialog.{ConfirmDialogTUI, DateInputDialogTUI}
 import me.timelytask.view.views.{Dialog, DialogFactory}
 import org.jline.terminal.Terminal
 
@@ -18,7 +16,8 @@ class DialogFactoryTUI(terminal: Terminal) extends DialogFactory[String] {
         currentView, terminal)
       case dialogModel: InputDialogModelDateTime => DateInputDialogTUI(Some(dialogModel),
         currentView, terminal)
-      case dialogModel: InputDialogModelPeriod => ???
+      case dialogModel: InputDialogModelPeriod => PeriodInputDialogTUI(Some(dialogModel), 
+        currentView, terminal)
     }
   }
 }

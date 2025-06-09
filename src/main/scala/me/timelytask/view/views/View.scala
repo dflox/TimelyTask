@@ -1,14 +1,18 @@
 package me.timelytask.view.views
 
-import com.softwaremill.macwire.{wire, wireWith}
-import me.timelytask.model.settings.{KeymapConfig, ViewType}
-import me.timelytask.model.utility.{Key, Space}
-import me.timelytask.view.keymaps.{GlobalEventResolverImpl, Keymap, KeymapImpl}
+import com.softwaremill.macwire.wireWith
+import me.timelytask.model.settings.{ KeymapConfig, ViewType }
+import me.timelytask.model.utility.{ Key, Space }
+import me.timelytask.view.keymaps.{
+  GlobalEventResolverImpl,
+  Keymap,
+  KeymapImpl
+}
 import me.timelytask.view.viewmodel.ViewModel
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.views.commonsModules.ViewTypeCommonsModule
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 trait View[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType], RenderType]
 (protected val viewTypeCommonsModule: ViewTypeCommonsModule[VT, ViewModelType]) {

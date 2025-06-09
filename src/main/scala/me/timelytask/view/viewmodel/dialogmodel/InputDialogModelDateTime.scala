@@ -1,6 +1,6 @@
 package me.timelytask.view.viewmodel.dialogmodel
 
-import com.github.nscala_time.time.Imports.{DateTime, Period}
+import com.github.nscala_time.time.Imports.DateTime
 
 case class InputDialogModelDateTime(
     description: String,

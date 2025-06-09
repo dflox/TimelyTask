@@ -7,7 +7,8 @@ import me.timelytask.model.state.TaskState
 import me.timelytask.model.{Deadline, Model, Task}
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
-import me.timelytask.view.viewmodel.elemts.{DateInputField, FocusElementGrid, Focusable, InputField, OptionInputField, PeriodInputField, TextInputField}
+import me.timelytask.view.viewmodel.elemts.{DateInputField, FocusElementGrid, Focusable, 
+  InputField, OptionInputField, PeriodInputField, TextInputField}
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
@@ -15,7 +16,8 @@ import scala.compiletime.erasedValue
 import scala.util.{Failure, Success, Try}
 
 case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
-                             lastView: Option[ViewType], isNewTask: Boolean = false,
+                             lastView: Option[ViewType],
+                             isNewTask: Boolean = false,
                              protected var focusElementGrid: Option[FocusElementGrid] = None,
                              dialogModel: Option[DialogModel[?]] = None,
                              override val model: Model)
