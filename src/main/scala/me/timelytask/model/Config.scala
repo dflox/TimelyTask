@@ -6,9 +6,9 @@ import me.timelytask.model.utility.*
 
 case class Config(keymaps: Map[ViewType, KeymapConfig],
                   globalKeymap: KeymapConfig,
-                  defaultStartView: ViewType,
-                  defaultDataFileType: FileType,
-                  defaultTheme: Theme) {
+                  startView: ViewType,
+                  dataFileType: FileType,
+                  theme: Theme) {
 }
 
 object Config {
@@ -17,14 +17,14 @@ object Config {
       CALENDAR -> {
         KeymapConfig(
           mappings = Map(
-            ShiftRight -> EventTypeId("NextDay"),
-            ShiftLeft -> EventTypeId("PreviousDay"),
-            CtrlRight -> EventTypeId("NextWeek"),
-            CtrlLeft -> EventTypeId("PreviousWeek"),
-            T -> EventTypeId("GoToToday"),
-            W -> EventTypeId("ShowWholeWeek"),
-            Plus -> EventTypeId("ShowMoreDays"),
-            Minus -> EventTypeId("ShowLessDays")
+            Key.ShiftRight -> EventTypeId("NextDay"),
+            Key.ShiftLeft -> EventTypeId("PreviousDay"),
+            Key.CtrlRight -> EventTypeId("NextWeek"),
+            Key.CtrlLeft -> EventTypeId("PreviousWeek"),
+            Key.T -> EventTypeId("GoToToday"),
+            Key.W -> EventTypeId("ShowWholeWeek"),
+            Key.Plus -> EventTypeId("ShowMoreDays"),
+            Key.Minus -> EventTypeId("ShowLessDays")
           )
         )
       },
@@ -36,9 +36,9 @@ object Config {
       TASKEdit -> {
         KeymapConfig(
           mappings = Map(
-            MoveDown -> EventTypeId("NextField"),
-            MoveUp -> EventTypeId("PreviousField"),
-            CtrlS -> EventTypeId("SaveTask")
+            Key.MoveDown -> EventTypeId("NextField"),
+            Key.MoveUp -> EventTypeId("PreviousField"),
+            Key.CtrlS -> EventTypeId("SaveTask")
           )
         )
       },
@@ -55,19 +55,19 @@ object Config {
     ),
     globalKeymap = KeymapConfig(
       mappings = Map(
-        Z -> EventTypeId("Undo"),
-        Y -> EventTypeId("Redo"),
-        R -> EventTypeId("AddRandomTask"),
-        CtrlF4 -> EventTypeId("ShutdownApplication"),
-        CtrlG -> EventTypeId("NewGuiWindow"),
-        CtrlI -> EventTypeId("NewInstance"),
-        CtrlX -> EventTypeId("CloseInstance"),
-        N -> EventTypeId("NewTask"),
-        G -> EventTypeId("SwitchToView")
+        Key.Z -> EventTypeId("Undo"),
+        Key.Y -> EventTypeId("Redo"),
+        Key.R -> EventTypeId("AddRandomTask"),
+        Key.CtrlF4 -> EventTypeId("ShutdownApplication"),
+        Key.CtrlG -> EventTypeId("NewGuiWindow"),
+        Key.CtrlI -> EventTypeId("NewInstance"),
+        Key.CtrlX -> EventTypeId("CloseInstance"),
+        Key.N -> EventTypeId("NewTask"),
+        Key.G -> EventTypeId("SwitchToView")
       )
     ),
-    defaultStartView = CALENDAR,
-    defaultDataFileType = FileType.JSON,
-    defaultTheme = Theme.LIGHT
+    startView = CALENDAR,
+    dataFileType = FileType.JSON,
+    theme = Theme.LIGHT
   )
 }

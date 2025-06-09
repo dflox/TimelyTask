@@ -2,7 +2,7 @@ package me.timelytask.view.views.viewImpl.tui
 
 import com.softwaremill.macwire.{ wire, wireWith }
 import me.timelytask.model.settings.{ CALENDAR, TASKEdit, ViewType }
-import me.timelytask.model.utility.{ Key, Unknown }
+import me.timelytask.model.utility.Key
 import me.timelytask.util.{ CancelableFuture, Publisher }
 import me.timelytask.view.views.*
 import me.timelytask.view.views.commonsModules.{
@@ -89,7 +89,7 @@ class TUIManager(override val activeViewPublisher: Publisher[ViewType],
   private def getNextKey: Key = {
     Option(bindingReader.readBinding(KeyMapManager.keyMap)) match {
       case Some(key) => key
-      case None => Unknown
+      case None => Key.Unknown
     }
   }
 

@@ -2,7 +2,7 @@ package me.timelytask.view.views
 
 import com.softwaremill.macwire.wireWith
 import me.timelytask.model.settings.{ KeymapConfig, ViewType }
-import me.timelytask.model.utility.{ Key, Space }
+import me.timelytask.model.utility.Key
 import me.timelytask.view.keymaps.{
   GlobalEventResolverImpl,
   Keymap,
@@ -56,7 +56,7 @@ trait View[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType], Render
   def update(viewModel: Option[ViewModelType]): Boolean
 
   private def testIfFocusedElementIsTriggered(key: Option[Key]): (Boolean, Option[Key]) = {
-    if key == Space then
+    if key == Key.Space then
       return (interactWithFocusedElement, None)
     (false, key)
   }

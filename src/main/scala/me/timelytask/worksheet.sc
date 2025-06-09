@@ -1,5 +1,4 @@
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.model.utility.TimeSelection
 import me.timelytask.model.{Model, Task}
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.viewImpl.tui.CalendarViewStringFactory
