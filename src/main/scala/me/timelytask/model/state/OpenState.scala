@@ -4,8 +4,10 @@ import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.Task
 import scalafx.scene.paint.Color
 
-class OpenState(name: String, description: String, color: Color) extends TaskState(name,
-  description, color) {
+import java.util.UUID
+
+class OpenState(name: String, description: String, color: Color, uuid: UUID = UUID.randomUUID()) 
+  extends TaskState(name, description, color, uuid) {
   override def start(task: Task, openState: OpenState): Option[Task] = {
     // Do nothing
     // a task that is already open cannot be started again

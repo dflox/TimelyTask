@@ -6,8 +6,7 @@ import scalafx.scene.paint.Color
 
 import java.util.UUID
 
-trait TaskState(val name: String, val description: String, val color: Color) {
-  val uuid: UUID = UUID.randomUUID()
+trait TaskState(val name: String, val description: String, val color: Color, val uuid: UUID = UUID.randomUUID()) {
 
   def start(task: Task, openState: OpenState): Option[Task]
 
@@ -16,4 +15,18 @@ trait TaskState(val name: String, val description: String, val color: Color) {
   def delete(task: Task, deletedState: DeletedState): Option[Task]
 
   def extendDeadline(task: Task, extension: Period): Option[Task]
+}
+object TaskState {
+  def apply(name: String, description: String, color: Color): TaskState = {
+    new OpenState(name, description, color)
+  }
+
+  def apply(name: String, description: String, color: Color, stateType: String, UUID: UUID): TaskState = {
+    stateType match {
+      case "open" => new OpenState(name, description, color, UUID)
+      case "closed" => new ClosedState(name, description, color, UUID)
+      case "deleted" => new DeletedState(name, description, color, UUID)
+      case _ => throw new IllegalArgumentException(s"Unknown state type: $stateType")
+    }
+  }
 }

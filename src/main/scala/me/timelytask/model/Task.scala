@@ -6,7 +6,7 @@ import me.timelytask.model.state.{ClosedState, DeletedState, OpenState, TaskStat
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
-import scala.util.{Try, Success, Failure}
+import scala.util.{Failure, Success, Try}
 
 case class Task(name: String = "",
                 description: String = "",
@@ -18,15 +18,14 @@ case class Task(name: String = "",
                 tedDuration: Period = 1.hour.toPeriod,
                 dependentOn: HashSet[UUID] = new HashSet[UUID](),
                 reoccurring: Boolean = false,
-                recurrenceInterval: Period = 1.week.toPeriod) {
-
-  val uuid: UUID = UUID.randomUUID()
-  val realDuration: Option[Period] = None
-  val completionDate: Option[DateTime] = None
+                recurrenceInterval: Period = 1.week.toPeriod,
+                uuid: UUID = UUID.randomUUID(),
+                realDuration: Option[Period] = None,
+                completionDate: Option[DateTime] = None) {
 
   private def getState[TS <: TaskState](stateFinder: UUID => Option[TaskState], state: Option[UUID])
   : Option[TS] = {
-    Try[Option[TS]]{
+    Try[Option[TS]] {
       state.map(s => stateFinder(s).asInstanceOf[TS])
     } match {
       case Success(value) => value
