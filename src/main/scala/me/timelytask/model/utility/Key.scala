@@ -3,133 +3,135 @@ package me.timelytask.model.utility
 sealed trait Key
 
 object Key {
-
-  def fromString(s: String): Key = s match {
-    case "Up"          => MoveUp
-    case "Down"        => MoveDown
-    case "Left"        => MoveLeft
-    case "Right"       => MoveRight
-    case "Home"        => Home
-    case "End"         => End
-    case "PageUp"      => PageUp
-    case "PageDown"    => PageDown
-    case "Insert"      => Insert
-    case "Delete"      => Delete
-    case "Backspace"   => Backspace
-    case "Tab"         => Tab
-    case "Space"       => Space
-    case "Enter"       => Enter
-    case "Dot"         => Dot
-    case "Comma"       => Comma
-    case "Colon"       => Colon
-    case "Semicolon"   => Semicolon
-    case "Plus"        => Plus
-    case "Minus"       => Minus
-    case "Slash"       => Slash
-    case "Backslash"   => Backslash
-    case "F1"          => F1
-    case "F2"          => F2
-    case "F3"          => F3
-    case "F4"          => F4
-    case "F5"          => F5
-    case "F6"          => F6
-    case "F7"          => F7
-    case "F8"          => F8
-    case "F9"          => F9
-    case "F10"         => F10
-    case "F11"         => F11
-    case "F12"         => F12
-    case "Ctrl+Up"     => CtrlUp
-    case "Ctrl+Down"   => CtrlDown
-    case "Ctrl+Left"   => CtrlLeft
-    case "Ctrl+Right"  => CtrlRight
-    case "Shift+Up"    => ShiftUp
-    case "Shift+Down"  => ShiftDown
-    case "Shift+Left"  => ShiftLeft
-    case "Shift+Right" => ShiftRight
-    case "Alt+Up"      => AltUp
-    case "Alt+Down"    => AltDown
-    case "Alt+Left"    => AltLeft
-    case "Alt+Right"   => AltRight
-    case "Ctrl+A"      => CtrlA
-    case "Ctrl+B"      => CtrlB
-    case "Ctrl+C"      => CtrlC
-    case "Ctrl+D"      => CtrlD
-    case "Ctrl+E"      => CtrlE
-    case "Ctrl+F"      => CtrlF
-    case "Ctrl+G"      => CtrlG
-    case "Ctrl+H"      => CtrlH
-    case "Ctrl+I"      => CtrlI
-    case "Ctrl+J"      => CtrlJ
-    case "Ctrl+K"      => CtrlK
-    case "Ctrl+L"      => CtrlL
-    case "Ctrl+M"      => CtrlM
-    case "Ctrl+N"      => CtrlN
-    case "Ctrl+O"      => CtrlO
-    case "Ctrl+P"      => CtrlP
-    case "Ctrl+Q"      => CtrlQ
-    case "Ctrl+R"      => CtrlR
-    case "Ctrl+S"      => CtrlS
-    case "Ctrl+T"      => CtrlT
-    case "Ctrl+U"      => CtrlU
-    case "Ctrl+V"      => CtrlV
-    case "Ctrl+W"      => CtrlW
-    case "Ctrl+X"      => CtrlX
-    case "Ctrl+Y"      => CtrlY
-    case "Ctrl+Z"      => CtrlZ
-    case "Ctrl+Plus"   => CtrlPlus
-    case "Ctrl+Minus"  => CtrlMinus
-    case "Ctrl+Space"  => CtrlSpace
-    case "Ctrl+F1"     => CtrlF1
-    case "Ctrl+F2"     => CtrlF2
-    case "Ctrl+F3"     => CtrlF3
-    case "Ctrl+F4"     => CtrlF4
-    case "Ctrl+F5"     => CtrlF5
-    case "Ctrl+F6"     => CtrlF6
-    case "Ctrl+F7"     => CtrlF7
-    case "Ctrl+F8"     => CtrlF8
-    case "Ctrl+F9"     => CtrlF9
-    case "Ctrl+F10"    => CtrlF10
-    case "Ctrl+F11"    => CtrlF11
-    case "Ctrl+F12"    => CtrlF12
-    case "A"           => A
-    case "B"           => B
-    case "C"           => C
-    case "D"           => D
-    case "E"           => E
-    case "F"           => F
-    case "G"           => G
-    case "H"           => H
-    case "I"           => I
-    case "J"           => J
-    case "K"           => K
-    case "L"           => L
-    case "M"           => M
-    case "N"           => N
-    case "O"           => O
-    case "P"           => P
-    case "Q"           => Q
-    case "R"           => R
-    case "S"           => S
-    case "T"           => T
-    case "U"           => U
-    case "V"           => V
-    case "W"           => W
-    case "X"           => X
-    case "Y"           => Y
-    case "Z"           => Z
-    case "Num0"        => Num0
-    case "Num1"        => Num1
-    case "Num2"        => Num2
-    case "Num3"        => Num3
-    case "Num4"        => Num4
-    case "Num5"        => Num5
-    case "Num6"        => Num6
-    case "Num7"        => Num7
-    case "Num8"        => Num8
-    case "Num9"        => Num9
-    case "Unknown"     => Unknown
-    case _             => Unknown // Default to Unknown if no match found
+  val keyMap: Map[String, Key] = Map(
+    MoveUp.toString -> MoveUp,
+    MoveDown.toString -> MoveDown,
+    MoveLeft.toString -> MoveLeft,
+    MoveRight.toString -> MoveRight,
+    Home.toString -> Home,
+    End.toString -> End,
+    PageUp.toString -> PageUp,
+    PageDown.toString -> PageDown,
+    Insert.toString -> Insert,
+    Delete.toString -> Delete,
+    Backspace.toString -> Backspace,
+    Tab.toString -> Tab,
+    Space.toString -> Space,
+    Enter.toString -> Enter,
+    Dot.toString -> Dot,
+    Comma.toString -> Comma,
+    Colon.toString -> Colon,
+    Semicolon.toString -> Semicolon,
+    Plus.toString -> Plus,
+    Minus.toString -> Minus,
+    Slash.toString -> Slash,
+    Backslash.toString -> Backslash,
+    F1.toString -> F1,
+    F2.toString -> F2,
+    F3.toString -> F3,
+    F4.toString -> F4,
+    F5.toString -> F5,
+    F6.toString -> F6,
+    F7.toString -> F7,
+    F8.toString -> F8,
+    F9.toString -> F9,
+    F10.toString -> F10,
+    F11.toString -> F11,
+    F12.toString -> F12,
+    CtrlUp.toString -> CtrlUp,
+    CtrlDown.toString -> CtrlDown,
+    CtrlLeft.toString -> CtrlLeft,
+    CtrlRight.toString -> CtrlRight,
+    ShiftUp.toString -> ShiftUp,
+    ShiftDown.toString -> ShiftDown,
+    ShiftLeft.toString -> ShiftLeft,
+    ShiftRight.toString -> ShiftRight,
+    AltUp.toString -> AltUp,
+    AltDown.toString -> AltDown,
+    AltLeft.toString -> AltLeft,
+    AltRight.toString -> AltRight,
+    CtrlA.toString -> CtrlA,
+    CtrlB.toString -> CtrlB,
+    CtrlC.toString -> CtrlC,
+    CtrlD.toString -> CtrlD,
+    CtrlE.toString -> CtrlE,
+    CtrlF.toString -> CtrlF,
+    CtrlG.toString -> CtrlG,
+    CtrlH.toString -> CtrlH,
+    CtrlI.toString -> CtrlI,
+    CtrlJ.toString -> CtrlJ,
+    CtrlK.toString -> CtrlK,
+    CtrlL.toString -> CtrlL,
+    CtrlM.toString -> CtrlM,
+    CtrlN.toString -> CtrlN,
+    CtrlO.toString -> CtrlO,
+    CtrlP.toString -> CtrlP,
+    CtrlQ.toString -> CtrlQ,
+    CtrlR.toString -> CtrlR,
+    CtrlS.toString -> CtrlS,
+    CtrlT.toString -> CtrlT,
+    CtrlU.toString -> CtrlU,
+    CtrlV.toString -> CtrlV,
+    CtrlW.toString -> CtrlW,
+    CtrlX.toString -> CtrlX,
+    CtrlY.toString -> CtrlY,
+    CtrlZ.toString -> CtrlZ,
+    CtrlPlus.toString -> CtrlPlus,
+    CtrlMinus.toString -> CtrlMinus,
+    CtrlSpace.toString -> CtrlSpace,
+    CtrlF1.toString -> CtrlF1,
+    CtrlF2.toString -> CtrlF2,
+    CtrlF3.toString -> CtrlF3,
+    CtrlF4.toString -> CtrlF4,
+    CtrlF5.toString -> CtrlF5,
+    CtrlF6.toString -> CtrlF6,
+    CtrlF7.toString -> CtrlF7,
+    CtrlF8.toString -> CtrlF8,
+    CtrlF9.toString -> CtrlF9,
+    CtrlF10.toString -> CtrlF10,
+    CtrlF11.toString -> CtrlF11,
+    CtrlF12.toString -> CtrlF12,
+    A.toString -> A,
+    B.toString -> B,
+    C.toString -> C,
+    D.toString -> D,
+    E.toString -> E,
+    F.toString -> F,
+    G.toString -> G,
+    H.toString -> H,
+    I.toString -> I,
+    J.toString -> J,
+    K.toString -> K,
+    L.toString -> L,
+    M.toString -> M,
+    N.toString -> N,
+    O.toString -> O,
+    P.toString -> P,
+    Q.toString -> Q,
+    R.toString -> R,
+    S.toString -> S,
+    T.toString -> T,
+    U.toString -> U,
+    V.toString -> V,
+    W.toString -> W,
+    X.toString -> X,
+    Y.toString -> Y,
+    Z.toString -> Z,
+    Num0.toString -> Num0,
+    Num1.toString -> Num1,
+    Num2.toString -> Num2,
+    Num3.toString -> Num3,
+    Num4.toString -> Num4,
+    Num5.toString -> Num5,
+    Num6.toString -> Num6,
+    Num7.toString -> Num7,
+    Num8.toString -> Num8,
+    Num9.toString -> Num9,
+    Unknown.toString -> Unknown
+  )
+  
+  def fromString(s: String): Key = {
+    keyMap.getOrElse(s, Unknown)
   }
 
 // Basic movement

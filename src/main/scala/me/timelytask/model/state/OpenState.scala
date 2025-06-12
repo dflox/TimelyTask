@@ -27,3 +27,15 @@ class OpenState(name: String, description: String, color: Color, uuid: UUID = UU
     Some(task.copy(deadline = newDeadline))
   }
 }
+
+object OpenState {
+  val stateType: String = "open"
+
+  def apply(name: String, description: String, color: Color): OpenState = {
+    new OpenState(name, description, color)
+  }
+
+  def apply(name: String, description: String, color: Color, uuid: UUID): OpenState = {
+    new OpenState(name, description, color, uuid)
+  }
+}

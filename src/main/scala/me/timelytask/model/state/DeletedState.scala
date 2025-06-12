@@ -28,3 +28,14 @@ class DeletedState(name: String, description: String, color: Color, uuid: UUID =
     None
   }
 }
+object DeletedState {
+  val stateType: String = "deleted"
+
+  def apply(name: String, description: String, color: Color): DeletedState = {
+    new DeletedState(name, description, color)
+  }
+
+  def apply(name: String, description: String, color: Color, uuid: UUID): DeletedState = {
+    new DeletedState(name, description, color, uuid)
+  }
+}

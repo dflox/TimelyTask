@@ -6,7 +6,17 @@ import scalafx.scene.paint.Color
 
 import java.util.UUID
 
-trait TaskState(val name: String, val description: String, val color: Color, val uuid: UUID = UUID.randomUUID()) {
+// TODO: Make TaskState a sealed trait to restrict its subclasses and make the subclasses case 
+//  classes so the equals method can be removed
+trait TaskState(val name: String, val description: String, val color: Color, val uuid: UUID =
+  UUID.randomUUID()) {
+
+  override def equals(obj: Any): Boolean = obj match {
+    case that: TaskState => this.uuid == that.uuid
+    case _ => false
+  }
+
+  def stateType: String = this.getClass.getSimpleName.stripSuffix("State").toLowerCase
 
   def start(task: Task, openState: OpenState): Option[Task]
 
@@ -23,9 +33,9 @@ object TaskState {
 
   def apply(name: String, description: String, color: Color, stateType: String, UUID: UUID): TaskState = {
     stateType match {
-      case "open" => new OpenState(name, description, color, UUID)
-      case "closed" => new ClosedState(name, description, color, UUID)
-      case "deleted" => new DeletedState(name, description, color, UUID)
+      case OpenState.stateType => new OpenState(name, description, color, UUID)
+      case ClosedState.stateType => new ClosedState(name, description, color, UUID)
+      case DeletedState.stateType => new DeletedState(name, description, color, UUID)
       case _ => throw new IllegalArgumentException(s"Unknown state type: $stateType")
     }
   }

@@ -75,6 +75,11 @@ case class Task(name: String = "",
       None
     }
   }
+
+  override def equals(obj: Any): Boolean = obj match {
+    case that: Task => this.uuid == that.uuid
+    case _ => false
+  }
 }
 
 object Task {

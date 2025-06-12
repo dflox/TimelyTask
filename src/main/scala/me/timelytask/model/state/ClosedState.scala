@@ -8,6 +8,7 @@ import java.util.UUID
 
 class ClosedState(name: String, description: String, color: Color, uuid: UUID = UUID.randomUUID())
   extends TaskState(name, description, color, uuid) {
+  
   override def start(task: Task, openState: OpenState): Option[Task] = {
     // Do nothing
     // a closed task cannot be started
@@ -30,5 +31,16 @@ class ClosedState(name: String, description: String, color: Color, uuid: UUID = 
     // Do nothing
     // a closed task cannot have its deadline extended
     None
+  }
+}
+object ClosedState {
+  val stateType: String = "closed"
+  
+  def apply(name: String, description: String, color: Color): ClosedState = {
+    new ClosedState(name, description, color)
+  }
+  
+  def apply(name: String, description: String, color: Color, uuid: UUID): ClosedState = {
+    new ClosedState(name, description, color, uuid)
   }
 }
