@@ -13,7 +13,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import scalafx.scene.paint.Color
 
 import scala.collection.immutable.HashSet
-
+//TODO: test failures of decoding for coverage
 class EncoderDecoderExtensionSpec extends AnyWordSpec {
   "The ViewTypeEncoder and ViewTypeDecoder" should {
     "correctly encode and decode a ViewType" in {

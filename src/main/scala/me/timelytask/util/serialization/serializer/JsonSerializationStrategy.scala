@@ -4,6 +4,8 @@ import io.circe.{Json, parser}
 import me.timelytask.util.serialization.{SerializationStrategy, TypeDecoder, TypeEncoder}
 
 class JsonSerializationStrategy extends SerializationStrategy{
+  override val fileExtension: String = "json"
+  
   override def serialize[T](obj: T)(using typeEncoder: TypeEncoder[T]): String = {
     typeEncoder(obj).spaces2
   }
