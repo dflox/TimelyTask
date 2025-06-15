@@ -32,6 +32,47 @@ class ModelControllerSpec extends AnyWordSpec
     }
   }
 
+  "The ModelController" should {
+
+    "be able to remove a Task from the Model" in {
+      // Setup
+      val coreModule = wire[CoreModuleImpl]
+      val task = Task.exampleTask
+      coreModule.controllers.modelController.addTask(task)
+      val callbackHelper = new CallbackHelper[Model]
+      callbackHelper.registerCallback(coreModule.registerModelListener)
+
+      // Action
+      coreModule.controllers.modelController.removeTask(task)
+
+      // Assert
+      val model = callbackHelper.getCallbackResults(2)
+      model.length shouldBe 1
+      model.head.tasks should not contain task
+    }
+  }
+
+    "The ModelController" should {
+
+        "be able to update a Task in the Model" in {
+        // Setup
+        val coreModule = wire[CoreModuleImpl]
+        val task = Task.exampleTask
+        coreModule.controllers.modelController.addTask(task)
+        val updatedTask = task.copy(name = "Updated Task")
+        val callbackHelper = new CallbackHelper[Model]
+        callbackHelper.registerCallback(coreModule.registerModelListener)
+
+        // Action
+        coreModule.controllers.modelController.updateTask(updatedTask)
+
+        // Assert
+        val model = callbackHelper.getCallbackResults(2)
+        model.length shouldBe 1
+        model.head.tasks should contain(updatedTask)
+        }
+    }
+
   class CallbackHelper[ListenerType] {
     private val callback = mock[Option[ListenerType] => Unit]
     def registerCallback(listenerRegistration: (Option[ListenerType] => Unit) => Unit): Unit = {
