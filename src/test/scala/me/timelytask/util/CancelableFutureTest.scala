@@ -77,5 +77,6 @@ class CancelableFutureTest extends AnyFunSuite with Matchers with Eventually {
       case Some(Failure(ex)) => ex shouldBe a [CancellationException]
       case other => fail(s"Future should have failed with CancellationException, but was $other")
     }
+    cf.isCompleted should be (true)
   }
 }
