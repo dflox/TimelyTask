@@ -31,7 +31,7 @@ trait View[VT <: ViewType, ViewModelType <: ViewModel[VT, ViewModelType], Render
   
   def dialogFactory: DialogFactory[RenderType]
 
-  private var keymap: Option[Keymap[VT, ViewModelType]] = None 
+  protected var keymap: Option[Keymap[VT, ViewModelType]] = None
   
   def render: (RenderType, ViewType) => Unit
 
