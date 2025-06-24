@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
-class PublisherImplSpec extends AnyWordSpec
+class PublisherSpec extends AnyWordSpec
                         with MockitoSugar {
   "The Publisher" should {
     // TODO: Nach Implementierung von anderen Tests schauen, wie Code Coverage ist
