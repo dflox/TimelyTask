@@ -2,9 +2,11 @@ package me.timelytask.view.viewmodel
 
 import com.github.nscala_time.time.Imports.{DateTime, Period}
 import me.timelytask.model.builder.TaskBuilder
+import me.timelytask.model.deadline.Deadline
 import me.timelytask.model.settings.*
 import me.timelytask.model.state.TaskState
-import me.timelytask.model.{Deadline, Model, Task}
+import me.timelytask.model.Model
+import me.timelytask.model.task.Task
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.{DateInputField, FocusElementGrid, Focusable, 

@@ -65,4 +65,6 @@ class PersistenceControllerImpl(modelPublisher: Publisher[Model],
       case None => false
     }
   }
+
+  override private[controller] def provideModelFromDB(userName: String): Unit = ???
 }

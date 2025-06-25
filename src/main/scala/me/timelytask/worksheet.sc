@@ -1,6 +1,7 @@
 import com.github.nscala_time.time.Imports.*
 import io.circe.Decoder
-import me.timelytask.model.{Model, Task}
+import me.timelytask.model.Model
+import me.timelytask.model.task.Task
 import me.timelytask.util.serialization.SerializationStrategy
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.viewImpl.tui.CalendarViewStringFactory

@@ -1,7 +1,7 @@
 package me.timelytask.view.views.viewImpl.gui
 
 import com.github.nscala_time.time.Imports.{DateTime, Interval, Period}
-import me.timelytask.model.Task
+import me.timelytask.model.task.Task
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.commonsModules.CalendarCommonsModule

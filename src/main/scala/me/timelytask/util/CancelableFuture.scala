@@ -26,7 +26,6 @@ class CancelableFuture[ReturnType](
   def cancel(): Boolean = {
     val cancelResult = executor.shutdownNow()
     promise.tryFailure(new CancellationException("Task was cancelled"))
-
     !cancelResult.isEmpty
   }
 

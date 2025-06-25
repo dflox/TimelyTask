@@ -1,5 +1,4 @@
-package me.timelytask.model
-
+package me.timelytask.model.config
 import io.circe.generic.auto.*
 import me.timelytask.model.settings.*
 import me.timelytask.model.utility.*
@@ -8,8 +7,7 @@ case class Config(keymaps: Map[ViewType, KeymapConfig],
                   globalKeymap: KeymapConfig,
                   startView: ViewType,
                   dataFileType: FileType,
-                  theme: Theme) {
-}
+                  theme: Theme)
 
 object Config {
   val default: Config = Config(

@@ -1,7 +1,8 @@
 package me.timelytask.model.builder
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.model.{Deadline, Task}
+import me.timelytask.model.deadline.Deadline
+import me.timelytask.model.task.Task
 
 import java.util.UUID
 import scala.collection.immutable.HashSet

@@ -2,7 +2,8 @@ package me.timelytask.controller
 
 import com.softwaremill.macwire.wire
 import me.timelytask.core.CoreModuleImpl
-import me.timelytask.model.{Model, Task}
+import me.timelytask.model.Model
+import me.timelytask.model.task.Task
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.{timeout, verify}
 import org.scalatest.matchers.should.Matchers.*

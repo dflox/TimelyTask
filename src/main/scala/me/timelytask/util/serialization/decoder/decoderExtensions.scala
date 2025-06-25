@@ -4,8 +4,14 @@ import com.github.nscala_time.time.Imports.DateTime
 import io.circe.{Decoder, KeyDecoder}
 import me.timelytask.core.{StartUpConfig, UiInstanceConfig}
 import me.timelytask.model.*
+import me.timelytask.model.config.Config
+import me.timelytask.model.deadline.Deadline
+import me.timelytask.model.priority.Priority
 import me.timelytask.model.settings.*
 import me.timelytask.model.state.TaskState
+import me.timelytask.model.tag.Tag
+import me.timelytask.model.task.Task
+import me.timelytask.model.user.User
 import me.timelytask.model.utility.Key
 import org.joda.time.Period
 import scalafx.scene.paint.Color
@@ -110,6 +116,14 @@ extension (d: Decoder.type) {
     Decoder.fileType,
     Decoder.theme
   )
+  
+  def user: Decoder[User] = Decoder.forProduct1[User, String](
+    "name"
+  )(
+    User.apply
+  )(
+    Decoder.decodeString
+  )
 
   def tag: Decoder[Tag] = Decoder.forProduct3[Tag, String, String, UUID](
     "name", "description", "uuid"
@@ -162,7 +176,7 @@ extension (d: Decoder.type) {
     Decoder.decodeBoolean,
     Decoder.decodeUUID
   )
-  
+
   def dateTime: Decoder[DateTime] = Decoder.decodeString.emap { str =>
     try {
       Right(DateTime.parse(str))
@@ -171,7 +185,7 @@ extension (d: Decoder.type) {
       case e: Exception => Left(s"Error decoding DateTime: $str. ${e.getMessage}")
     }
   }
-  
+
   def period: Decoder[Period] = Decoder.decodeString.emap { str =>
     try {
       Right(Period.parse(str))
@@ -180,8 +194,8 @@ extension (d: Decoder.type) {
       case e: Exception => Left(s"Error decoding Period: $str. ${e.getMessage}")
     }
   }
-  
-  def deadline: Decoder[Deadline] = Decoder.forProduct3[Deadline, DateTime, Option[DateTime], 
+
+  def deadline: Decoder[Deadline] = Decoder.forProduct3[Deadline, DateTime, Option[DateTime],
     Option[DateTime]](
     "date", "initialDate", "completionDate"
   )(
@@ -192,7 +206,7 @@ extension (d: Decoder.type) {
     Decoder.decodeOption(Decoder.dateTime)
   )
 
-  def task: Decoder[Task] = Decoder.forProduct14[Task,
+  def task: Decoder[Task] = Decoder.forProduct13[Task,
     String,
     String,
     Option[UUID],
@@ -205,10 +219,9 @@ extension (d: Decoder.type) {
     Boolean,
     Period,
     UUID,
-  Option[Period],
-  Option[DateTime]](
+    Option[Period]](
     "name", "description", "priority", "tags", "deadline", "scheduleDate", "state", "tedDuration",
-    "dependentOn", "reoccurring", "recurrenceInterval", "uuid", "realDuration", "completionDate"
+    "dependentOn", "reoccurring", "recurrenceInterval", "uuid", "realDuration"
   )(
     Task.apply
   )(
@@ -224,13 +237,12 @@ extension (d: Decoder.type) {
     Decoder.decodeBoolean,
     Decoder.period,
     Decoder.decodeUUID,
-    Decoder.decodeOption(Decoder.period),
-    Decoder.decodeOption(Decoder.dateTime)
+    Decoder.decodeOption(Decoder.period)
   )
 
-  def model: Decoder[Model] = Decoder.forProduct5[Model, List[Task], HashSet[Tag],
-    HashSet[Priority], HashSet[TaskState], Config](
-    "tasks", "tags", "priorities", "states", "config"
+  def model: Decoder[Model] = Decoder.forProduct6[Model, List[Task], HashSet[Tag],
+    HashSet[Priority], HashSet[TaskState], Config, User](
+    "tasks", "tags", "priorities", "states", "config", "user"
   )(
     Model.apply
   )(
@@ -238,6 +250,7 @@ extension (d: Decoder.type) {
     Decoder.decodeHashSet(Decoder.tag),
     Decoder.decodeHashSet(Decoder.priority),
     Decoder.decodeHashSet(Decoder.taskState),
-    Decoder.config
+    Decoder.config,
+    Decoder.user
   )
 }

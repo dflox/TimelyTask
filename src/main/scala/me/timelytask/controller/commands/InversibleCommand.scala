@@ -1,7 +1,5 @@
 package me.timelytask.controller.commands
 
-import me.timelytask.model.{Priority, State, Tag, Task}
-
 trait InversibleHandler[Args] {
   def apply(args: Args): Boolean
 

@@ -3,7 +3,8 @@ package me.timelytask.view.viewmodel
 import com.github.nscala_time.time.Imports.*
 import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.utility.TimeSelection
-import me.timelytask.model.{Model, Task}
+import me.timelytask.model.Model
+import me.timelytask.model.task.Task
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
 import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, TaskCollection}
 

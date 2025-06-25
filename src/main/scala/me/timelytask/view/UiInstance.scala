@@ -20,7 +20,8 @@ import me.timelytask.view.views.viewImpl.tui.TUIManager
 // that only the interface is ever used anywhere.
 
 class UiInstance(protected val uiInstanceConfig: UiInstanceConfig,
-                 protected val coreModule: CoreModule) {
+                 protected val coreModule: CoreModule,
+                 protected val userToken: String) {
 
   private val self = this
 
@@ -38,10 +39,8 @@ class UiInstance(protected val uiInstanceConfig: UiInstanceConfig,
 
   private lazy val globalEventContainer: GlobalEventContainer = wire[GlobalEventContainerImpl]
   
-  //CalendarView
   private lazy val calendarViewModule: CalendarCommonsModule = wire[CalendarCommonsModuleImpl]
-
-  //TaskEditView
+  
   private lazy val taskEditViewModule: TaskEditCommonsModule = wire[TaskEditCommonsModuleImpl]
   
   private var uiManager: Vector[UIManager[?]] = Vector.empty

@@ -1,6 +1,6 @@
 package me.timelytask.controller
 
-import me.timelytask.model.Task
+import me.timelytask.model.task.Task
 
 trait ModelController {
   def addTask(task: Task): Unit

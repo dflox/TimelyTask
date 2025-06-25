@@ -3,9 +3,14 @@ package me.timelytask.util.serialization
 import com.github.nscala_time.time.Imports.DateTime
 import io.circe.{Decoder, Encoder}
 import me.timelytask.core.{StartUpConfig, UiInstanceConfig}
-import me.timelytask.model.{Config, Deadline, Model, Priority, Tag, Task}
+import me.timelytask.model.config.Config
+import me.timelytask.model.deadline.Deadline
+import me.timelytask.model.priority.Priority
+import me.timelytask.model.Model
 import me.timelytask.model.settings.{CALENDAR, EventTypeId, FileType, KeymapConfig, TASKEdit, Theme, UIType, ViewType}
 import me.timelytask.model.state.{ClosedState, DeletedState, OpenState, TaskState}
+import me.timelytask.model.tag.Tag
+import me.timelytask.model.task.Task
 import me.timelytask.model.utility.Key
 import me.timelytask.util.serialization.encoder.*
 import me.timelytask.util.serialization.decoder.*

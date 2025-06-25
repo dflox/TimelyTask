@@ -2,7 +2,8 @@ package me.timelytask.view.events.container.contailerImpl
 
 import me.timelytask.core.CoreModule
 import me.timelytask.model.settings.ViewType
-import me.timelytask.model.{Model, Task}
+import me.timelytask.model.Model
+import me.timelytask.model.task.Task
 import me.timelytask.util.Publisher
 import me.timelytask.view.events.{EventContainer, EventHandler}
 import me.timelytask.view.events.container.TaskEditEventContainer
@@ -11,10 +12,11 @@ import me.timelytask.view.viewmodel.TaskEditViewModel
 class TaskEditEventContainerImpl(taskEditViewModelPublisher: Publisher[TaskEditViewModel],
                                  activeViewPublisher: Publisher[ViewType],
                                  eventHandler: EventHandler,
-                                 coreModule: CoreModule)
+                                 coreModule: CoreModule,
+                                 userToken: String)
   extends TaskEditEventContainer
   with EventContainer(
-    taskEditViewModelPublisher, activeViewPublisher, eventHandler, coreModule) {
+    taskEditViewModelPublisher, activeViewPublisher, eventHandler, coreModule, userToken) {
 
   //  def initi(): Unit = {
   //

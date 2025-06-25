@@ -8,12 +8,17 @@ import me.timelytask.util.publisher.PublisherImpl
 
 trait CoreModule{
   private lazy val self: CoreModule = this
-  
-  private lazy val modelPublisher: Publisher[Model] = wire[PublisherImpl[Model]]
+
+  private[core] lazy val modelPublisher: Publisher[Model] = wire[PublisherImpl[Model]]
   
   lazy val controllers: ControllerModule = wire[ControllerModuleImpl]
   
-  def registerModelListener(listener: Option[Model] => Unit): Unit = modelPublisher.addListener(listener)
+  def registerModelListener(listener: Option[Model] => Unit, userToken: String): Unit = modelPublisher
+    .addListener(listener = listener, target = Some(userToken))
+  
+  def removeUserSession(userName: String): Unit = {
+    modelPublisher.removeTarget(userName)
+  }
 }
 
 class CoreModuleImpl extends CoreModule

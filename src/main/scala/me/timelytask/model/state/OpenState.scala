@@ -1,7 +1,7 @@
 package me.timelytask.model.state
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.model.Task
+import me.timelytask.model.task.Task
 import scalafx.scene.paint.Color
 
 import java.util.UUID

@@ -8,11 +8,6 @@ trait PersistenceController {
   private[controller] def init(): Unit
 
   /**
-   * Loads the current model from the database.
-   */
-  private[controller] def loadModelFromDB(): Unit
-
-  /**
    * Saves the current model to a file.
    *
    * @param folderPath Optional path to the folder where the model will be saved.
@@ -34,7 +29,14 @@ trait PersistenceController {
    *                                  empty.
    */
   def loadModel(folderPathWithFileName: String): Boolean
-
+  
+  /**
+   * Loads a model for a specific user.
+   * If the model is not found in the database, it will be created.
+   * @param userName The name of the user whose model is to be loaded.
+   */
+  private[controller] def provideModelFromDB(userName: String): Unit
+  
   /**
    * Sets the serialization type for the persistence controller.
    * @param serializationType the type of serialization to use, e.g., "json", "xml" or "yaml".

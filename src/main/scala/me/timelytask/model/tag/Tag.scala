@@ -1,4 +1,4 @@
-package me.timelytask.model
+package me.timelytask.model.tag
 
 import java.util.UUID
 
