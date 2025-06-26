@@ -66,5 +66,6 @@ class PersistenceControllerImpl(modelPublisher: Publisher[Model],
     }
   }
 
-  override private[controller] def provideModelFromDB(userName: String): Unit = ???
+  override private[controller] def provideModelFromDB(userName: String): Unit = modelPublisher
+    .update(target = Some(userName), newValue = Some(Model.emptyModel))
 }

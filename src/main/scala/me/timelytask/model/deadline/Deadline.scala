@@ -5,11 +5,13 @@ import me.timelytask.util.extensions.equalsWithComparison
 
 /**
  * Deadline class represents a deadline with a specific date, an optional initial date,
- * @param date the deadline date
- * @param initialDate an optional initial date for the deadline
+ *
+ * @param date           the deadline date
+ * @param initialDate    an optional initial date for the deadline
  * @param completionDate an optional completion date for the deadline
  */
-case class Deadline(date: DateTime, initialDate: Option[DateTime],
+case class Deadline(date: DateTime,
+                    initialDate: Option[DateTime],
                     completionDate: Option[DateTime]) {
   /**
    * Checks if the deadline is completed.
@@ -37,8 +39,8 @@ case class Deadline(date: DateTime, initialDate: Option[DateTime],
   override def equals(obj: Any): Boolean = obj match {
     case that: Deadline =>
       this.date.isEqual(that.date) &&
-      this.initialDate.equalsWithComparison(that.initialDate, _.isEqual(_)) &&
-      this.completionDate.equalsWithComparison(that.completionDate, _.isEqual(_))
+        this.initialDate.equalsWithComparison(that.initialDate, _.isEqual(_)) &&
+        this.completionDate.equalsWithComparison(that.completionDate, _.isEqual(_))
     case _ => false
   }
 }

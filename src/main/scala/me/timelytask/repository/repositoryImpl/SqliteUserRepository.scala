@@ -4,9 +4,7 @@ import me.timelytask.model.user.User
 import me.timelytask.repository.UserRepository
 import simplesql.DataSource
 
-class SqliteUserRepository extends UserRepository {
-  val dataSource: DataSource = DataSource.pooled("jbdc:sqlite:TimelyTaskDataStore")
-
+class SqliteUserRepository(dataSource: DataSource) extends UserRepository {
   override def getUserByName(name: String): User = dataSource.transaction {
     sql"""
          SELECT * FROM users WHERE name = $name

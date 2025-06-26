@@ -1,7 +1,7 @@
 package me.timelytask.controller.controllersImpl
 
 import me.timelytask.controller.commands.*
-import me.timelytask.controller.{CoreController, PersistenceController}
+import me.timelytask.controller.{CoreController, PersistenceController, UpdateController}
 import me.timelytask.core.{CoreModule, StartUpConfig, UiInstanceConfig}
 import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.settings.UIType.{GUI, TUI}
@@ -12,6 +12,7 @@ import me.timelytask.view.views.viewImpl.tui.TUIMinimalStartupView
 
 class CoreControllerImpl(private val commandHandler: CommandHandler,
                          private val persistenceController: PersistenceController,
+                         private val updateController: UpdateController,
                          private val coreModule: CoreModule)
   extends CoreController {
 
@@ -32,6 +33,7 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
   override def startUpApplication(startUpConfig: Option[StartUpConfig]): Unit = {
     if (runningFlag) return
     persistenceController.init()
+    updateController.init()
 
     createUiInstances(startUpConfig)
 

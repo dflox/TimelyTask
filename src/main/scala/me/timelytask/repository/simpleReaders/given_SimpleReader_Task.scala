@@ -18,7 +18,17 @@ given SimpleReader[Task] with {
         case null => None
         case uuid: java.util.UUID => Some(uuid)
       },
-      deadline = rs.getObject("deadline", classOf[Deadline]),
+      deadline = Deadline(
+        date = rs.getObject("deadline_date", classOf[DateTime]),
+        initialDate = rs.getObject("deadline_initialDate", classOf[DateTime]) match {
+          case null => None
+          case date: DateTime => Some(date)
+        },
+        completionDate = rs.getObject("deadline_completionDate", classOf[DateTime]) match {
+          case null => None
+          case date: DateTime => Some(date)
+        }
+      ),
       scheduleDate = DateTime.parse(rs.getString("scheduleDate")),
       state = rs.getObject("state", classOf[UUID]) match {
         case null => None

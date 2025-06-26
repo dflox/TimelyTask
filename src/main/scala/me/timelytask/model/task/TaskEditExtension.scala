@@ -68,6 +68,16 @@ extension (task: Task) {
   def removeAllTags(): Task = {
     task.copy(tags = HashSet[UUID]())
   }
+  
+  /**
+   * Sets the tags for the task.
+   *
+   * @param tags The HashSet of UUIDs to set as tags for the task.
+   * @return Task with the updated tags.
+   */
+  def withTags(tags: HashSet[UUID]): Task = {
+    task.copy(tags = tags)
+  }
 
   /**
    * Sets the deadline for the task.
@@ -136,6 +146,16 @@ extension (task: Task) {
    */
   def removeAllDependents(): Task = {
     task.copy(dependentOn = HashSet[UUID]())
+  }
+  
+  /**
+   * Sets the dependents for the task.
+   *
+   * @param dependents The HashSet of UUIDs to set as dependents for the task.
+   * @return Task with the updated dependents.
+   */
+  def withDependents(dependents: HashSet[UUID]): Task = {
+    task.copy(dependentOn = dependents)
   }
 
   /**
