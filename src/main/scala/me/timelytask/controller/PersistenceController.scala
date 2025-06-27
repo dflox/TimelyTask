@@ -3,11 +3,6 @@ package me.timelytask.controller
 trait PersistenceController {
 
   /**
-   * Initializes the persistence controller.
-   */
-  private[controller] def init(): Unit
-
-  /**
    * Saves the current model to a file.
    *
    * @param folderPath Optional path to the folder where the model will be saved.
@@ -17,7 +12,8 @@ trait PersistenceController {
    * @throws IllegalStateException if the serialization strategy is not set.
    * @note If the `folderPath` is not provided, the model will be saved in the current working directory.
    */
-  def saveModel(folderPath: Option[String], fileName: Option[String]): Boolean
+  def saveModel(userToken: String, folderPath: Option[String], fileName: Option[String], 
+                serializationType: String): Boolean
 
   /**
    * Loads a model from a specified file.
@@ -28,7 +24,8 @@ trait PersistenceController {
    * @throws IllegalArgumentException if the file does not exist or is 
    *                                  empty.
    */
-  def loadModel(folderPathWithFileName: String): Boolean
+  def loadModel(userToken: String, folderPathWithFileName: String, serializationType: String)
+  : Boolean
   
   /**
    * Loads a model for a specific user.
@@ -36,11 +33,4 @@ trait PersistenceController {
    * @param userName The name of the user whose model is to be loaded.
    */
   private[controller] def provideModelFromDB(userName: String): Unit
-  
-  /**
-   * Sets the serialization type for the persistence controller.
-   * @param serializationType the type of serialization to use, e.g., "json", "xml" or "yaml".
-   * @return Boolean indicating whether the serialization type was set successfully.
-   */
-  def setSerializationType(serializationType: String): Boolean
 }

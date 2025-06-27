@@ -32,7 +32,6 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
 
   override def startUpApplication(startUpConfig: Option[StartUpConfig]): Unit = {
     if (runningFlag) return
-    persistenceController.init()
     updateController.init()
 
     createUiInstances(startUpConfig)

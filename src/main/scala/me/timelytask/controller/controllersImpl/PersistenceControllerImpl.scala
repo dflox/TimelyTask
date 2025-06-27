@@ -8,64 +8,44 @@ import me.timelytask.util.serialization.SerializationStrategy
 import me.timelytask.util.serialization.encoder.given
 import me.timelytask.util.serialization.decoder.given
 import com.github.nscala_time.time.Imports.DateTime
+import me.timelytask.model.user.User
+import me.timelytask.serviceLayer.ServiceModule
 
 class PersistenceControllerImpl(modelPublisher: Publisher[Model],
+                                serviceModule: ServiceModule,
                                 commandHandler: CommandHandler)
   extends Controller(modelPublisher, commandHandler)
   with PersistenceController {
 
-  override private[controller] def init(): Unit = modelPublisher.addListener(saveToDB)
-
-  private def saveToDB(model: Option[Model]): Unit = model.map(m => ())
-
-  private[controller] def loadModelFromDB(): Unit = modelPublisher.update(Some(Model.emptyModel))
-
-  private var serializer: Option[SerializationStrategy] = None
-  
   private val applicationName = "TimelyTask"
-  
+
   private def timeStamp: String = DateTime.now().toString("yyyy_mm_dd")
   
   private def buildFileName(fileName: Option[String]): String = fileName
-  .getOrElse(s"${timeStamp}_$applicationName.${serializer.get.fileExtension}")
+  .getOrElse(s"${timeStamp}_$applicationName")
 
-  override def saveModel(folderPath: Option[String], fileName: Option[String]): Boolean = {
-    if (serializer.isEmpty) throw new IllegalStateException("Serialization strategy not set") 
-    
-    val serializedModel = serializer.get.serialize(model().getOrElse(Model.emptyModel))
-    
-    FileIO.writeToFile(folderPath.getOrElse("").concat(buildFileName(fileName)),
-      serializedModel)
+  override def saveModel(userToken: String,
+                         folderPath: Option[String],
+                         fileName: Option[String],
+                         serializationType: String)
+  : Boolean = {
+    serviceModule.fileExportService.exportToFile(userToken,
+      folderPath.getOrElse("").concat(buildFileName(fileName)),
+    serializationType)
+    true
   }
 
-  override def loadModel(folderPathWithFileName: String): Boolean = {
-    if (serializer.isEmpty) throw new IllegalStateException("Serialization strategy not set")
-
-    val serializedModel = FileIO.readFromFile(folderPathWithFileName)
-
-    if (serializedModel.isEmpty) throw new IllegalArgumentException(
-      s"File not found or empty: $folderPathWithFileName"
-    )
-    
-    serializer.get.deserialize[Model](serializedModel.get) match {
-      case Some(model) =>
-        modelPublisher.update(Some(model))
-        true
-      case None =>
-        throw new IllegalArgumentException(
-          s"Failed to deserialize model from file: $folderPathWithFileName"
-        )
-    }
-  } 
-
-  override def setSerializationType(serializationType: String): Boolean = {
-    serializer = SerializationStrategy.tryApply(serializationType)
-    serializer match {
-      case Some(_) => true
-      case None => false
-    }
+  override def loadModel(userToken: String, folderPathWithFileName: String, 
+                         serializationType: String): Boolean = {
+    serviceModule.fileExportService.importFromFile(userToken, folderPathWithFileName, serializationType)
+    true
   }
 
-  override private[controller] def provideModelFromDB(userName: String): Unit = modelPublisher
-    .update(target = Some(userName), newValue = Some(Model.emptyModel))
+  override private[controller] def provideModelFromDB(userName: String): Unit = { 
+    if(serviceModule.userService.userExists(userName)) serviceModule.modelService.loadModel(userName)
+    else {
+      val model = Model.emptyModel.copy(user = User(userName))
+      serviceModule.modelService.saveModel(userName, model)
+    }
+  }
 }

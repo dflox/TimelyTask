@@ -13,21 +13,21 @@ trait SerializationStrategy {
 object SerializationStrategy {
   /**
    * Factory method to create a SerializationStrategy based on the provided strategy name.
-   * @param strategy the name of the serialization strategy, e.g., "json" or "yaml".
+   * @param serializationType the name of the serialization strategy, e.g., "json" or "yaml".
    * @return an instance of SerializationStrategy corresponding to the specified strategy.
    *         Throws IllegalArgumentException if the strategy is unknown.
    */
-  def apply(strategy: String): SerializationStrategy = {
-    strategy match {
+  def apply(serializationType: String): SerializationStrategy = {
+    serializationType match {
       case "json" => JsonSerializationStrategy()
       case "yaml" => YamlSerializationStrategy()
-      case _ => throw new IllegalArgumentException(s"Unknown serialization strategy: $strategy")
+      case _ => throw new IllegalArgumentException(s"Unknown serialization strategy: $serializationType")
     }
   }
   
-  def tryApply(strategy: String): Option[SerializationStrategy] = {
+  def tryApply(serializationType: String): Option[SerializationStrategy] = {
     Try {
-      apply(strategy)
+      apply(serializationType)
     }.toOption
   }
 }

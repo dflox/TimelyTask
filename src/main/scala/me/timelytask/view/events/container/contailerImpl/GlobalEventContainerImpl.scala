@@ -83,7 +83,7 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
 
   override def addRandomTask(): Unit = eventHandler.handle(new Event[Unit](
     (args: Unit) => {
-      coreModule.controllers.modelController.addTask(randomTask())
+      coreModule.controllers.modelController.addTask(userToken, randomTask())
       true
     },
     (args: Unit) => None,

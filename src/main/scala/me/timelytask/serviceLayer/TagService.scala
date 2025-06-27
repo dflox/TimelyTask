@@ -9,5 +9,5 @@ trait TagService {
   def addTag(userName: String, tag: Tag): Unit
   def removeTag(userName: String, uuid: UUID): Unit
   def updateTag(userName: String, tag: Tag): Unit
-  def getTag(userName: String, uuid: UUID): Option[Tag]
+  def getTag(userName: String, uuid: UUID): Tag
 }

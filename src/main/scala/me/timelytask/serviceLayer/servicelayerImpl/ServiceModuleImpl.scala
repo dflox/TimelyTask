@@ -5,7 +5,7 @@ import me.timelytask.serviceLayer.*
 import simplesql.DataSource
 
 class ServiceModuleImpl extends ServiceModule {
-  private val dataSource: DataSource = DataSource.pooled("jbdc:sqlite:TimelyTaskDataStore")
+  private[serviceLayer] val dataSource: DataSource = DataSource.pooled("jbdc:sqlite:TimelyTaskDataStore")
   private lazy val self: ServiceModule = this
   
   override val taskService: TaskService = wire[TaskServiceImpl]
@@ -17,4 +17,5 @@ class ServiceModuleImpl extends ServiceModule {
   override val userService: UserService = wire[UserServiceImpl]
   override val fileExportService: FileExportService = wire[FileExportServiceImpl]
   override val updateService: UpdateService = wire[UpdateServiceImpl]
+  override val modelService: ModelService = wire[ModelServiceImpl]
 }

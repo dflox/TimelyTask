@@ -26,9 +26,9 @@ trait TaskService {
 
   def removeTag(userName: String, taskUUID: UUID, tagUUID: UUID): Unit
 
-  def updateDeadline(userName: String, taskUUID: UUID, newDeadline: Option[Deadline]): Unit
+  def updateDeadline(userName: String, taskUUID: UUID, newDeadline: Deadline): Unit
 
-  def updateTedDuration(userName: String, taskUUID: UUID, newTedDuration: Option[Period]): Unit
+  def updateTedDuration(userName: String, taskUUID: UUID, newTedDuration: Period): Unit
 
   def addDependentTask(userName: String, taskUUID: UUID, dependentTaskUUID: UUID): Unit
 
@@ -37,10 +37,10 @@ trait TaskService {
   def updateReoccurring(userName: String, taskUUID: UUID, newReoccurring: Boolean): Unit
 
   def updateRecurrenceInterval(userName: String, taskUUID: UUID,
-                               recurrenceInterval: Option[Period]): Unit
+                               recurrenceInterval: Period): Unit
 
   def updateRealDuration(userName: String, taskUUID: UUID,
                          newRealDuration: Option[Period]): Unit
   
-  def loadAllTasks(userName: String): Seq[Task]
+  private[serviceLayer] def loadAllTasks(userName: String): Seq[Task]
 }

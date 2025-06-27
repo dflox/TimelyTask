@@ -100,7 +100,6 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   
   override def addTask(userName: String, task: Task): Unit = dataSource.transaction {
     createTaskTable
-    createDependentOnTable
     sql"""
         INSERT INTO tasks(userid, id, name, description, priority, deadline_date, deadline_initialDate,
                           deadline_completionDate, scheduleDate, state, tedDuration, reoccurring,
@@ -111,6 +110,8 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
                ${task.state}, ${task.tedDuration.toString}, ${task.reoccurring},
                ${task.recurrenceInterval.toString}, ${task.realDuration.getOrElse("").toString})
        """.write()
+    updateTags(userName, task.uuid, task.tags)
+    updateDependentTasks(userName, task.uuid, task.dependentOn)
   }
 
   override def getAllTasks(userName: String): Seq[Task] = dataSource.transaction {

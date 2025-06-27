@@ -9,5 +9,5 @@ trait TaskStateService {
   def addTaskState(userName: String, taskState: TaskState): Unit
   def removeTaskState(userName: String, uuid: UUID): Unit
   def updateTaskState(userName: String, taskState: TaskState): Unit
-  def getAllTaskStates(): Seq[String]
+  def getAllTaskStates(userName: String): Seq[TaskState]
 }

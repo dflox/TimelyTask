@@ -21,7 +21,7 @@ import me.timelytask.view.views.viewImpl.tui.TUIManager
 
 class UiInstance(protected val uiInstanceConfig: UiInstanceConfig,
                  protected val coreModule: CoreModule,
-                 protected val userToken: String) {
+                 val userToken: String) {
 
   private val self = this
 
