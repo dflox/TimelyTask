@@ -1,6 +1,7 @@
 package me.timelytask.view.events.container
 
 trait GlobalEventContainer {
+  val userToken: String
 
   def undo(): Unit
 

@@ -1,11 +1,14 @@
 package me.timelytask.model.state
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.model.Task
+import me.timelytask.model.task.Task
 import scalafx.scene.paint.Color
 
-class ClosedState(name: String, description: String, color: Color) extends TaskState(name,
-  description, color) {
+import java.util.UUID
+
+class ClosedState(name: String, description: String, color: Color, uuid: UUID = UUID.randomUUID())
+  extends TaskState(name, description, color, uuid) {
+  
   override def start(task: Task, openState: OpenState): Option[Task] = {
     // Do nothing
     // a closed task cannot be started
@@ -28,5 +31,16 @@ class ClosedState(name: String, description: String, color: Color) extends TaskS
     // Do nothing
     // a closed task cannot have its deadline extended
     None
+  }
+}
+object ClosedState {
+  val stateType: String = "closed"
+  
+  def apply(name: String, description: String, color: Color): ClosedState = {
+    new ClosedState(name, description, color)
+  }
+  
+  def apply(name: String, description: String, color: Color, uuid: UUID): ClosedState = {
+    new ClosedState(name, description, color, uuid)
   }
 }

@@ -1,9 +1,9 @@
 package me.timelytask.view.views.viewImpl.tui.dialog
 
-import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, InputDialogModel}
+import me.timelytask.view.viewmodel.dialogmodel.InputDialogModel
 import me.timelytask.view.views.viewImpl.tui.TuiUtils.createLine
 import org.jline.reader.impl.history.DefaultHistory
-import org.jline.reader.{LineReader, LineReaderBuilder}
+import org.jline.reader.{ LineReader, LineReaderBuilder }
 import org.jline.terminal.Terminal
 
 class TextInputDialogTUI(override val dialogModel: Option[InputDialogModel[String]],

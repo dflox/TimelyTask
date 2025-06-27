@@ -1,9 +1,9 @@
 package me.timelytask.view.events.container.contailerImpl
 
 import me.timelytask.core.CoreModule
-import me.timelytask.model.Task
 import me.timelytask.model.settings.UIType.GUI
 import me.timelytask.model.settings.{TABLE, TASKEdit, ViewType}
+import me.timelytask.model.task.Task
 import me.timelytask.util.Publisher
 import me.timelytask.view.UiInstance
 import me.timelytask.view.events.EventHandler
@@ -17,8 +17,9 @@ import scala.util.Random
 class GlobalEventContainerImpl(coreModule: CoreModule,
                                eventHandler: EventHandler,
                                activeViewPublisher: Publisher[ViewType],
-                               uiInstance: UiInstance ) extends
-                                                                          GlobalEventContainer {
+                               uiInstance: UiInstance,
+                               override val userToken: String
+                              ) extends GlobalEventContainer {
 
   override def undo(): Unit = eventHandler.handle(new Event[Unit](
     (args: Unit) => {
@@ -73,7 +74,7 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
 
   override def newInstance(): Unit = eventHandler.handle(new Event[Unit](
     (args: Unit) => {
-      coreModule.controllers.coreController.newInstance()
+      coreModule.controllers.coreController.newGuiInstance()
       true
     },
     (args: Unit) => None,
@@ -82,7 +83,7 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
 
   override def addRandomTask(): Unit = eventHandler.handle(new Event[Unit](
     (args: Unit) => {
-      coreModule.controllers.modelController.addTask(randomTask())
+      coreModule.controllers.modelController.addTask(userToken, randomTask())
       true
     },
     (args: Unit) => None,

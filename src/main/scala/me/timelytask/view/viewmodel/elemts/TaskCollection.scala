@@ -1,7 +1,7 @@
 package me.timelytask.view.viewmodel.elemts
 
 import com.github.nscala_time.time.Imports.Interval
-import me.timelytask.model.Task
+import me.timelytask.model.task.Task
 import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, OptionDialogModel}
 
 class TaskCollection(tasks: List[Task]) extends Focusable[Task] {

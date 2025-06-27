@@ -11,12 +11,12 @@ trait Publisher[T] {
   /** 
    * Adds a listener function to the publisher with an optional source identifier.
    * The listener will be called whenever the value changes.
-   * Listener from the same source will be ignored.
+   * If the source identifier is provided, the publisher will ignore updates from the same source.
    * @param listener function to be called when the value changes
    * @param source optional source identifier
    */
   def addListener(listener: Option[T] => Unit, source: Option[Any] = 
-  None): Unit
+  None, target: Option[Any] = None): Unit
 
   /**
    * Update the value and notify all listeners, with an optional source identifier.
@@ -24,11 +24,24 @@ trait Publisher[T] {
    * @param newValue value to be updated
    * @param source source identifier
    */
-  def update(newValue: Option[T], source: Option[Any] = None): Unit
+  def update(newValue: Option[T], source: Option[Any] = None, target: Option[Any] = None): Unit
 
   /** 
    * Retrieve the current value
    * @return
    */
   def getValue: Option[T]
+
+  /**
+   * Retrieve the value for a specific target.
+   *
+   * @return
+   */
+  def getValue(target: Any): Option[T]
+  
+  /**
+   * Remove a listener for a specific target and all values published for this target.
+   * @param target the target for which the listener should be removed
+   */
+  def removeTarget(target: Any): Unit
 }

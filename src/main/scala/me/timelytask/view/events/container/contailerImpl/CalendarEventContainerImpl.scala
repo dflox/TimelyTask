@@ -16,13 +16,15 @@ import scala.util.{Failure, Success, Try}
 class CalendarEventContainerImpl(calendarViewModelPublisher: Publisher[CalendarViewModel],
                                  activeViewPublisher: Publisher[ViewType],
                                  eventHandler: EventHandler,
-                                 coreModule: CoreModule)
+                                 coreModule: CoreModule,
+                                 userToken: String)
   extends CalendarEventContainer
   with EventContainer(
     calendarViewModelPublisher,
     activeViewPublisher,
     eventHandler,
-    coreModule) {
+    coreModule,
+    userToken) {
 
   def nextDay(): Unit = eventHandler.handle(new Event[Unit](
     (args: Unit) => addPeriodToTimeSelection(1.days),

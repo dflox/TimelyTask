@@ -1,7 +1,7 @@
 package me.timelytask.view.viewmodel.viewchanger
 
-import me.timelytask.model.Task
 import me.timelytask.model.settings.{TASKEdit, ViewType}
+import me.timelytask.model.task.Task
 import me.timelytask.view.viewmodel.TaskEditViewModel
 
 case class TaskEditViewChangeArg(task: Option[Task], callingView: Option[ViewType] = None)

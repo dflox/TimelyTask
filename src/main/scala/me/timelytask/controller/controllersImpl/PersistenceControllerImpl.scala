@@ -3,20 +3,49 @@ package me.timelytask.controller.controllersImpl
 import me.timelytask.controller.commands.CommandHandler
 import me.timelytask.controller.PersistenceController
 import me.timelytask.model.Model
-import me.timelytask.util.Publisher
+import me.timelytask.util.{FileIO, Publisher}
+import me.timelytask.util.serialization.SerializationStrategy
+import me.timelytask.util.serialization.encoder.given
+import me.timelytask.util.serialization.decoder.given
+import com.github.nscala_time.time.Imports.DateTime
+import me.timelytask.model.user.User
+import me.timelytask.serviceLayer.ServiceModule
 
 class PersistenceControllerImpl(modelPublisher: Publisher[Model],
+                                serviceModule: ServiceModule,
                                 commandHandler: CommandHandler)
   extends Controller(modelPublisher, commandHandler)
   with PersistenceController {
 
-  override private[controller] def init(): Unit = modelPublisher.addListener(saveToDB)
+  private val applicationName = "TimelyTask"
 
-  private def saveToDB(model: Option[Model]): Unit = model.map((m) => ())
+  private def timeStamp: String = DateTime.now().toString("yyyy_mm_dd")
+  
+  private def buildFileName(fileName: Option[String]): String = fileName
+  .getOrElse(s"${timeStamp}_$applicationName")
 
-  private[controller] def loadModelFromDB(): Unit = modelPublisher.update(Some(Model.emptyModel))
+  override def saveModel(userToken: String,
+                         folderPath: Option[String],
+                         fileName: Option[String],
+                         serializationType: String)
+  : Boolean = {
+    serviceModule.fileExportService.exportToFile(userToken,
+      folderPath.getOrElse("").concat(buildFileName(fileName)),
+    serializationType)
+    true
+  }
 
-  override def SaveModelTo(serializationType: String): Unit = ???
+  override def loadModel(userToken: String, folderPathWithFileName: String, 
+                         serializationType: String): Boolean = {
+    serviceModule.fileExportService.importFromFile(userToken, folderPathWithFileName, serializationType)
+    true
+  }
 
-  override def LoadModel(serializationType: String): Unit = ???
+  override private[controller] def provideModelFromDB(userName: String): Unit = { 
+    if(serviceModule.userService.userExists(userName)) serviceModule.modelService.loadModel(userName)
+    else {
+      val model = Model.emptyModel.copy(user = User(userName))
+      serviceModule.modelService.saveModel(userName, model)
+    }
+  }
 }

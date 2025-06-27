@@ -11,7 +11,7 @@ case class CalendarViewChangeArg(timeSelection: Option[TimeSelection])
     if viewModel.isEmpty | timeSelection.isEmpty then None
     else viewModel match {
       case Some(value: CalendarViewModel) => Some(value.copy(timeSelection = timeSelection.get))
-      case None => None
+      case _ => None
     }
   }
 }
