@@ -91,6 +91,7 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   }
 
   override def getTaskById(userName: String, taskId: UUID): Task = dataSource.transaction {
+    createTaskTable
     val result = sql"""
           SELECT * FROM tasks WHERE id = $taskId AND userid = $userName
        """.readOne[Task]
@@ -115,6 +116,7 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   }
 
   override def getAllTasks(userName: String): Seq[Task] = dataSource.transaction {
+    createTaskTable
     val result = sql"""
         SELECT * FROM tasks WHERE userid = $userName
        """.read[Task]
