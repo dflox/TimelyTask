@@ -8,7 +8,7 @@ import simplesql.DataSource
 
 class ServiceModuleImpl extends ServiceModule {
   private val dataSource: DataSource =
-    DataSource.pooled("jbdc:sqlite:TimelyTaskDataStore")
+    DataSource.pooled("jdbc:sqlite:TimelyTaskDataStore.db")
   private lazy val self: ServiceModule = this
 
   private lazy val taskRepository: TaskRepository = wire[SqliteTaskRepository]

@@ -29,7 +29,7 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
           realDuration TEXT,
           PRIMARY KEY (id, userid)
         )
-       """
+       """.write()
   }
 
   private def createTagAssignmentTable: Unit = dataSource.transaction {
@@ -39,7 +39,7 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
          tagId BLOB FOREIGN KEY REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
          PRIMARY KEY (taskId, tagId)
          )
-       """
+       """.write()
   }
 
   private def createDependentOnTable: Unit = dataSource.transaction {
@@ -49,7 +49,7 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
          dependentOnId BLOB FOREIGN KEY REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
          PRIMARY KEY (taskId, dependentOnId)
          )
-       """
+       """.write()
   }
   
   private def updateTags(userName: String, taskId: UUID, tags: Set[UUID]): Unit = dataSource.transaction {

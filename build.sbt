@@ -12,7 +12,7 @@ val mockitoVersion = "3.2.10.0"
 val scalaFxVersion = "24.0.0-R35"
 val macwireVersion = "2.6.6"
 val circeYamlVersion = "1.15.0"
-val sqliteJbdcVersion = "3.50.1.0"
+val sqliteJdbcVersion = "3.50.1.0"
 val simpleSqlVersion = "0.4.0"
 
 lazy val root = project
@@ -44,7 +44,7 @@ lazy val root = project
       "io.circe" %% "circe-parser" % circeVersion,
       "io.circe" %% "circe-yaml-v12" % circeYamlVersion,
       "com.softwaremill.macwire" %% "macros" % macwireVersion % "provided",
-      "org.xerial" % "sqlite-jdbc" % sqliteJbdcVersion,
+      "org.xerial" % "sqlite-jdbc" % sqliteJdbcVersion,
       "io.crashbox" %% "simplesql" % simpleSqlVersion
     )
   )

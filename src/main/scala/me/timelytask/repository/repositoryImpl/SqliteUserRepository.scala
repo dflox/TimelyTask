@@ -10,7 +10,7 @@ class SqliteUserRepository(dataSource: DataSource) extends UserRepository {
   private def createUserTable(): Unit = dataSource.transaction {
     sql"""
             CREATE TABLE IF NOT EXISTS users (name TEXT PRIMARY KEY)
-         """
+         """.write()
   }
 
   override def getUser(userName: String): User = dataSource.transaction {
@@ -34,11 +34,13 @@ class SqliteUserRepository(dataSource: DataSource) extends UserRepository {
          """.write()
   }
 
-  override def userExists(userName: String): Boolean = dataSource.transaction {
+  override def userExists(userName: String): Boolean = {
     createUserTable()
-    sql"""
+    dataSource.transaction {
+      sql"""
             SELECT COUNT(*) FROM users WHERE name = $userName
          """.readOne[Int] > 0
+    }
   }
 
   override def updateName(oldName: String, newName: String): Unit = dataSource.transaction {
