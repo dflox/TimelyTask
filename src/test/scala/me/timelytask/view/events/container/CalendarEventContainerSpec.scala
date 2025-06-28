@@ -22,6 +22,9 @@ class CalendarEventContainerSpec extends AnyWordSpec
   with Matchers
   with BeforeAndAfterEach {
 
+    // Constants
+  private val userToken: String = "testUserToken"
+  
   // Mocks
   private val mockViewModelPublisher = mock[Publisher[CalendarViewModel]]
   private val mockActiveViewPublisher = mock[Publisher[ViewType]]
@@ -33,6 +36,7 @@ class CalendarEventContainerSpec extends AnyWordSpec
   // Helpers
   private val eventCaptor: ArgumentCaptor[Event[?]] = ArgumentCaptor.forClass(classOf[Event[?]])
   private val listenerCaptor: ArgumentCaptor[Option[Model] => Unit] = ArgumentCaptor.forClass(classOf[Option[Model] => Unit])
+  private val targetCaptor: ArgumentCaptor[String] = ArgumentCaptor.forClass(classOf[String])
 
   override def beforeEach(): Unit = {
     reset(mockViewModelPublisher, mockActiveViewPublisher, mockEventHandler, mockCoreModule)
@@ -40,7 +44,8 @@ class CalendarEventContainerSpec extends AnyWordSpec
       mockViewModelPublisher,
       mockActiveViewPublisher,
       mockEventHandler,
-      mockCoreModule
+      mockCoreModule,
+        userToken
     )
   }
 
@@ -51,7 +56,8 @@ class CalendarEventContainerSpec extends AnyWordSpec
       "create a new ViewModel with default TimeSelection if none exists" in {
         // Setup
         container.init()
-        verify(mockCoreModule).registerModelListener(listenerCaptor.capture())
+        verify(mockCoreModule).registerModelListener(listenerCaptor.capture(), targetCaptor.capture())
+        targetCaptor.getValue should be(userToken)
         val listener = listenerCaptor.getValue
 
         // Setup for: No existing ViewModel
@@ -73,7 +79,8 @@ class CalendarEventContainerSpec extends AnyWordSpec
       "create a new ViewModel preserving TimeSelection if one exists" in {
         // Setup
         container.init()
-        verify(mockCoreModule).registerModelListener(listenerCaptor.capture())
+        verify(mockCoreModule).registerModelListener(listenerCaptor.capture() , targetCaptor.capture())
+        targetCaptor.getValue should be(userToken)
         val listener = listenerCaptor.getValue
 
         // Setup for: An existing ViewModel with a custom TimeSelection

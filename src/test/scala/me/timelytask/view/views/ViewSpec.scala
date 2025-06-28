@@ -1,7 +1,7 @@
 package me.timelytask.view.views
 
 import me.timelytask.model.settings.{CALENDAR, KeymapConfig, ViewType}
-import me.timelytask.model.utility.{Key, MoveUp, Space}
+import me.timelytask.model.utility.Key
 import me.timelytask.util.Publisher
 import me.timelytask.view.keymaps.Keymap
 import me.timelytask.view.viewmodel.ViewModel
@@ -62,7 +62,7 @@ class ViewSpec extends AnyWordSpec with Matchers with MockitoSugar {
         when(mockViewModelPublisher.getValue).thenReturn(Some(mockViewModel))
         when(mockViewModel.interact(any())).thenReturn(Some(updatedViewModel))
 
-        val result = view.handleKey(Some(Space))
+        val result = view.handleKey(Some(Key.Space))
 
         result shouldBe true
         verify(mockViewModel, times(1)).interact(any())
@@ -72,7 +72,7 @@ class ViewSpec extends AnyWordSpec with Matchers with MockitoSugar {
       "delegate other keys to the keymap if it exists" in new Fixture {
         view.asInstanceOf[TestableView].setKeymapForTest(mockKeymap)
 
-        val testKey = Some(MoveUp)
+        val testKey = Some(Key.MoveUp)
         when(mockKeymap.handleKey(testKey)).thenReturn(true)
 
         val result = view.handleKey(testKey)
@@ -82,7 +82,7 @@ class ViewSpec extends AnyWordSpec with Matchers with MockitoSugar {
       }
 
       "throw an exception if a key is handled without a keymap" in new Fixture {
-        val testKey = Some(MoveUp)
+        val testKey = Some(Key.MoveUp)
 
         val exception = intercept[Exception] {
           view.handleKey(testKey)

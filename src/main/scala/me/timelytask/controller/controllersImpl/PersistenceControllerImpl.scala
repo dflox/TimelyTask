@@ -25,8 +25,8 @@ class PersistenceControllerImpl(modelPublisher: Publisher[Model],
   .getOrElse(s"${timeStamp}_$applicationName")
 
   override def saveModel(userToken: String,
-                         folderPath: Option[String],
-                         fileName: Option[String],
+                         folderPath: Option[String] = None,
+                         fileName: Option[String] = None,
                          serializationType: String)
   : Boolean = {
     serviceModule.fileExportService.exportToFile(userToken,
