@@ -10,8 +10,8 @@ import me.timelytask.serviceLayer.ServiceModule
 import me.timelytask.serviceLayer.servicelayerImpl.ServiceModuleImpl
 import me.timelytask.util.Publisher
 
-trait ControllerModule(private val modelPublisher: Publisher[Model], private val coreModule: CoreModule) {
-  private val serviceModule: ServiceModule = wire[ServiceModuleImpl]
+trait ControllerModule(private val modelPublisher: Publisher[Model], private val 
+coreModule: CoreModule, serviceModule: ServiceModule) {
   
   lazy val commandHandler: CommandHandler = wire[CommandHandlerImpl]
 
@@ -24,5 +24,5 @@ trait ControllerModule(private val modelPublisher: Publisher[Model], private val
   lazy val updateController: UpdateController = wire[UpdateControllerImpl]
 }
 
-class ControllerModuleImpl(modelPublisher: Publisher[Model], coreModule: CoreModule) 
-  extends ControllerModule(modelPublisher, coreModule)
+class ControllerModuleImpl(modelPublisher: Publisher[Model], coreModule: CoreModule, serviceModule: ServiceModule) 
+  extends ControllerModule(modelPublisher, coreModule, serviceModule)

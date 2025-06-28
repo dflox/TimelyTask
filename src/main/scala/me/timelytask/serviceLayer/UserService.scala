@@ -7,4 +7,5 @@ trait UserService {
   def getUser(userName: String): User
   def addUser(userName: String): Unit
   def removeUser(userName: String): Unit
+  def updateName(oldName: String, newName: String): Unit
 }

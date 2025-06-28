@@ -13,7 +13,7 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   private def createTaskTable: Unit = dataSource.transaction {
     sql"""
         CREATE TABLE IF NOT EXIST tasks(
-          userid TEXT FOREIGN KEY REFERENCES users(name),
+          userid TEXT FOREIGN KEY REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE,
           id BLOB NOT NULL,
           name TEXT NOT NULL,
           description TEXT,
@@ -35,8 +35,8 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   private def createTagAssignmentTable: Unit = dataSource.transaction {
     sql"""
          CREATE TABLE IF NOT EXISTS task_tags(
-         taskId BLOB FOREIGN KEY REFERENCES tasks(id),
-         tagId BLOB FOREIGN KEY REFERENCES tags(id),
+         taskId BLOB FOREIGN KEY REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
+         tagId BLOB FOREIGN KEY REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
          PRIMARY KEY (taskId, tagId)
          )
        """
@@ -45,8 +45,8 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   private def createDependentOnTable: Unit = dataSource.transaction {
     sql"""
          CREATE TABLE IF NOT EXISTS task_dependencies(
-         taskId BLOB FOREIGN KEY REFERENCES tasks(id),
-         dependentOnId BLOB FOREIGN KEY REFERENCES tasks(id),
+         taskId BLOB FOREIGN KEY REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
+         dependentOnId BLOB FOREIGN KEY REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
          PRIMARY KEY (taskId, dependentOnId)
          )
        """

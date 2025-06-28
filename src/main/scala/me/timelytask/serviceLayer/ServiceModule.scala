@@ -1,9 +1,6 @@
 package me.timelytask.serviceLayer
 
-import simplesql.DataSource
-
 trait ServiceModule() {
-  private[serviceLayer] val dataSource: DataSource
   
   val taskService: TaskService
   val configService: ConfigService

@@ -3,13 +3,15 @@ package me.timelytask.core
 import com.softwaremill.macwire.wire
 import me.timelytask.core.validation.StartUpValidator
 import me.timelytask.core.validation.startupValidatorImpl.StartUpValidatorImpl
+import me.timelytask.serviceLayer.ServiceModule
+import me.timelytask.serviceLayer.servicelayerImpl.ServiceModuleImpl
 import me.timelytask.util.FileIO
 import me.timelytask.util.serialization.SerializationStrategy
 import me.timelytask.util.serialization.decoder.given
 import me.timelytask.util.serialization.encoder.given
 
 class ApplicationCore {
-  
+  private lazy val serviceModule: ServiceModule = wire[ServiceModuleImpl]
   private lazy val coreModule: CoreModule = wire[CoreModuleImpl]
   
   private var startUpConfig: Option[StartUpConfig] = None
