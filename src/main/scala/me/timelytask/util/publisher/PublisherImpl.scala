@@ -19,7 +19,7 @@ class PublisherImpl[T] extends Publisher[T] {
 
   override def update(newValue: Option[T], source: Option[Any] = None, target: Option[Any] = None)
   : Unit = {
-    if newValue.isDefined && target.isDefined then value.map(newValue => target)
+    if newValue.isDefined && target.isDefined then value(target.get) = newValue
     else if newValue.isDefined then defaultValue = newValue
     listeners.foreach {
       case (listener, listenerSource, listenerTarget) =>

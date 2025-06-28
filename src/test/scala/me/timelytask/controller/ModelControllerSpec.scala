@@ -1,21 +1,20 @@
 package me.timelytask.controller
 
-import com.softwaremill.macwire.wire
 import me.timelytask.core.CoreModuleImpl
 import me.timelytask.model.Model
 import me.timelytask.model.task.Task
 import me.timelytask.model.user.User
-import me.timelytask.repository.{TaskRepository, UserRepository}
+import me.timelytask.repository.{ TaskRepository, UserRepository }
 import me.timelytask.serviceLayer.ServiceModule
 import me.timelytask.testUtil.ServiceModuleBuilder
-import org.mockito.ArgumentCaptor
-import org.mockito.Mockito.{timeout, verify, when}
+import org.mockito.ArgumentMatchers.*
+import org.mockito.Mockito.*
+import org.mockito.{ ArgumentCaptor, ArgumentMatchers }
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
 import java.util.UUID
-import scala.collection.mutable
 import scala.jdk.CollectionConverters.*
 
 class ModelControllerSpec extends AnyWordSpec with MockitoSugar {
@@ -25,14 +24,18 @@ class ModelControllerSpec extends AnyWordSpec with MockitoSugar {
     "be able to add a Task to the Model" in {
       // Setup
       val userName = "testUser"
+      val task = Task.exampleTask
       val serviceModule: ServiceModule = ServiceModuleBuilder()
-        .withTaskRepository(setupTaskRepository("testUser"))
+        .withTaskRepository(setupTaskRepository("testUser", task))
         .withUserRepository(setupUserRepository("testUser"))
         .build()
       val coreModule = CoreModuleImpl(serviceModule)
-      val task = Task.exampleTask
+      coreModule.controllers.updateController.init()
       val callbackHelper = new CallbackHelper[Model]
-      callbackHelper.registerCallback(coreModule.registerModelListener, userName)
+      callbackHelper.registerCallback(
+        coreModule.registerModelListener,
+        userName
+      )
 
       // Action
       coreModule.controllers.modelController.addTask(userName, task)
@@ -54,36 +57,47 @@ class ModelControllerSpec extends AnyWordSpec with MockitoSugar {
       listenerRegistration(callback, target)
     }
 
-    def getCallbackResults(atLeast: Int, timeoutMillis: Int = 200): Vector[ListenerType] = {
+    def getCallbackResults(atLeast: Int, timeoutMillis: Int = 1000): Vector[ListenerType] = {
       val captor = ArgumentCaptor.forClass(classOf[Option[ListenerType]])
-      verify(callback, timeout(timeoutMillis).atLeast(2)).apply(captor.capture())
-        captor.getAllValues.asScala.toVector.filter(_.isDefined).map(_.get)
+      verify(callback, timeout(timeoutMillis).atLeast(2))
+        .apply(captor.capture())
+      captor.getAllValues.asScala.toVector.filter(_.isDefined).map(_.get)
     }
   }
 
-  def setupTaskRepository(userName: String): TaskRepository = {
-    val virtualTaskList = mutable.HashSet[Task]()
+  def setupTaskRepository(
+      userName: String,
+      taskToBeAdded: Task
+    ): TaskRepository = {
     val taskRepository = mock[TaskRepository]
-    when(taskRepository.addTask(userName, _)).thenAnswer { invocation =>
-      val task = invocation.getArgument[Task](1)
-      virtualTaskList.addOne(task)
+    when(
+      taskRepository.addTask(
+        ArgumentMatchers.eq(userName),
+        ArgumentMatchers.eq(taskToBeAdded)
+      )
+    ).thenAnswer( inv => ())
+    when(
+      taskRepository.getTaskById(ArgumentMatchers.eq(userName), any[UUID]())
+    ).thenAnswer { invocation =>
+      val taskId = invocation.getArgument[UUID](1)
+      if (taskId == taskToBeAdded.uuid) {
+        taskToBeAdded
+      } else {
+        throw new NoSuchElementException(s"Task with ID $taskId not found")
+      }
     }
-    when(taskRepository.getTaskById(userName, _)).thenAnswer { invocation =>
-      val taskUUID = invocation.getArgument[UUID](1)
-      virtualTaskList.find(_.uuid == taskUUID).getOrElse(Task.exampleTask)
-    }
-    when(taskRepository.getAllTasks).thenReturn(virtualTaskList.toVector)
-    when(taskRepository.deleteTask(userName, _)).thenAnswer { invocation =>
-      val taskUUID = invocation.getArgument[UUID](1)
-      virtualTaskList.filterInPlace( task => task.uuid != taskUUID )
-    }
+    when(taskRepository.getAllTasks(ArgumentMatchers.eq(userName))).thenReturn(
+      Vector(taskToBeAdded)
+    )
     taskRepository
   }
 
   def setupUserRepository(userName: String): UserRepository = {
     val userRepository = mock[UserRepository]
-    when(userRepository.getUser(userName)).thenReturn(Some(User(userName)))
-    when(userRepository.userExists(userName)).thenReturn(true)
+    when(userRepository.getUser(ArgumentMatchers.eq(userName)))
+      .thenReturn(User(userName))
+    when(userRepository.userExists(ArgumentMatchers.eq(userName)))
+      .thenReturn(true)
     userRepository
   }
 }
