@@ -12,7 +12,7 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
 
   private def createTaskTable: Unit = dataSource.transaction {
     sql"""
-        CREATE TABLE IF NOT EXIST tasks(
+        CREATE TABLE IF NOT EXISTS tasks(
           userid TEXT FOREIGN KEY REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE,
           id BLOB NOT NULL,
           name TEXT NOT NULL,

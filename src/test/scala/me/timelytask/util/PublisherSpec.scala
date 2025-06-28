@@ -1,11 +1,11 @@
 package me.timelytask.util
 
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.matchers.should.Matchers
-import org.scalatestplus.mockito.MockitoSugar
-import org.mockito.Mockito.{never, times, verify}
+import me.timelytask.util.publisher.PublisherImpl
 import org.mockito.ArgumentMatchers.any
-import scala.collection.mutable
+import org.mockito.Mockito.{ never, times, verify }
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.mockito.MockitoSugar
 
 /**
  * Test specification for any class that implements the Publisher trait.
@@ -14,64 +14,9 @@ import scala.collection.mutable
  */
 class PublisherSpec extends AnyWordSpec with Matchers with MockitoSugar {
 
-  /**
-   * A minimal, test-only implementation of the Publisher trait.
-   * This class correctly implements the full Publisher interface, including logic
-   * for default values, targeted values, and source/target filtering for listeners.
-   */
-  private class SimplePublisher[T] extends Publisher[T] {
-    // State for targeted values
-    private val values: mutable.Map[Any, Option[T]] = mutable.Map.empty
-    // State for the default, non-targeted value
-    private var defaultValue: Option[T] = None
-    // Listeners now store the listener function, its source, and its target
-    private var listeners: Vector[(Option[T] => Unit, Option[Any], Option[Any])] = Vector.empty
-
-    // The overriding method should NOT have default parameters; it inherits them from the trait.
-    override def addListener(listener: Option[T] => Unit, source: Option[Any], target: Option[Any]): Unit = {
-      listeners = listeners :+ (listener, source, target)
-    }
-
-    override def update(newValue: Option[T], source: Option[Any], target: Option[Any]): Unit = {
-      // Update the correct state based on whether a target is present
-      if (target.isDefined) {
-        values(target.get) = newValue
-      } else {
-        defaultValue = newValue
-      }
-
-      // Notify relevant listeners
-      listeners.foreach { case (listener, listenerSource, listenerTarget) =>
-        // A listener is blocked only if the update has a source AND it's the same as the listener's source.
-        val isBlockedBySource = source.isDefined && listenerSource == source
-
-        if (!isBlockedBySource) {
-          // A listener is notified if:
-          // 1. It's a "global" listener (no target).
-          // 2. The update is "global" (no target).
-          // 3. The listener's target matches the update's target.
-          val isGlobalListener = listenerTarget.isEmpty
-          val isGlobalUpdate = target.isEmpty
-          val isTargetMatch = listenerTarget == target
-
-          if (isGlobalListener || isGlobalUpdate || isTargetMatch) {
-            listener(newValue)
-          }
-        }
-      }
-    }
-
-    override def getValue: Option[T] = defaultValue
-    override def getValue(target: Any): Option[T] = values.get(target).flatten
-    override def removeTarget(target: Any): Unit = {
-      values.remove(target)
-      listeners = listeners.filterNot(_._3.contains(target))
-    }
-  }
-
   // Fixture to create a new publisher for each test context
   trait Fixture {
-    val publisher: Publisher[String] = new SimplePublisher[String]
+    val publisher: Publisher[String] = new PublisherImpl[String]
   }
 
   "A Publisher" should {
@@ -89,7 +34,9 @@ class PublisherSpec extends AnyWordSpec with Matchers with MockitoSugar {
       publisher.addListener(mockListener)
       val newValue = Some("Hello, World!")
 
-      publisher.update(newValue) // No target, updates default
+      verify(mockListener, times(1)).apply(None)
+
+      publisher.update(newValue)
 
       publisher.getValue shouldBe newValue
       verify(mockListener, times(1)).apply(newValue)
@@ -109,7 +56,11 @@ class PublisherSpec extends AnyWordSpec with Matchers with MockitoSugar {
       val listener1 = mock[Option[String] => Unit]
       val listener2 = mock[Option[String] => Unit]
       publisher.addListener(listener1)
+      verify(listener1, times(1)).apply(None)
+
       publisher.addListener(listener2)
+      verify(listener2, times(1)).apply(None)
+
       val newValue = Some("Update All")
 
       publisher.update(newValue)
@@ -121,12 +72,15 @@ class PublisherSpec extends AnyWordSpec with Matchers with MockitoSugar {
     "NOT notify a listener that comes from the same source as the update" in new Fixture {
       val sourceId = Some("ComponentA")
       val sameSourceListener = mock[Option[String] => Unit]
+
       publisher.addListener(sameSourceListener, source = sourceId)
+      verify(sameSourceListener, times(1)).apply(None)
+
       val newValue = Some("This should be muted")
 
       publisher.update(newValue, source = sourceId)
 
-      verify(sameSourceListener, never()).apply(any())
+      verify(sameSourceListener, never()).apply(newValue)
     }
 
     "notify a listener if the update comes from a DIFFERENT source" in new Fixture {
@@ -134,6 +88,9 @@ class PublisherSpec extends AnyWordSpec with Matchers with MockitoSugar {
       val updateSource = Some("ComponentB")
       val listener = mock[Option[String] => Unit]
       publisher.addListener(listener, source = listenerSource)
+
+      verify(listener, times(1)).apply(None)
+
       val newValue = Some("Crosstalk")
 
       publisher.update(newValue, source = updateSource)
@@ -145,6 +102,9 @@ class PublisherSpec extends AnyWordSpec with Matchers with MockitoSugar {
       val targetId = "t1"
       val listener = mock[Option[String] => Unit]
       publisher.addListener(listener, target = Some(targetId))
+
+      verify(listener, never()).apply(None)
+
       val newValue = Some("For t1 only")
 
       publisher.update(newValue, target = Some(targetId))
@@ -155,6 +115,9 @@ class PublisherSpec extends AnyWordSpec with Matchers with MockitoSugar {
     "NOT notify a listener for a different target" in new Fixture {
       val listenerForT1 = mock[Option[String] => Unit]
       publisher.addListener(listenerForT1, target = Some("t1"))
+
+      verify(listenerForT1, never()).apply(None)
+
       val newValue = Some("Update for t2")
 
       publisher.update(newValue, target = Some("t2"))
@@ -162,24 +125,27 @@ class PublisherSpec extends AnyWordSpec with Matchers with MockitoSugar {
       verify(listenerForT1, never()).apply(any())
     }
 
-    "notify a global listener of a targeted update" in new Fixture {
+    "NOT notify a global listener of a targeted update" in new Fixture {
       val globalListener = mock[Option[String] => Unit]
       publisher.addListener(globalListener) // No target specified
+
+      verify(globalListener, times(1)).apply(None)
+
       val newValue = Some("Update for t1")
 
       publisher.update(newValue, target = Some("t1"))
 
-      verify(globalListener, times(1)).apply(newValue)
+      verify(globalListener, times(1)).apply(None)
     }
 
-    "notify a targeted listener of a global update" in new Fixture {
+    "NOT notify a targeted listener of a global update" in new Fixture {
       val targetedListener = mock[Option[String] => Unit]
       publisher.addListener(targetedListener, target = Some("t1"))
       val newValue = Some("Global update")
 
       publisher.update(newValue) // No target
 
-      verify(targetedListener, times(1)).apply(newValue)
+      verify(targetedListener, never()).apply(any())
     }
 
     "remove a target and its associated value and listeners" in new Fixture {

@@ -16,6 +16,8 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
                          private val coreModule: CoreModule)
   extends CoreController {
 
+  private val standardNewGuiInstanceConfig: UiInstanceConfig = UiInstanceConfig(List(GUI), CALENDAR)
+  
   private var uiInstances: Vector[UiInstance] = Vector.empty
   private var runningFlag: Boolean = false
 
@@ -63,15 +65,6 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
     uiInstanceConfig,
     createUiInstance(_, uiInstanceConfig))
 
-  private def createUiInstance(userToken: String, uiInstanceConfig: UiInstanceConfig): Unit = {
-      persistenceController.provideModelFromDB(userToken)
-      val newUiInstance = new UiInstance(uiInstanceConfig, coreModule, userToken)
-      newUiInstance.run()
-      uiInstances = uiInstances.appended(newUiInstance)
-    }
-
-  private val standardNewGuiInstanceConfig: UiInstanceConfig = UiInstanceConfig(List(GUI), CALENDAR)
-
   private def injectUserIntoNewInstance(instanceConfig: UiInstanceConfig,
                                          onInput: String => Unit)
   : Unit = {
@@ -82,6 +75,13 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
     startUpViews.foreach(_.render(inputStoppingCallbackWrapper(onInput, startUpViews, _)))
   }
 
+  private def createUiInstance(userToken: String, uiInstanceConfig: UiInstanceConfig): Unit = {
+    persistenceController.provideModelFromDB(userToken)
+    val newUiInstance = new UiInstance(uiInstanceConfig, coreModule, userToken)
+    newUiInstance.run()
+    uiInstances = uiInstances.appended(newUiInstance)
+  }
+  
   private def inputStoppingCallbackWrapper(onInput: String => Unit,
                                            vector: Vector[MinimalStartUpView],
                                            input: String)

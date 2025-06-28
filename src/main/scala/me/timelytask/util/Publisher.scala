@@ -15,7 +15,7 @@ trait Publisher[T] {
    * @param listener function to be called when the value changes
    * @param source optional source identifier
    */
-  def addListener(listener: Option[T] => Unit, source: Option[Any] = 
+  def addListener(listener: Option[T] => Unit, source: Option[Any] =
   None, target: Option[Any] = None): Unit
 
   /**
