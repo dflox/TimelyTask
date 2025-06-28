@@ -10,7 +10,10 @@ import me.timelytask.view.views.viewImpl.gui.dialog.DialogFactoryImpl
 import me.timelytask.view.views.{CalendarView, DialogFactory, TaskEditView, UIManager}
 import scalafx.Includes.*
 import scalafx.application.Platform
+import scalafx.geometry.Pos
 import scalafx.scene.Scene
+import scalafx.scene.control.Label
+import scalafx.scene.layout.VBox
 import scalafx.stage.Stage
 
 class GuiManager(override val activeViewPublisher: Publisher[ViewType],
@@ -45,7 +48,14 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
 
   override def run(): Unit = {
     Platform.runLater {
-      val initialScene = new Scene(300, 300)
+      val initialScene = new Scene(300, 300) {
+        root = new VBox {
+          alignment = Pos.Center
+          children = Seq(
+            Label("Bitte warten...")
+          )
+        }
+      }
       calendarView.render(initialScene, CALENDAR)      
       
       stage = Some(new Stage {

@@ -12,12 +12,7 @@ import me.timelytask.util.serialization.decoder.given
 import me.timelytask.util.serialization.encoder.given
 import simplesql.DataSource
 
-//var testModel = Model.emptyModel
-//var serializationStrategy = SerializationStrategy.apply("xml")
-//var testModelSerialized = serializationStrategy.serialize(testModel)
-//var testModelAfterSerialization = serializationStrategy.deserialize[Model](testModelSerialized)
-
-val dataSource: DataSource =
-  DataSource.pooled("jdbc:sqlite:TimelyTaskDataStore.db")
-val userRepository = SqliteUserRepository(dataSource)
-userRepository.addUser(User("testUser"))
+var testModel = Model.emptyModel
+var serializationStrategy = SerializationStrategy.apply("xml")
+var testModelSerialized = serializationStrategy.serialize(testModel)
+var testModelAfterSerialization = serializationStrategy.deserialize[Model](testModelSerialized)

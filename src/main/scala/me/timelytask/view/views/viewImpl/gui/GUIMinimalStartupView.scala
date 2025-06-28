@@ -4,7 +4,7 @@ import me.timelytask.view.views.MinimalStartUpView
 import scalafx.application.Platform
 import scalafx.geometry.Pos
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, Label, TextField}
+import scalafx.scene.control.{ Button, Label, TextField }
 import scalafx.scene.layout.VBox
 import scalafx.stage.Stage
 
@@ -30,11 +30,13 @@ class GUIMinimalStartupView extends MinimalStartUpView {
   override def kill(): Unit = Platform.runLater {
     stage.foreach(_.close())
   }
-  
+
   private def getScene(onUserInput: String => Unit): Scene = {
     new Scene(300, 300) {
       val usernameField: TextField = new TextField {
+        style = "-fx-font-size: 14px;"
         promptText = "Benutzername eingeben"
+        maxWidth = 250
       }
 
       val errorLabel: Label = new Label {
@@ -54,6 +56,7 @@ class GUIMinimalStartupView extends MinimalStartUpView {
         val name = usernameField.text.value.trim
         if (name.nonEmpty) {
           errorLabel.visible = false
+          stage.foreach(_.close())
           onUserInput(name)
         } else {
           errorLabel.text = "Benutzername darf nicht leer sein."
@@ -64,6 +67,9 @@ class GUIMinimalStartupView extends MinimalStartUpView {
       root = new VBox(10) {
         alignment = Pos.Center
         children = Seq(
+          new Label("Willkommen bei TimelyTask!") {
+            style = "-fx-font-size: 18px; -fx-font-weight: bold;"
+          },
           new Label("Bitte Benutzernamen eingeben:"),
           usernameField,
           enterButton,

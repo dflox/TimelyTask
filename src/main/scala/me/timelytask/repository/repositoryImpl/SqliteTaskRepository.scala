@@ -12,8 +12,8 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
 
   private def createTaskTable: Unit = dataSource.transaction {
     sql"""
-        CREATE TABLE IF NOT EXIST tasks(
-          userid TEXT FOREIGN KEY REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE,
+        CREATE TABLE IF NOT EXISTS tasks(
+          userid TEXT,
           id BLOB NOT NULL,
           name TEXT NOT NULL,
           description TEXT,
@@ -27,7 +27,8 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
           reoccurring BOOLEAN,
           recurrenceInterval TEXT,
           realDuration TEXT,
-          PRIMARY KEY (id, userid)
+          PRIMARY KEY (id, userid),
+          FOREIGN KEY (userid) REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE
         )
        """.write()
   }
