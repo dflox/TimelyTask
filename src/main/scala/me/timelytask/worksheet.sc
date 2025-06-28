@@ -9,6 +9,6 @@ import me.timelytask.util.serialization.decoder.given
 import me.timelytask.util.serialization.encoder.given
 
 var testModel = Model.emptyModel
-var serializationStrategy = SerializationStrategy.apply("json")
+var serializationStrategy = SerializationStrategy.apply("xml")
 var testModelSerialized = serializationStrategy.serialize(testModel)
 var testModelAfterSerialization = serializationStrategy.deserialize[Model](testModelSerialized)
