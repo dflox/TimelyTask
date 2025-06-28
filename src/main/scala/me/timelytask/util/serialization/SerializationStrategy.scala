@@ -21,7 +21,7 @@ object SerializationStrategy {
     serializationType match {
       case "json" => JsonSerializationStrategy()
       case "yaml" => YamlSerializationStrategy()
-      case "xml" => YamlSerializationStrategy()
+      case "xml" => XmlSerializationStrategy()
       case _ => throw new IllegalArgumentException(s"Unknown serialization strategy: $serializationType")
     }
   }
