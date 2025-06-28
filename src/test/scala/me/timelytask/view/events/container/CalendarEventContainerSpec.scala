@@ -17,7 +17,7 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
-class CalendarEventContainerImplSpec extends AnyWordSpec
+class CalendarEventContainerSpec extends AnyWordSpec
   with MockitoSugar
   with Matchers
   with BeforeAndAfterEach {
