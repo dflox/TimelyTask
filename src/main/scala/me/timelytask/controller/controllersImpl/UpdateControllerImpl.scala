@@ -20,7 +20,7 @@ class UpdateControllerImpl(serviceModule: ServiceModule, modelPublisher: Publish
     serviceModule.updateService.registerPriorityUpdateListener(modelUpdater(_, _, updatePriority))
     serviceModule.updateService.registerConfigUpdateListener(modelUpdater(_, _, updateConfig))
     serviceModule.updateService.registerTaskStateUpdateListener(modelUpdater(_, _, updateTaskState))
-    serviceModule.updateService.registerModelUpdateListener(modelUpdater(_, _, updateModel))
+    serviceModule.updateService.registerModelUpdateListener(updateModelUpdater)
   }
   
   private def modelUpdater[UpdatedType](userToken: String,
@@ -36,7 +36,8 @@ class UpdateControllerImpl(serviceModule: ServiceModule, modelPublisher: Publish
     }
   }
   
-  private def updateModel(currentModel: Model, updatedModel: Model): Model = updatedModel
+  private def updateModelUpdater(userToken: String, updatedModel: Model): Unit = modelPublisher
+    .update(newValue = Some(updatedModel), target = Some(userToken))
   
   private def updateTask(currentModel: Model, updatedTask: Task): Model = {
     currentModel.copy(tasks = currentModel.tasks.replaceOne((t: Task) 

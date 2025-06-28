@@ -10,11 +10,8 @@ import me.timelytask.serviceLayer.{ServiceModule, TaskService}
 
 import java.util.UUID
 
-class TaskServiceImpl(serviceModule: ServiceModule)
+class TaskServiceImpl(serviceModule: ServiceModule, taskRepository: TaskRepository)
   extends TaskService {
-  private val taskRepository: TaskRepository = wireWith[SqliteTaskRepository](
-    () => new SqliteTaskRepository(serviceModule.dataSource)
-  )
   
   override def updateName(userName: String, taskUUID: UUID, newName: String): Unit = {
       val task = taskRepository.getTaskById(userName, taskUUID)
