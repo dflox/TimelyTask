@@ -1,4 +1,5 @@
 package me.timelytask.repository.repositoryImpl
+
 import me.timelytask.model.task.Task
 import me.timelytask.model.task.*
 import me.timelytask.repository.TaskRepository
@@ -10,7 +11,7 @@ import scala.collection.immutable.HashSet
 
 class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
 
-  private def createTaskTable: Unit = dataSource.transaction {
+  private def createTaskTable(): Unit = dataSource.transaction {
     sql"""
         CREATE TABLE IF NOT EXISTS tasks(
           userid TEXT,
@@ -33,126 +34,191 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
        """.write()
   }
 
-  private def createTagAssignmentTable: Unit = dataSource.transaction {
+  private def createTagAssignmentTable(): Unit = dataSource.transaction {
+    // FOREIGN KEY (tagId) REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE
     sql"""
          CREATE TABLE IF NOT EXISTS task_tags(
-         taskId BLOB FOREIGN KEY REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
-         tagId BLOB FOREIGN KEY REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
-         PRIMARY KEY (taskId, tagId)
+         userId TEXT,
+         taskId BLOB,
+         tagId BLOB,
+         PRIMARY KEY (userId, taskId, tagId),
+         FOREIGN KEY (userId) REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE,
+         FOREIGN KEY (taskId) REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE
          )
        """.write()
   }
 
-  private def createDependentOnTable: Unit = dataSource.transaction {
+  private def createDependentOnTable(): Unit = dataSource.transaction {
     sql"""
          CREATE TABLE IF NOT EXISTS task_dependencies(
-         taskId BLOB FOREIGN KEY REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
-         dependentOnId BLOB FOREIGN KEY REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
-         PRIMARY KEY (taskId, dependentOnId)
+         userId TEXT,
+         taskId BLOB,
+         dependentOnId BLOB,
+         PRIMARY KEY (userId, taskId, dependentOnId),
+         FOREIGN KEY (userId) REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE,
+         FOREIGN KEY (taskId) REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
+         FOREIGN KEY (dependentOnId) REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE
          )
        """.write()
   }
-  
-  private def updateTags(userName: String, taskId: UUID, tags: Set[UUID]): Unit = dataSource.transaction {
-    createTagAssignmentTable
-    sql"""
-        DELETE FROM task_tags WHERE taskId = $taskId AND tagId NOT IN (${tags.mkString(",")})
-       """.write()
-    tags.foreach { tagId =>
+
+  private def updateTags(
+      userName: String,
+      taskId: UUID,
+      tags: Set[UUID]
+    ): Unit = {
+    createTagAssignmentTable()
+    dataSource.transaction {
       sql"""
-          INSERT OR IGNORE INTO task_tags(taskId, tagId) VALUES($taskId, $tagId)
-         """.write()
-    }
-  }
-  
-  private def updateDependentTasks(userName: String, taskId: UUID, dependentTasks: Set[UUID]): Unit = dataSource.transaction {
-    createDependentOnTable
-    sql"""
-        DELETE FROM task_dependencies WHERE taskId = $taskId AND dependentOnId NOT IN (${dependentTasks.mkString(",")})
+        DELETE FROM task_tags WHERE taskId = $taskId AND tagId NOT IN (${tags
+        .mkString(",")})
        """.write()
-    dependentTasks.foreach { dependentTaskId =>
-      sql"""
-          INSERT OR IGNORE INTO task_dependencies(taskId, dependentOnId) VALUES($taskId, $dependentTaskId)
+      tags.foreach { tagId =>
+        sql"""
+          INSERT OR IGNORE INTO task_tags(userId, taskId, tagId) VALUES($userName, $taskId, $tagId)
          """.write()
+      }
     }
-  }
-  
-  private def getTagsForTask(userName: String, taskId: UUID): Set[UUID] = dataSource.transaction {
-    createTagAssignmentTable
-    sql"""
-        SELECT tagId FROM task_tags WHERE taskId = $taskId
-       """.read[UUID].toSet
-  }
-  
-  private def getDependentTasksForTask(userName: String, taskId: UUID): Set[UUID] = dataSource.transaction {
-    createDependentOnTable
-    sql"""
-        SELECT dependentOnId FROM task_dependencies WHERE taskId = $taskId
-       """.read[UUID].toSet
   }
 
-  override def getTaskById(userName: String, taskId: UUID): Task = dataSource.transaction {
-    createTaskTable
-    val result = sql"""
+  private def updateDependentTasks(
+      userName: String,
+      taskId: UUID,
+      dependentTasks: Set[UUID]
+    ): Unit = {
+    createDependentOnTable()
+    dataSource.transaction {
+      sql"""
+        DELETE FROM task_dependencies WHERE taskId = $taskId AND dependentOnId NOT IN
+        (${dependentTasks
+        .mkString(",")})
+       """.write()
+      dependentTasks.foreach { dependentTaskId =>
+        sql"""
+          INSERT OR IGNORE INTO task_dependencies(userName, taskId, dependentOnId) VALUES
+          ($userName, $taskId, $dependentTaskId)
+         """.write()
+      }
+    }
+  }
+
+  private def getTagsForTask(userName: String, taskId: UUID): Set[UUID] = {
+      createTagAssignmentTable()
+      dataSource.transaction {
+        sql"""
+        SELECT tagId FROM task_tags WHERE taskId = $taskId AND userId = $userName
+       """.read[UUID].toSet
+      }
+    }
+
+  private def getDependentTasksForTask(userName: String, taskId: UUID): Set[UUID] = {
+    createDependentOnTable()
+    dataSource
+      .transaction {
+
+        sql"""
+        SELECT dependentOnId FROM task_dependencies WHERE taskId = $taskId AND userId = $userName
+       """.read[UUID].toSet
+      }
+  }
+
+  override def getTaskById(userName: String, taskId: UUID): Task = {
+    createTaskTable()
+    dataSource.transaction {
+      val result = sql"""
           SELECT * FROM tasks WHERE id = $taskId AND userid = $userName
        """.readOne[Task]
-    result.withTags(HashSet.from(getTagsForTask(userName, taskId)))
-          .withDependents(HashSet.from(getDependentTasksForTask(userName, taskId)))
+      result
+        .withTags(HashSet.from(getTagsForTask(userName, taskId)))
+        .withDependents(
+          HashSet.from(getDependentTasksForTask(userName, taskId))
+        )
+    }
   }
-  
-  override def addTask(userName: String, task: Task): Unit = dataSource.transaction {
-    createTaskTable
-    sql"""
-        INSERT INTO tasks(userid, id, name, description, priority, deadline_date, deadline_initialDate,
+
+  override def addTask(userName: String, task: Task): Unit = {
+    createTaskTable()
+    dataSource.transaction {
+      sql"""
+        INSERT INTO tasks(userid, id, name, description, priority, deadline_date,
+        deadline_initialDate,
                           deadline_completionDate, scheduleDate, state, tedDuration, reoccurring,
                           recurrenceInterval, realDuration)
         VALUES(${userName}, ${task.uuid}, ${task.name}, ${task.description}, ${task.priority},
-               ${task.deadline.date.toString}, ${task.deadline.initialDate.getOrElse("").toString},
-               ${task.deadline.completionDate.getOrElse("").toString}, ${task.scheduleDate.toString},
+               ${task.deadline.date.toString}, ${task.deadline.initialDate
+          .getOrElse("")
+          .toString},
+               ${task.deadline.completionDate
+          .getOrElse("")
+          .toString}, ${task.scheduleDate.toString},
                ${task.state}, ${task.tedDuration.toString}, ${task.reoccurring},
-               ${task.recurrenceInterval.toString}, ${task.realDuration.getOrElse("").toString})
+               ${task.recurrenceInterval.toString}, ${task.realDuration
+          .getOrElse("")
+          .toString})
        """.write()
+    }
     updateTags(userName, task.uuid, task.tags)
     updateDependentTasks(userName, task.uuid, task.dependentOn)
   }
 
-  override def getAllTasks(userName: String): Seq[Task] = dataSource.transaction {
-    createTaskTable
-    val result = sql"""
+  override def getAllTasks(userName: String): Seq[Task] = {
+    createTaskTable()
+    dataSource.transaction {
+      val result = sql"""
         SELECT * FROM tasks WHERE userid = $userName
        """.read[Task]
-    result.map { task =>
-      task.withTags(HashSet.from(getTagsForTask(userName, task.uuid)))
-          .withDependents(HashSet.from(getDependentTasksForTask(userName, task.uuid)))
+      result.map { task =>
+        task
+          .withTags(HashSet.from(getTagsForTask(userName, task.uuid)))
+          .withDependents(
+            HashSet.from(getDependentTasksForTask(userName, task.uuid))
+          )
+      }
     }
   }
 
-  override def deleteTask(userName: String, taskId: UUID): Unit = dataSource.transaction {
-    sql"""
+  override def deleteTask(userName: String, taskId: UUID): Unit =
+    dataSource.transaction {
+      sql"""
             DELETE FROM task_tags WHERE taskId = $taskId
            """.write()
-    sql"""
+      sql"""
             DELETE FROM task_dependencies WHERE taskId = $taskId
            """.write()
-    sql"""
+      sql"""
         DELETE FROM tasks WHERE id = $taskId AND userid = $userName
        """.write()
-  }
+    }
 
-  override def updateTask(userName: String, taskId: UUID, updatedTask: Task): Unit = dataSource.transaction {
-    createTaskTable
-    sql"""
+  override def updateTask(
+      userName: String,
+      taskId: UUID,
+      updatedTask: Task
+    ): Unit = {
+    createTaskTable()
+    dataSource.transaction {
+      sql"""
         UPDATE tasks SET name = ${updatedTask.name}, description = ${updatedTask.description},
-                         priority = ${updatedTask.priority}, deadline_date = ${updatedTask.deadline.date.toString},
-                         deadline_initialDate = ${updatedTask.deadline.initialDate.getOrElse("").toString},
-                         deadline_completionDate = ${updatedTask.deadline.completionDate.getOrElse("").toString},
-                         scheduleDate = ${updatedTask.scheduleDate.toString}, state = ${updatedTask.state},
-                         tedDuration = ${updatedTask.tedDuration.toString}, reoccurring = ${updatedTask.reoccurring},
+                         priority = ${updatedTask.priority}, deadline_date = ${updatedTask
+        .deadline.date.toString},
+                         deadline_initialDate = ${updatedTask.deadline.initialDate
+          .getOrElse("")
+          .toString},
+                         deadline_completionDate = ${updatedTask.deadline.completionDate
+          .getOrElse("")
+          .toString},
+                         scheduleDate = ${updatedTask.scheduleDate.toString}, state =
+                         ${updatedTask.state},
+                         tedDuration = ${updatedTask.tedDuration.toString}, reoccurring =
+                         ${updatedTask.reoccurring},
                          recurrenceInterval = ${updatedTask.recurrenceInterval.toString},
-                         realDuration = ${updatedTask.realDuration.getOrElse("").toString}
+                         realDuration = ${updatedTask.realDuration
+          .getOrElse("")
+          .toString}
         WHERE id = $taskId AND userid = $userName
        """.write()
-    updateTags(userName, taskId, updatedTask.tags)
-    updateDependentTasks(userName, taskId, updatedTask.dependentOn)
+      updateTags(userName, taskId, updatedTask.tags)
+      updateDependentTasks(userName, taskId, updatedTask.dependentOn)
+    }
   }
 }
