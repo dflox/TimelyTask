@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run + Debug SBT" type="CompoundRunConfigurationType">
+    <toRun name="Attach to SBT JVM" type="Remote" />
+    <toRun name="Run SBT in Debug" type="ShConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>
