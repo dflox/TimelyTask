@@ -43,9 +43,9 @@ class SqliteTaskRepository(ds: DataSource) extends TaskRepository {
          taskId TEXT,
          tagId TEXT,
          PRIMARY KEY (userId, taskId, tagId),
-         FOREIGN KEY (userId) REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE,
-         FOREIGN KEY (taskId) REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE
-         )
+         FOREIGN KEY (userId, taskId) REFERENCES tasks(userid, id) ON UPDATE CASCADE ON DELETE
+         CASCADE
+       )
        """.write()
   }
 
@@ -54,11 +54,14 @@ class SqliteTaskRepository(ds: DataSource) extends TaskRepository {
          CREATE TABLE IF NOT EXISTS task_dependencies(
          userId TEXT,
          taskId TEXT,
+         userIdDependent TEXT,
          dependentOnId TEXT,
          PRIMARY KEY (userId, taskId, dependentOnId),
-         FOREIGN KEY (userId) REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE,
-         FOREIGN KEY (taskId) REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
-         FOREIGN KEY (dependentOnId) REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE
+         FOREIGN KEY (userId, taskId) REFERENCES tasks(userid, id) ON UPDATE CASCADE ON DELETE
+         CASCADE,
+         FOREIGN KEY (userIdDependent, dependentOnId) REFERENCES tasks(userid, id) ON UPDATE CASCADE ON
+         DELETE CASCADE,
+         CHECK ( userId = userIdDependent )
          )
        """.write()
   }

@@ -34,8 +34,9 @@ class SqliteUserRepository(ds: DataSource) extends UserRepository {
 
   override def removeUser(userName: String): Unit = {
     ds.transactionWithForeignKeys {
-      createUserTable()
+      createUserTable() // TODO: Try with run not transaction
       sql"""
+            PRAGMA FOREIGN_KEYS = ON;
             DELETE FROM users WHERE name = $userName
          """.write()
     }
