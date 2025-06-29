@@ -12,7 +12,7 @@ trait PersistenceController {
    * @throws IllegalStateException if the serialization strategy is not set.
    * @note If the `folderPath` is not provided, the model will be saved in the current working directory.
    */
-  def saveModel(userToken: String, folderPath: Option[String], fileName: Option[String], 
+  def saveModel(userToken: String, folderPath: Option[String] = None, fileName: Option[String] = None, 
                 serializationType: String): Boolean
 
   /**

@@ -20,4 +20,6 @@ trait GlobalEventContainer {
   def shutdownApplication(): Unit
   
   def closeInstance(): Unit
+  
+  def exportModel(): Unit
 }

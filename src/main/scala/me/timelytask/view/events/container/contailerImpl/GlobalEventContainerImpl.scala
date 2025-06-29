@@ -90,6 +90,17 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
     ()
   ){})
 
+  override def exportModel(): Unit = eventHandler.handle(new Event[Unit](
+    (args: Unit) => {
+      coreModule.controllers.persistenceController.saveModel(userToken, serializationType = "json")
+      true
+    },
+    (args: Unit) => None,
+    ()
+  ) {})
+    
+  
+  
   private def randomTask(): Task = {
     new Task(
       "Random Task",
@@ -112,4 +123,6 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
     (args: Unit) => None,
     ()
   ){})
+
+  
 }

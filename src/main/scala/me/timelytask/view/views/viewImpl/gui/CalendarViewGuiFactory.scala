@@ -5,13 +5,18 @@ import me.timelytask.model.task.Task
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.commonsModules.CalendarCommonsModule
+import org.joda.time.DateTime
+import scalafx.application.Platform
 import scalafx.geometry.{HPos, Insets, Pos, VPos}
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, ButtonBar, Label, TextArea}
+import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.control.*
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight}
+import scalafx.stage.FileChooser
 
+import java.io.File
 import java.time.LocalDate
 import java.time.format.{DateTimeFormatter, TextStyle}
 import java.util.Locale
@@ -35,13 +40,11 @@ object CalendarViewGuiFactory {
    * Updates or creates the content pane for the calendar view.
    *
    * @param viewModel The CalendarViewModel containing data for the view, including tasks.
-   *                  It is assumed that `viewModel` has a property `tasks: List[Task]`.
    * @param currentScene The current scene, if any.
    * @param viewTypeCommonsModule Common module for calendar view interactions.
    * @return A Pane representing the calendar view.
    */
-  def updateContent(
-                     viewModel: CalendarViewModel,
+  def updateContent( viewModel: CalendarViewModel,
                      currentScene: Option[Scene],
                      viewTypeCommonsModule: CalendarCommonsModule
                    ): Pane = {
@@ -115,15 +118,21 @@ object CalendarViewGuiFactory {
       onAction = _ => viewTypeCommonsModule.globalEventContainer.redo()
     }
 
+    val exportModelBtn = new Button("Modell exportieren") {
+      onAction = _ => viewTypeCommonsModule.globalEventContainer.exportModel()
+    }
+
     val shutdownApplicationBtn = new Button("App beenden") {
       onAction = _ => viewTypeCommonsModule.globalEventContainer.shutdownApplication()
     }
 
     val globalNavBar = new HBox() {
       alignment = Pos.Center
+      spacing = 5
       children = Seq(
         undoBtn,
         redoBtn,
+        exportModelBtn,
         newWindowBtn,
         newInstanceBtn,
         shutdownApplicationBtn
@@ -238,15 +247,13 @@ object CalendarViewGuiFactory {
 
         taskStartDateJava.equals(date) && taskStartActualHour == hour
       }
-
-      val cellContent = tasksInCell.map(_.name).mkString("\n") // Display task names, one per line
-
+      val cellContent = tasksInCell.map(_.name).mkString("\n")
       val cell = new TextArea {
         text = cellContent
         wrapText = true
         editable = false
         if (tasksInCell.nonEmpty) {
-          style = "-fx-control-inner-background: #e0f7fa;" // light cyan/blue background
+          style = "-fx-control-inner-background: #e0f7fa;"
         }
       }
       GridPane.setColumnIndex(cell, dayCol + 1)
@@ -256,3 +263,41 @@ object CalendarViewGuiFactory {
     grid
   }
 }
+
+//Platform.runLater {
+//  val fileChooser = new FileChooser {
+//    title = "Modell exportieren unter..."
+//    initialFileName = s"${DateTime.now().toString("yyyy_MM_dd")}_TimelyTask.json"
+//    extensionFilters.addAll(
+//      new FileChooser.ExtensionFilter("JSON-Datei", "*.json"),
+//      new FileChooser.ExtensionFilter("XML-Datei", "*.xml"),
+//      new FileChooser.ExtensionFilter("Alle Dateien", "*.*")
+//    )
+//  }
+//
+//  val selectedFile: Option[File] = Option(fileChooser.showSaveDialog(mainStage))
+//
+//  selectedFile.foreach { file =>
+//    val folderPath = Option(file.getParent)
+//    val fileName = Some(file.getName)
+//    val serializationType = file.getName.split('.').lastOption.getOrElse("json").toLowerCase
+//
+//    val success = coreModule.controllers.persistenceController.saveModel(userToken, folderPath, fileName, serializationType)
+//
+//    if (success) {
+//      new Alert(AlertType.Information) {
+//        initOwner(mainStage)
+//        title = "Export erfolgreich"
+//        headerText = "Das Modell wurde erfolgreich exportiert."
+//        contentText = s"Gespeichert unter: ${file.getAbsolutePath}"
+//      }.showAndWait()
+//    } else {
+//      new Alert(AlertType.Error) {
+//        initOwner(mainStage)
+//        title = "Export fehlgeschlagen"
+//        headerText = "Das Modell konnte nicht exportiert werden."
+//        contentText = "Bitte überprüfen Sie die Konsolenausgabe für weitere Details."
+//      }.showAndWait()
+//    }
+//  }
+//}
