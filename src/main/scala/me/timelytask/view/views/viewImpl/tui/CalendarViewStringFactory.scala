@@ -58,7 +58,7 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
     val builder = new StringBuilder()
 
     // Creating
-    builder.append(header(actualWidth, timeSelection))
+    builder.append(header(actualWidth, timeSelection, model.user.name))
     // Create the TopRow
     builder.append(colored(timeColumn, colorText1))
     daySpan.foreach(day => builder.append(
@@ -94,8 +94,8 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
     }
   }
 
-  def header(actualWidth: Int, timeSelection: TimeSelection): String = {
-    val title = "Calendar"
+  def header(actualWidth: Int, timeSelection: TimeSelection, userName: String): String = {
+    val title = "Calendar of " + userName
     val dateformat = "dd. - dd. MMM. yyyy"
     val headerLetterCount: Int = (title + dateformat)
       .length // the amount of space(letters) the period String takes
