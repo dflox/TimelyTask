@@ -10,7 +10,7 @@ class CommandHandlerImpl extends CommandHandler {
   private var undoStack: List[Command[?]] = Nil
   private var redoStack: List[Command[?]] = Nil
 
-  private[controller] val runner: CancelableFuture[Unit] = CancelableFuture[Unit](commandExecutor
+  private[controller] var runner: CancelableFuture[Unit] = CancelableFuture[Unit](commandExecutor
     (), onFailure = Some(handleFailure))
 
   private def handleFailure(throwable: Throwable): Unit = {
