@@ -117,16 +117,33 @@ class GlobalEventContainerImplSpec extends AnyWordSpec with Matchers with Mockit
           .addTask(ArgumentMatchers.eq(userToken), ArgumentMatchers.any[Task]())
       }
 
-      "trigger an export model event" in new Fixture {
-        container.exportModel()
+      "trigger an export model event with default parameters" in new Fixture {
+        // Mindestens den erforderlichen serializationType angeben
+        container.exportModel("json")
         captureAndExecuteEvent()
 
         verify(mockPersistenceController, times(1))
           .saveModel(
             ArgumentMatchers.eq(userToken),
-            ArgumentMatchers.eq(null),
-            ArgumentMatchers.eq(null),
+            ArgumentMatchers.eq(None),
+            ArgumentMatchers.eq(None),
             ArgumentMatchers.eq("json")
+          )
+      }
+
+      "trigger an export model event with custom parameters" in new Fixture {
+        val folderPath = Some("/path/to/folder")
+        val fileName = Some("backup")
+
+        container.exportModel("xml", folderPath, fileName)
+        captureAndExecuteEvent()
+
+        verify(mockPersistenceController, times(1))
+          .saveModel(
+            ArgumentMatchers.eq(userToken),
+            ArgumentMatchers.eq(folderPath),
+            ArgumentMatchers.eq(fileName),
+            ArgumentMatchers.eq("xml")
           )
       }
     }
