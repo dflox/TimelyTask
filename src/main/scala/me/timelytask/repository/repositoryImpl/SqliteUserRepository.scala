@@ -3,50 +3,59 @@ package me.timelytask.repository.repositoryImpl
 import me.timelytask.repository.simpleReaders.given
 import me.timelytask.model.user.User
 import me.timelytask.repository.UserRepository
-import simplesql.DataSource
+import me.timelytask.util.extensions.simplesql.*
+import simplesql.{ Connection, DataSource }
 
-class SqliteUserRepository(dataSource: DataSource) extends UserRepository {
+class SqliteUserRepository(ds: DataSource) extends UserRepository {
 
-  private def createUserTable(): Unit = dataSource.transaction {
+  private def createUserTable(): Connection ?=> Int = {
     sql"""
             CREATE TABLE IF NOT EXISTS users (name TEXT PRIMARY KEY)
          """.write()
   }
 
-  override def getUser(userName: String): User = dataSource.transaction {
-    createUserTable()
-    sql"""
+  override def getUser(userName: String): User = {
+    ds.transactionWithForeignKeys {
+      createUserTable()
+      sql"""
             SELECT name FROM users WHERE name = $userName
          """.readOne[User]
+    }
   }
 
-  override def addUser(user: User): Unit = dataSource.transaction {
-    createUserTable()
-    sql"""
+  override def addUser(user: User): Unit = {
+    ds.transactionWithForeignKeys {
+      createUserTable()
+      sql"""
           INSERT INTO users (name) VALUES (${user.name})
          """.write()
+    }
   }
 
-  override def removeUser(userName: String): Unit = dataSource.transaction {
-    createUserTable()
-    sql"""
+  override def removeUser(userName: String): Unit = {
+    ds.transactionWithForeignKeys {
+      createUserTable()
+      sql"""
             DELETE FROM users WHERE name = $userName
          """.write()
+    }
   }
 
   override def userExists(userName: String): Boolean = {
-    createUserTable()
-    dataSource.transaction {
+    ds.transactionWithForeignKeys {
+      createUserTable()
       sql"""
             SELECT COUNT(*) FROM users WHERE name = $userName
          """.readOne[Int] > 0
     }
   }
 
-  override def updateName(oldName: String, newName: String): Unit = dataSource.transaction {
-    createUserTable()
-    sql"""
+  override def updateName(oldName: String, newName: String): Unit = {
+    ds.transactionWithForeignKeys {
+      createUserTable()
+      sql"""
             UPDATE users SET name = $newName WHERE name = $oldName
          """.write()
+    }
   }
 }

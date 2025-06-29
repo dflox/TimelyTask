@@ -4,6 +4,7 @@ import me.timelytask.model.Model
 import me.timelytask.serviceLayer.{ModelService, ServiceModule}
 
 import scala.collection.immutable.HashSet
+import scala.util.Try
 
 class ModelServiceImpl(serviceModule: ServiceModule) extends ModelService {
 
@@ -24,6 +25,8 @@ class ModelServiceImpl(serviceModule: ServiceModule) extends ModelService {
 
   override def saveModel(userName: String, model: Model): Unit = {
     serviceModule.updateService.updateModel(userName, model)
+
+    serviceModule.userService.removeUser(userName)
 
     serviceModule.userService.addUser(userName)
     model.tags.foreach(t => serviceModule.tagService.addTag(userName, t))

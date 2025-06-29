@@ -428,7 +428,6 @@ object CalendarViewGuiFactory {
           val fileName = file.getAbsolutePath
           callback(fileName)
         case None =>
-          callback("") // No file selected
       }
     }
   }

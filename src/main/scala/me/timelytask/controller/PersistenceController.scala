@@ -15,7 +15,7 @@ trait PersistenceController {
   def saveModel(userToken: String,
                 folderPath: Option[String] = None,
                 fileName: Option[String] = None, 
-                serializationType: String): Boolean
+                serializationType: String): Unit
 
   /**
    * Loads a model from a specified file.
@@ -27,7 +27,7 @@ trait PersistenceController {
    *                                  empty.
    */
   def loadModel(userToken: String, folderPathWithFileName: String, serializationType: String)
-  : Boolean
+  : Unit
   
   /**
    * Loads a model for a specific user.
