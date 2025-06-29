@@ -90,9 +90,12 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
     ()
   ){})
 
-  override def exportModel(): Unit = eventHandler.handle(new Event[Unit](
+  override def exportModel(serializationType: String,
+                           folderPath: Option[String] = None,
+                           fileName: Option[String] = None): Unit = eventHandler.handle(new Event[Unit](
     (args: Unit) => {
-      coreModule.controllers.persistenceController.saveModel(userToken, serializationType = "json")
+      coreModule.controllers.persistenceController.saveModel(userToken,
+        folderPath, fileName, serializationType)
       true
     },
     (args: Unit) => None,
@@ -124,5 +127,14 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
     ()
   ){})
 
-  
+
+  override def importModel(serializationType: String, folderPathWithFileName: String): Unit = {
+    eventHandler.handle(new Event[Unit](
+      (args: Unit) => {
+        coreModule.controllers.persistenceController.loadModel(userToken, folderPathWithFileName, serializationType)
+        true
+      },
+      (args: Unit) => None,
+      ()
+    ) {})
 }
