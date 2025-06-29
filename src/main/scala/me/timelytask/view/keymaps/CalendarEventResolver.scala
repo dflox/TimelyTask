@@ -15,7 +15,7 @@ class CalendarEventResolver(override protected val eventContainer: CalendarEvent
       case EventTypeId("PreviousDay") => eventContainer.previousDay()
       case EventTypeId("NextWeek") => eventContainer.nextWeek()
       case EventTypeId("PreviousWeek") => eventContainer.previousWeek()
-//      case EventTypeId("GoToToday") => Some(eventContainer.goToToday.call(()))
+      case EventTypeId("GoToToday") => eventContainer.goToToday()
 //      case EventTypeId("GoToDate") => Some(eventContainer.goToDate.call(()))
 //      case EventTypeId("ShowWholeWeek") => Some(eventContainer.showWholeWeek.call(()))
 //      case EventTypeId("ShowMoreDays") => Some(eventContainer.showMoreDays.call(()))

@@ -21,5 +21,10 @@ trait GlobalEventContainer {
   
   def closeInstance(): Unit
   
-  def exportModel(): Unit
+  def exportModel(serializationType: String,
+                   folderPath: Option[String] = None,
+                  fileName: Option[String] = None): Unit
+  
+  def importModel(serializationType: String,
+                   folderPathWithFileName: String): Unit
 }

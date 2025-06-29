@@ -21,16 +21,21 @@ class PersistenceControllerImpl(modelPublisher: Publisher[Model],
 
   private def timeStamp: String = DateTime.now().toString("yyyy_mm_dd")
   
-  private def buildFileName(fileName: Option[String]): String = fileName
-  .getOrElse(s"${timeStamp}_$applicationName")
+  private def buildFileName(fileName: Option[String], userName: String): String = fileName
+  .getOrElse(s"${timeStamp}_${applicationName}_$userName")
 
   override def saveModel(userToken: String,
                          folderPath: Option[String] = None,
                          fileName: Option[String] = None,
                          serializationType: String)
   : Boolean = {
+    val user = serviceModule.userService.getUser(userToken)
+    val folder = folderPath match {
+      case Some(path) if path.nonEmpty => path + "/"
+      case _ => ""
+    }
     serviceModule.fileExportService.exportToFile(userToken,
-      folderPath.getOrElse("").concat(buildFileName(fileName)),
+      folder.concat(buildFileName(fileName, user.name)),
     serializationType)
     true
   }
