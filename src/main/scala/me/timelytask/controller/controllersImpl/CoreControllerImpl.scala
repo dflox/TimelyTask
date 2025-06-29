@@ -22,7 +22,7 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
   private var runningFlag: Boolean = false
 
   override def shutdownApplication(): Unit = {
-    commandHandler.handle(new UndoableCommand[Unit](shutdownCommandHandler(), ()) {})
+    commandHandler.handle(new IrreversibleCommand[Unit](shutdownCommandHandler(), ()) {})
   }
 
   private def shutdownCommandHandler(): Handler[Unit] = (args: Unit) => {

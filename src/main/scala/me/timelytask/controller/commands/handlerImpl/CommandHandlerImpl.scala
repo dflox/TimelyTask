@@ -1,6 +1,6 @@
 package me.timelytask.controller.commands.handlerImpl
 
-import me.timelytask.controller.commands.{Command, CommandHandler, Handler, UndoableCommand}
+import me.timelytask.controller.commands.{Command, CommandHandler, Handler, IrreversibleCommand}
 import me.timelytask.util.CancelableFuture
 
 import java.util.concurrent.LinkedBlockingQueue
@@ -30,7 +30,7 @@ class CommandHandlerImpl extends CommandHandler {
     if command.execute then
       command match {
         case cmd: CommandHandlerCommand => ()
-        case cmd: UndoableCommand[?] =>
+        case cmd: IrreversibleCommand[?] =>
           undoStack = Nil
           redoStack = Nil
         case _ =>

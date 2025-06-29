@@ -1,6 +1,6 @@
 package me.timelytask.controller
 
-import me.timelytask.controller.commands.{ CommandHandler, UndoableCommand }
+import me.timelytask.controller.commands.{ CommandHandler, IrreversibleCommand }
 import me.timelytask.controller.controllersImpl.CoreControllerImpl
 import me.timelytask.core.{ CoreModule, StartUpConfig, UiInstanceConfig }
 import me.timelytask.model.settings.CALENDAR
@@ -72,7 +72,7 @@ class CoreControllerSpec extends AnyWordSpec with Matchers with MockitoSugar {
 
       "handle a shutdown command" in new Fixture {
         coreController.shutdownApplication()
-        verify(mockCommandHandler, times(1)).handle(any[UndoableCommand[Unit]])
+        verify(mockCommandHandler, times(1)).handle(any[IrreversibleCommand[Unit]])
       }
     }
 
@@ -92,7 +92,7 @@ class CoreControllerSpec extends AnyWordSpec with Matchers with MockitoSugar {
 
         verify(mockUiInstance1, times(1)).shutdown()
         verify(mockUiInstance2, never()).shutdown()
-        verify(mockCommandHandler, never()).handle(any[UndoableCommand[Unit]])
+        verify(mockCommandHandler, never()).handle(any[IrreversibleCommand[Unit]])
       }
 
       "shut down the application when the last instance is closed" in new Fixture {
@@ -101,7 +101,7 @@ class CoreControllerSpec extends AnyWordSpec with Matchers with MockitoSugar {
 
         coreController.closeInstance(mockUiInstance)
 
-        verify(mockCommandHandler, times(1)).handle(any[UndoableCommand[Unit]])
+        verify(mockCommandHandler, times(1)).handle(any[IrreversibleCommand[Unit]])
         verify(mockUiInstance, never()).shutdown()
       }
     }

@@ -10,7 +10,7 @@ import me.timelytask.view.events.EventHandler
 import me.timelytask.view.events.event.Event
 import me.timelytask.view.viewmodel.CalendarViewModel
 import org.mockito.ArgumentCaptor
-import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.*
@@ -69,7 +69,7 @@ class CalendarEventContainerSpec extends AnyWordSpec
 
         // Assert
         val viewModelCaptor = ArgumentCaptor.forClass(classOf[Option[CalendarViewModel]])
-        verify(mockViewModelPublisher).update(viewModelCaptor.capture())
+        verify(mockViewModelPublisher, times(1)).update(viewModelCaptor.capture())
 
         val capturedVm = viewModelCaptor.getValue.get
         capturedVm.model should be(newModel)

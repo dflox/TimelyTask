@@ -14,8 +14,8 @@ class ModelControllerImpl(modelPublisher: Publisher[Model],
   with ModelController {
 
   override def addTask(userToken: String, task: Task): Unit = commandHandler.handle(new
-      InversibleCommand[Task](
-    new InversibleHandler[Task] {
+      ReversibleCommand[Task](
+    new ReversibleHandler[Task] {
       override def apply(args: Task): Boolean = {
         serviceModule.taskService.newTask(userToken, args)
         true
@@ -29,9 +29,9 @@ class ModelControllerImpl(modelPublisher: Publisher[Model],
     task
   ) {})
 
-  override def removeTask(userToken: String, task: Task): Unit = commandHandler.handle(new 
-      InversibleCommand[Task](
-    new InversibleHandler[Task] {
+  override def removeTask(userToken: String, task: Task): Unit = commandHandler.handle(new
+      ReversibleCommand[Task](
+    new ReversibleHandler[Task] {
       override def apply(args: Task): Boolean = {
         serviceModule.taskService.deleteTask(userToken, args.uuid)
         true

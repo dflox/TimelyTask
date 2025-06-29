@@ -1,57 +1,32 @@
 package me.timelytask.controller.commands
 
-import me.timelytask.model.*
-import me.timelytask.util.publisher.PublisherImpl
+trait ReversibleHandler[Args] {
+  def apply(args: Args): Boolean
 
-trait StoreHandler[Args, StateValue] {
-  def apply(args: Args): Option[StateValue]
+  def unapply(args: Args): Boolean
 }
 
-// TODO: Rename to something like absolute state manipulating command
-trait RestoreHandler[Args, StateValue] {
-  def apply(args: Args, value: StateValue): Boolean
-}
-
-trait ReversibleCommand[Args, StateValue](handler: Handler[Args], args: Args,
-                                          storeHandler: StoreHandler[Args, StateValue],
-                                          restoreHandler: RestoreHandler[Args, StateValue])
+trait ReversibleCommand[Args](handler: ReversibleHandler[Args], args: Args)
   extends Command[Args] {
-  private var state: Option[StateValue] = None
 
   override def execute: Boolean = {
-    state match {
-      case Some(s) => false
-      case None =>
-        state = storeHandler(args)
-        handler(args)
-    }
+    handler(args)
   }
 
   override def redo: Boolean = {
-    state match {
-      case Some(s) => handler(args)
-      case None => false
-    }
+    handler(args)
   }
 
   override def undo: Boolean = {
-    state match {
-      case Some(s) => restoreHandler(args, s)
-      case None => false
-    }
+    handler.unapply(args)
   }
 }
 
-trait ReversibleCommandCompanion[StateValue, T <: ReversibleCommand[Args, StateValue], Args] {
-  protected var handler: Option[Handler[Args]] = None
-  protected var storeHandler: Option[StoreHandler[Args, StateValue]] = None
-  protected var restoreHandler: Option[RestoreHandler[Args, StateValue]] = None
+trait ReversibleCommandCompanion[T <: ReversibleCommand[Args], Args] {
+  protected var handler: Option[ReversibleHandler[Args]] = None
 
-  def setHandler(newHandler: Handler[Args], newStoreHandler: StoreHandler[Args, StateValue],
-                 newRestoreHandler: RestoreHandler[Args, StateValue]): Boolean = {
+  def setHandler(newHandler: ReversibleHandler[Args]): Boolean = {
     handler = Some(newHandler)
-    storeHandler = Some(newStoreHandler)
-    restoreHandler = Some(newRestoreHandler)
     true
   }
 
