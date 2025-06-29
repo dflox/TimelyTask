@@ -9,9 +9,15 @@ class CommandHandlerImpl extends CommandHandler {
   private val commandQueue: LinkedBlockingQueue[Command[?]] = new LinkedBlockingQueue[Command[?]]()
   private var undoStack: List[Command[?]] = Nil
   private var redoStack: List[Command[?]] = Nil
-  override private[controller] val runner: CancelableFuture[Unit] =
-    CancelableFuture[Unit](commandExecutor())
-  
+
+  private[controller] var runner: CancelableFuture[Unit] = CancelableFuture[Unit](commandExecutor
+    (), onFailure = Some(handleFailure))
+
+  private def handleFailure(throwable: Throwable): Unit = {
+    System.err.println(throwable.toString)
+    runner = CancelableFuture[Unit](commandExecutor(), onFailure = Some(handleFailure))
+  }
+
   private def commandExecutor(): Unit = {
     while (true) {
       this.doStep(commandQueue.take())

@@ -13,7 +13,7 @@ class ModelControllerImpl(modelPublisher: Publisher[Model],
   extends Controller(modelPublisher, commandHandler)
   with ModelController {
 
-  override def addTask(userToken: String, task: Task): Unit = commandHandler.handle(new 
+  override def addTask(userToken: String, task: Task): Unit = commandHandler.handle(new
       InversibleCommand[Task](
     new InversibleHandler[Task] {
       override def apply(args: Task): Boolean = {

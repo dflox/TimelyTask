@@ -59,7 +59,7 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
       calendarView.render(initialScene, CALENDAR)      
       
       stage = Some(new Stage {
-        title = "TimelyTask"
+        title = "TimelyTask - " + calendarViewModule.globalEventContainer.userToken // bit hacky, but works
         scene = initialScene
         onCloseRequest = _ => {
           calendarViewModule.globalEventContainer.closeInstance()

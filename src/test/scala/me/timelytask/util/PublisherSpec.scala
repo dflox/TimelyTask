@@ -7,11 +7,6 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
-/**
- * Test specification for any class that implements the Publisher trait.
- * This spec uses a minimal, in-memory implementation of the trait called SimplePublisher
- * to test the contract defined by the trait itself.
- */
 class PublisherSpec extends AnyWordSpec with Matchers with MockitoSugar {
 
   // Fixture to create a new publisher for each test context

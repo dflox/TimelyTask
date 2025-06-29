@@ -22,7 +22,7 @@ class TaskServiceImpl(serviceModule: ServiceModule, taskRepository: TaskReposito
 
   override def newTask(userName: String, task: Task): Unit = {
     taskRepository.addTask(userName, task)
-    serviceModule.updateService.updateTask(userName, task)
+    serviceModule.modelService.loadModel(userName)
   }
 
   override def deleteTask(userName: String, taskUUID: UUID): Unit = {

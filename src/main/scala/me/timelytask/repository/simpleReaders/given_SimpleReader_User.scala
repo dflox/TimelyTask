@@ -10,7 +10,11 @@ given SimpleReader[User] with {
     User(name = rs.getString("name"))
   }
 
-  override def readIdx(results: ResultSet, idx: Int): User = ???
+  override def readIdx(results: ResultSet, idx: Int): User = {
+    User(name = results.getString(idx))
+  }
 
-  override def readName(result: ResultSet, name: String): User = ???
+  override def readName(result: ResultSet, name: String): User = {
+    User(name = result.getString(name))
+  }
 }
