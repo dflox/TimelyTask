@@ -1,18 +1,16 @@
 package me.timelytask.view.views.viewImpl.tui
 
-import com.softwaremill.macwire.{ wire, wireWith }
-import me.timelytask.model.settings.{ CALENDAR, TASKEdit, ViewType }
+import com.softwaremill.macwire.{wire, wireWith}
+import me.timelytask.model.settings.{CALENDAR, TASKEdit, ViewType}
 import me.timelytask.model.utility.Key
-import me.timelytask.util.{ CancelableFuture, Publisher }
+import me.timelytask.util.{CancelableFuture, Publisher}
 import me.timelytask.view.views.*
-import me.timelytask.view.views.commonsModules.{
-  CalendarCommonsModule,
-  TaskEditCommonsModule
-}
+import me.timelytask.view.views.commonsModules.{CalendarCommonsModule, TaskEditCommonsModule}
 import me.timelytask.view.views.viewImpl.tui.dialog.DialogFactoryTUI
 import org.jline.keymap.BindingReader
-import org.jline.terminal.{ Terminal, TerminalBuilder }
+import org.jline.terminal.{Terminal, TerminalBuilder}
 import org.jline.utils.InfoCmp.Capability
+import scalafx.stage.Stage
 
 import java.io.PrintWriter
 
@@ -21,6 +19,8 @@ class TUIManager(override val activeViewPublisher: Publisher[ViewType],
                  override protected val taskEditViewModule: TaskEditCommonsModule
                 )
   extends UIManager[String] {
+
+  override def stage: Option[Stage] = None
 
   override def shutdown(afterShutdownAction: () => Unit = () => ()): Unit = {
     stopInput()
