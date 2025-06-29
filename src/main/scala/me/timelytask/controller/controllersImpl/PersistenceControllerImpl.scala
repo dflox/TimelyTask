@@ -40,17 +40,6 @@
     true
   }
 
-    override def saveModel(userToken: String,
-                           folderPath: Option[String] = None,
-                           fileName: Option[String] = None,
-                           serializationType: String)
-    : Boolean = {
-      serviceModule.fileExportService.exportToFile(userToken,
-        folderPath.getOrElse("").concat(buildFileName(fileName)),
-      serializationType)
-      true
-    }
-
     override def loadModel(userToken: String, folderPathWithFileName: String,
                            serializationType: String): Boolean = {
       serviceModule.fileExportService.importFromFile(userToken, folderPathWithFileName, serializationType)

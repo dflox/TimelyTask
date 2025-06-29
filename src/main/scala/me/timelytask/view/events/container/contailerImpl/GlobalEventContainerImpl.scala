@@ -128,7 +128,7 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
   ){})
 
 
-  override def importModel(serializationType: String, folderPathWithFileName: String): Unit = {
+  override def importModel(serializationType: String, folderPathWithFileName: String): Unit = 
     eventHandler.handle(new Event[Unit](
       (args: Unit) => {
         coreModule.controllers.persistenceController.loadModel(userToken, folderPathWithFileName, serializationType)
