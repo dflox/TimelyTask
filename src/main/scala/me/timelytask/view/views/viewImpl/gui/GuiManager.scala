@@ -20,13 +20,11 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
                  override protected val calendarViewModule: CalendarCommonsModule,
                  override protected val taskEditViewModule: TaskEditCommonsModule)
   extends UIManager[Scene] {
-  private var _stage: Option[Stage] = None
-
-  override val stage: Option[Stage] = _stage
+  private var stage: Option[Stage] = None
 
   override def shutdown(afterShutdownAction: () => Unit = () => ()): Unit = {
     Platform.runLater {
-      _stage.foreach(_.close())
+      stage.foreach(_.close())
     }
     afterShutdownAction()
   }
@@ -41,9 +39,9 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
   override def render(scene: Scene, viewType: ViewType): Unit = {
     if activeViewPublisher.getValue.contains(viewType) then {
       Platform.runLater {
-        _stage.foreach(_.setScene(scene))
-        _stage.foreach(_.sizeToScene())
-        _stage.foreach(_.centerOnScreen())
+        stage.foreach(_.setScene(scene))
+        stage.foreach(_.sizeToScene())
+        stage.foreach(_.centerOnScreen())
       }
     }
   }
@@ -60,14 +58,14 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
       }
       calendarView.render(initialScene, CALENDAR)      
       
-      _stage = Some(new Stage {
+      stage = Some(new Stage {
         title = "TimelyTask"
         scene = initialScene
         onCloseRequest = _ => {
           calendarViewModule.globalEventContainer.closeInstance()
         }
       })
-      _stage.foreach(_.show())
+      stage.foreach(_.show())
       calendarView.init()
       taskEditView.init()
     }

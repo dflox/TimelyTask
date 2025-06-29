@@ -10,12 +10,7 @@ import me.timelytask.view.events.EventHandler
 import me.timelytask.view.events.container.GlobalEventContainer
 import me.timelytask.view.events.event.Event
 import org.joda.time.DateTime
-import scalafx.application.Platform
-import scalafx.scene.control.Alert
-import scalafx.scene.control.Alert.AlertType
-import scalafx.stage.FileChooser
 
-import java.io.File
 import scala.util.Random
 
 // TODO: add GlobalEventResolver and extend the Keymap to include the global events
@@ -95,50 +90,6 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
     ()
   ){})
 
-  override def exportModel(): Unit = {
-    val stageOption = uiInstance.uiManager.flatMap(_.stage).headOption
-
-    stageOption.foreach { mainStage =>
-      Platform.runLater {
-        val fileChooser = new FileChooser {
-          title = "Modell exportieren unter..."
-          initialFileName = s"${DateTime.now().toString("yyyy_MM_dd")}_TimelyTask.json"
-          extensionFilters.addAll(
-            new FileChooser.ExtensionFilter("JSON-Datei", "*.json"),
-            new FileChooser.ExtensionFilter("XML-Datei", "*.xml"),
-            new FileChooser.ExtensionFilter("Alle Dateien", "*.*")
-          )
-        }
-
-        val selectedFile: Option[File] = Option(fileChooser.showSaveDialog(mainStage))
-
-        selectedFile.foreach { file =>
-          val folderPath = Option(file.getParent)
-          val fileName = Some(file.getName)
-          val serializationType = file.getName.split('.').lastOption.getOrElse("json").toLowerCase
-
-          val success = coreModule.controllers.persistenceController.saveModel(userToken, folderPath, fileName, serializationType)
-
-          if (success) {
-            new Alert(AlertType.Information) {
-              initOwner(mainStage)
-              title = "Export erfolgreich"
-              headerText = "Das Modell wurde erfolgreich exportiert."
-              contentText = s"Gespeichert unter: ${file.getAbsolutePath}"
-            }.showAndWait()
-          } else {
-            new Alert(AlertType.Error) {
-              initOwner(mainStage)
-              title = "Export fehlgeschlagen"
-              headerText = "Das Modell konnte nicht exportiert werden."
-              contentText = "Bitte überprüfen Sie die Konsolenausgabe für weitere Details."
-            }.showAndWait()
-          }
-        }
-      }
-    }
-  }
-  
   private def randomTask(): Task = {
     new Task(
       "Random Task",
@@ -161,6 +112,4 @@ class GlobalEventContainerImpl(coreModule: CoreModule,
     (args: Unit) => None,
     ()
   ){})
-
-  
 }

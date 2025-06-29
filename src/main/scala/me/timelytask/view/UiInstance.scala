@@ -43,7 +43,7 @@ class UiInstance(protected val uiInstanceConfig: UiInstanceConfig,
   
   private lazy val taskEditViewModule: TaskEditCommonsModule = wire[TaskEditCommonsModuleImpl]
   
-  var uiManager: Vector[UIManager[?]] = Vector.empty
+  private var uiManager: Vector[UIManager[?]] = Vector.empty
 
   def run(): Unit = {
     init()
