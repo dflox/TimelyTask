@@ -29,13 +29,13 @@ class CommandHandlerImpl extends CommandHandler {
     }
   }
 
-  private[controller] override def handle(userToken: String, command: Command[?]): Unit = 
+  private[controller] override def handle(userToken: String, command: Command[?]): Unit =
     commandQueue.add(QueueCommand(
     userToken, command))
 
   private def doStep(queueCommand: QueueCommand): Boolean = {
     if queueCommand.command.execute then
-      queueCommand match {
+      queueCommand.command match {
         case cmd: CommandHandlerCommand => ()
         case cmd: IrreversibleCommand[?] =>
           userSessions = userSessions.removed(queueCommand.userToken)
@@ -52,10 +52,10 @@ class CommandHandlerImpl extends CommandHandler {
       false
   }
 
-  override def undo(userToken: String): Unit = commandQueue.add(QueueCommand(userToken, new 
+  override def undo(userToken: String): Unit = commandQueue.add(QueueCommand(userToken, new
       CommandHandlerCommand(undoStep(_, userToken)) {}))
 
-  override def redo(userToken: String): Unit = commandQueue.add(QueueCommand(userToken, new 
+  override def redo(userToken: String): Unit = commandQueue.add(QueueCommand(userToken, new
       CommandHandlerCommand(redoStep(_, userToken)) {}))
 
   private def undoStep(args: Unit, userToken: String): Boolean = {
@@ -67,7 +67,7 @@ class CommandHandlerImpl extends CommandHandler {
             userSessions = userSessions.updated(userToken,
               session.copy(undoStack = stack, redoStack = head :: session.redoStack))
             true
-          else 
+          else
             false
       }
       case None => false
@@ -83,7 +83,7 @@ class CommandHandlerImpl extends CommandHandler {
             userSessions = userSessions.updated(userToken,
               session.copy(undoStack = head :: session.undoStack, redoStack = stack))
             true
-          else 
+          else
             false
       }
       case None => false
@@ -109,6 +109,6 @@ class CommandHandlerImpl extends CommandHandler {
     userSessions = userSessions.removed(userToken)
   }
 
-  override private[controller] def handleGlobally(command: Command[?]): Unit = 
+  override private[controller] def handleGlobally(command: Command[?]): Unit =
     commandQueue.add(QueueCommand("", command))
 }
