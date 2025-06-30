@@ -22,10 +22,15 @@ class ModelServiceImpl(serviceModule: ServiceModule) extends ModelService {
       user = serviceModule.userService.getUser(userName)
     )
   }
+  
+  override def loadModelOrCreate(userName: String): Unit = {
+    if (!serviceModule.userService.userExists(userName)) {
+      serviceModule.userService.addUser(userName)
+    }
+    loadModel(userName)
+  }
 
   override def saveModel(userName: String, model: Model): Unit = {
-    serviceModule.updateService.updateModel(userName, model)
-
     serviceModule.userService.removeUser(userName)
 
     serviceModule.userService.addUser(userName)
@@ -34,5 +39,7 @@ class ModelServiceImpl(serviceModule: ServiceModule) extends ModelService {
     model.states.foreach(s => serviceModule.taskStateService.addTaskState(userName, s))
     model.tasks.foreach(t => serviceModule.taskService.newTask(userName, t))
     serviceModule.configService.addConfig(userName, model.config)
+    
+    serviceModule.updateService.updateModel(userName, model)
   }
 }

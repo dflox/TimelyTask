@@ -1,10 +1,10 @@
 package me.timelytask.repository.repositoryImpl
 
-import me.timelytask.repository.simpleReaders.given
 import me.timelytask.model.user.User
 import me.timelytask.repository.UserRepository
+import me.timelytask.repository.simpleReaders.given
 import me.timelytask.util.extensions.simplesql.*
-import simplesql.{ Connection, DataSource }
+import simplesql.{Connection, DataSource}
 
 class SqliteUserRepository(ds: DataSource) extends UserRepository {
 
@@ -34,9 +34,11 @@ class SqliteUserRepository(ds: DataSource) extends UserRepository {
 
   override def removeUser(userName: String): Unit = {
     ds.transactionWithForeignKeys {
-      createUserTable() // TODO: Try with run not transaction
+      createUserTable()
+    }
+    ds.transactionWithForeignKeys {
+      // TODO: Try with run not transaction
       sql"""
-            PRAGMA FOREIGN_KEYS = ON;
             DELETE FROM users WHERE name = $userName
          """.write()
     }

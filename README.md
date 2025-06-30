@@ -29,6 +29,7 @@ This is an educational project for the Software Engineering module at HTWG Konst
 
 - [Scala](https://www.scala-lang.org/download/)
 - [sbt (Scala Build Tool)](https://www.scala-sbt.org/download.html)
+- [jdk 24](https://jdk.java.net/24/)
 
 ### Clone the Repository
 

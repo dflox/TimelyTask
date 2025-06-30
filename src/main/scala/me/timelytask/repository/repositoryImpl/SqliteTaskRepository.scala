@@ -227,4 +227,21 @@ class SqliteTaskRepository(ds: DataSource) extends TaskRepository {
     updateTags(userName, taskId, updatedTask.tags)
     updateDependentTasks(userName, taskId, updatedTask.dependentOn)
   }
+
+  override def deleteAllTasks(userName: String): Unit = {
+    ds.transactionWithForeignKeys {
+      createTaskTable()
+      createTagAssignmentTable()
+      createDependentOnTable()
+      sql"""
+        DELETE FROM tasks WHERE userid = $userName
+       """.write()
+      sql"""
+        DELETE FROM task_tags WHERE userId = $userName
+       """.write()
+      sql"""
+        DELETE FROM task_dependencies WHERE userId = $userName
+       """.write()
+    }
+  }
 }

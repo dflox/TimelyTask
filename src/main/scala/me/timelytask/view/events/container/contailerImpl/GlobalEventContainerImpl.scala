@@ -25,7 +25,7 @@ class GlobalEventContainerImpl(
   override def undo(): Unit = eventHandler.handle(
     new Event[Unit](
       (args: Unit) => {
-        coreModule.controllers.commandHandler.undo()
+        coreModule.controllers.commandHandler.undo(userToken)
         true
       },
       (args: Unit) => None,
@@ -36,7 +36,7 @@ class GlobalEventContainerImpl(
   override def redo(): Unit = eventHandler.handle(
     new Event[Unit](
       (args: Unit) => {
-        coreModule.controllers.commandHandler.redo()
+        coreModule.controllers.commandHandler.redo(userToken)
         true
       },
       (args: Unit) => None,

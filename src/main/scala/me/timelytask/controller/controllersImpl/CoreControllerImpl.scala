@@ -22,7 +22,7 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
   private var runningFlag: Boolean = false
 
   override def shutdownApplication(): Unit = {
-    commandHandler.handle(new IrreversibleCommand[Unit](shutdownCommandHandler(), ()) {})
+    commandHandler.handleGlobally(new IrreversibleCommand[Unit](shutdownCommandHandler(), ()) {})
   }
 
   private def shutdownCommandHandler(): Handler[Unit] = (args: Unit) => {
@@ -50,6 +50,14 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
     uiInstances = uiInstances.filterNot(_ == uiInstance)
     if (uiInstances.isEmpty) this.shutdownApplication()
     else uiInstance.shutdown()
+  }
+  
+  private def closeUserSessionOnLastInstance(userToken: String): Unit = {
+    if (!uiInstances.exists(_.userToken == userToken)) {
+      commandHandler.terminateUserSession(userToken)
+      coreModule.removeUserSession(userToken)
+    } 
+      
   }
 
   private def createUiInstances(startUpConfig: Option[StartUpConfig]): Unit = {

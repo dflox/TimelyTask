@@ -29,7 +29,7 @@ class PersistenceControllerImpl(
       folderPath: Option[String] = None,
       fileName: Option[String] = None,
       serializationType: String
-    ): Unit = commandHandler.handle(new IrreversibleCommand(
+    ): Unit = commandHandler.handle(userToken, new IrreversibleCommand(
      saveModelHandler(_, folderPath, fileName, serializationType),
     userToken
   ) {})
@@ -57,7 +57,7 @@ class PersistenceControllerImpl(
       userToken: String,
       folderPathWithFileName: String,
       serializationType: String
-    ): Unit = commandHandler.handle(new IrreversibleCommand(
+    ): Unit = commandHandler.handle(userToken, new IrreversibleCommand(
       loadModelHandler(_, folderPathWithFileName, serializationType),
       userToken
     ) {})
@@ -78,11 +78,6 @@ class PersistenceControllerImpl(
   override private[controller] def provideModelFromDB(
       userName: String
     ): Unit = {
-    if (serviceModule.userService.userExists(userName))
-      serviceModule.modelService.loadModel(userName)
-    else {
-      val model = Model.emptyModel.copy(user = User(userName))
-      serviceModule.modelService.saveModel(userName, model)
-    }
+    serviceModule.modelService.loadModelOrCreate(userName)
   }
 }
