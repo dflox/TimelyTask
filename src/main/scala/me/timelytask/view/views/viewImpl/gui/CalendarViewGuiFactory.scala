@@ -91,12 +91,7 @@ object CalendarViewGuiFactory {
     }
 
     val todayBtn = new Button("Heute") {
-      onAction = _ => {
-        println(
-          "Heute button clicked - goToToday action pending implementation"
-        )
-        // Example: viewTypeCommonsModule.eventContainer.goToToday()
-      }
+      onAction = _ => viewTypeCommonsModule.eventContainer.goToToday()
     }
     val prevWeekBtn = new Button("<< Woche") {
       onAction = _ => viewTypeCommonsModule.eventContainer.previousWeek()
