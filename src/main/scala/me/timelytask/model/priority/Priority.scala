@@ -24,6 +24,14 @@ case class Priority(name: String,
   def < (other: Priority): Boolean = {
     this.rank < other.rank
   }
+
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case that: Priority => this.uuid == that.uuid
+      case _ => false
+    }
+  }
+  
   def == (other: Priority): Boolean = {
     this.uuid == other.uuid
   }

@@ -58,11 +58,11 @@ class ViewSpec extends AnyWordSpec with Matchers with MockitoSugar {
     "handling key presses" should {
 
       "interact with the focused element when Space is pressed" in new Fixture {
-        val updatedViewModel = mock[TestViewModel]
+        val updatedViewModel: TestViewModel = mock[TestViewModel]
         when(mockViewModelPublisher.getValue).thenReturn(Some(mockViewModel))
         when(mockViewModel.interact(any())).thenReturn(Some(updatedViewModel))
 
-        val result = view.handleKey(Some(Key.Space))
+        val result: Boolean = view.handleKey(Some(Key.Space))
 
         result shouldBe true
         verify(mockViewModel, times(1)).interact(any())

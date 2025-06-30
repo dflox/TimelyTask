@@ -10,12 +10,15 @@ import me.timelytask.view.events.EventHandler
 import me.timelytask.view.events.event.Event
 import me.timelytask.view.viewmodel.CalendarViewModel
 import org.mockito.ArgumentCaptor
-import org.mockito.Mockito.{reset, times, verify, when}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{doReturn, reset, times, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
+
+import scala.compiletime.uninitialized
 
 class CalendarEventContainerSpec extends AnyWordSpec
   with MockitoSugar
@@ -31,7 +34,7 @@ class CalendarEventContainerSpec extends AnyWordSpec
   private val mockEventHandler = mock[EventHandler]
   private val mockCoreModule = mock[CoreModule]
 
-  private var container: CalendarEventContainerImpl = _
+  private var container: CalendarEventContainerImpl = uninitialized
 
   // Helpers
   private val eventCaptor: ArgumentCaptor[Event[?]] = ArgumentCaptor.forClass(classOf[Event[?]])
@@ -61,7 +64,7 @@ class CalendarEventContainerSpec extends AnyWordSpec
         val listener = listenerCaptor.getValue
 
         // Setup for: No existing ViewModel
-        when(mockViewModelPublisher.getValue).thenReturn(None)
+        when(mockViewModelPublisher.getValue: Option[CalendarViewModel]).thenReturn(None)
         val newModel = mock[Model]
 
         // Action
@@ -69,7 +72,8 @@ class CalendarEventContainerSpec extends AnyWordSpec
 
         // Assert
         val viewModelCaptor = ArgumentCaptor.forClass(classOf[Option[CalendarViewModel]])
-        verify(mockViewModelPublisher, times(1)).update(viewModelCaptor.capture())
+        verify(mockViewModelPublisher).update(viewModelCaptor.capture(),any[Option[Any]],
+          any[Option[Any]])
 
         val capturedVm = viewModelCaptor.getValue.get
         capturedVm.model should be(newModel)
@@ -94,7 +98,8 @@ class CalendarEventContainerSpec extends AnyWordSpec
 
         // Assert
         val viewModelCaptor = ArgumentCaptor.forClass(classOf[Option[CalendarViewModel]])
-        verify(mockViewModelPublisher).update(viewModelCaptor.capture())
+        verify(mockViewModelPublisher).update(viewModelCaptor.capture(), any[Option[Any]],
+          any[Option[Any]])
 
         val capturedVm = viewModelCaptor.getValue.get
         capturedVm.model should be(newModel)
@@ -127,7 +132,7 @@ class CalendarEventContainerSpec extends AnyWordSpec
       }
 
       "handle a 'previousDay' event by subtracting 1 day" in {
-        testPeriodChange(() => container.previousDay(), (-1).days)
+        testPeriodChange(() => container.previousDay(), -1.days)
       }
 
       "handle a 'nextWeek' event by adding 1 week" in {
@@ -135,7 +140,7 @@ class CalendarEventContainerSpec extends AnyWordSpec
       }
 
       "handle a 'previousWeek' event by subtracting 1 week" in {
-        testPeriodChange(() => container.previousWeek(), (-1).weeks)
+        testPeriodChange(() => container.previousWeek(), -1.weeks)
       }
     }
   }

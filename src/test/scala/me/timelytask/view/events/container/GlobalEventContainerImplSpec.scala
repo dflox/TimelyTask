@@ -64,13 +64,13 @@ class GlobalEventContainerImplSpec extends AnyWordSpec with Matchers with Mockit
       "trigger an undo event" in new Fixture {
         container.undo()
         captureAndExecuteEvent()
-        verify(mockCommandHandler, times(1)).undo()
+        verify(mockCommandHandler, times(1)).undo(userToken)
       }
 
       "trigger a redo event" in new Fixture {
         container.redo()
         captureAndExecuteEvent()
-        verify(mockCommandHandler, times(1)).redo()
+        verify(mockCommandHandler, times(1)).redo(userToken)
       }
     }
 

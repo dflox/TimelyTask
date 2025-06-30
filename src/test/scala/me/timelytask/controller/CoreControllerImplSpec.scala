@@ -14,9 +14,11 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatestplus.mockito.MockitoSugar
 
-class CoreControllerSpec extends AnyWordSpec with Matchers with MockitoSugar {
+class CoreControllerImplSpec extends AnyWordSpec with Matchers with MockitoSugar {
 
   trait Fixture {
+    val userName: String = "testUser"
+    
     val mockCommandHandler: CommandHandler = mock[CommandHandler]
 
     val mockPersistenceController: PersistenceController =
@@ -41,7 +43,7 @@ class CoreControllerSpec extends AnyWordSpec with Matchers with MockitoSugar {
     "handling application startup" should {
 
       "successfully start the application with a valid config" in new Fixture {
-        val startupConfig =
+        val startupConfig: StartUpConfig =
           StartUpConfig(List(UiInstanceConfig(List(GUI), CALENDAR)))
 
         coreController.startUpApplication(Some(startupConfig))
@@ -50,7 +52,7 @@ class CoreControllerSpec extends AnyWordSpec with Matchers with MockitoSugar {
       }
 
       "not start the application twice" in new Fixture {
-        val startupConfig =
+        val startupConfig: StartUpConfig =
           StartUpConfig(List(UiInstanceConfig(List(GUI), CALENDAR)))
 
         coreController.startUpApplication(Some(startupConfig))
@@ -60,7 +62,7 @@ class CoreControllerSpec extends AnyWordSpec with Matchers with MockitoSugar {
       }
 
       "throw an exception if the startup config is missing" in new Fixture {
-        val exception = intercept[Exception] {
+        val exception: Exception = intercept[Exception] {
           coreController.startUpApplication(None)
         }
 
@@ -72,15 +74,15 @@ class CoreControllerSpec extends AnyWordSpec with Matchers with MockitoSugar {
 
       "handle a shutdown command" in new Fixture {
         coreController.shutdownApplication()
-        verify(mockCommandHandler, times(1)).handle(any[IrreversibleCommand[Unit]])
+        verify(mockCommandHandler, times(1)).handle(any[String], any[IrreversibleCommand[Unit]])
       }
     }
 
     "managing UI instances" should {
 
       "close a specific instance if it is not the last one" in new Fixture {
-        val mockUiInstance1 = mock[UiInstance]
-        val mockUiInstance2 = mock[UiInstance]
+        val mockUiInstance1: UiInstance = mock[UiInstance]
+        val mockUiInstance2: UiInstance = mock[UiInstance]
 
         setPrivateField(
           coreController,
@@ -92,16 +94,16 @@ class CoreControllerSpec extends AnyWordSpec with Matchers with MockitoSugar {
 
         verify(mockUiInstance1, times(1)).shutdown()
         verify(mockUiInstance2, never()).shutdown()
-        verify(mockCommandHandler, never()).handle(any[IrreversibleCommand[Unit]])
+        verify(mockCommandHandler, never()).handle(any[String], any[IrreversibleCommand[Unit]])
       }
 
       "shut down the application when the last instance is closed" in new Fixture {
-        val mockUiInstance = mock[UiInstance]
+        val mockUiInstance: UiInstance = mock[UiInstance]
         setPrivateField(coreController, "uiInstances", Vector(mockUiInstance))
 
-        coreController.closeInstance(mockUiInstance)
+        coreController.closeInstance(mockUiInstance) 
 
-        verify(mockCommandHandler, times(1)).handle(any[IrreversibleCommand[Unit]])
+        verify(mockCommandHandler, times(1)).handle(any[String], any[IrreversibleCommand[Unit]])
         verify(mockUiInstance, never()).shutdown()
       }
     }
