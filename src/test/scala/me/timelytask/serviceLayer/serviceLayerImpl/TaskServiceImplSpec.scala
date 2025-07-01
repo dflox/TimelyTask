@@ -47,10 +47,11 @@ class TaskServiceImplSpec extends AnyWordSpec with Matchers with MockitoSugar {
 
   "TaskServiceImpl" should {
 
-    "newTask should add the task to the repository and notify the update service" in new Fixture {
+    "newTask should add the task to the repository and trigger a model reload" in new Fixture {
+      // Action: Call the method under test
       taskService.newTask(testUserName, genericMockTask)
       verify(mockTaskRepository, times(1)).addTask(testUserName, genericMockTask)
-      verify(mockUpdateService, times(1)).updateTask(testUserName, genericMockTask)
+      verify(mockModelService, times(1)).loadModel(testUserName)
     }
 
     "deleteTask should delete from the repository and trigger a model reload" in new Fixture {
