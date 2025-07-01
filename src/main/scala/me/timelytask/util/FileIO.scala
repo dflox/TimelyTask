@@ -19,4 +19,14 @@ object FileIO {
       new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8)
     }.toOption
   }
+  
+  def tryFindFile(fileType: String): Option[String] = {
+    val fileName = s".$fileType"
+    val currentDir = Paths.get("").toAbsolutePath
+    val files = Files.list(currentDir).toArray
+    files.collectFirst {
+      case path if path.toString.endsWith(fileName) && path.toString.contains("_TimelyTask_") => 
+        path.toString
+    }
+  }
 }

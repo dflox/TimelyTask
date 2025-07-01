@@ -147,7 +147,7 @@ class GlobalEventContainerImpl(
 
   override def importModel(
       serializationType: String,
-      folderPathWithFileName: String
+      folderPathWithFileName: Option[String]
     ): Unit = eventHandler.handle(
     new Event[Unit](
       (args: Unit) => {

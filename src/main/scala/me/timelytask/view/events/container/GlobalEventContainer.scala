@@ -26,5 +26,5 @@ trait GlobalEventContainer {
                   fileName: Option[String] = None): Unit
   
   def importModel(serializationType: String,
-                   folderPathWithFileName: String): Unit
+                   folderPathWithFileName: Option[String] = None): Unit
 }

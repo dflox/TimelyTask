@@ -26,7 +26,8 @@ trait PersistenceController {
    * @throws IllegalArgumentException if the file does not exist or is 
    *                                  empty.
    */
-  def loadModel(userToken: String, folderPathWithFileName: String, serializationType: String)
+  def loadModel(userToken: String, folderPathWithFileName: Option[String], 
+                serializationType: String)
   : Unit
   
   /**

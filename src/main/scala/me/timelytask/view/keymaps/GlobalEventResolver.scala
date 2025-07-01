@@ -25,6 +25,12 @@ class GlobalEventResolverImpl( override protected val eventContainer: GlobalEven
       case EventTypeId("CloseInstance") => eventContainer.closeInstance()
       case EventTypeId("NewTask") => eventContainer.newTask()
       case EventTypeId("SwitchToView") => eventContainer.switchToView()
+      case EventTypeId("ExportToJSON") => eventContainer.exportModel("json")
+      case EventTypeId("ImportFromJSON") => eventContainer.importModel("json")
+      case EventTypeId("ExportToXML") => eventContainer.exportModel("xml")
+      case EventTypeId("ImportFromXML") => eventContainer.importModel("xml")
+      case EventTypeId("ExportToYAML") => eventContainer.exportModel("yaml")
+      case EventTypeId("ImportFromYAML") => eventContainer.importModel("yaml")
       case _ => false
     }
   }

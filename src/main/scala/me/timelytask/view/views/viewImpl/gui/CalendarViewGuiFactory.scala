@@ -194,21 +194,21 @@ object CalendarViewGuiFactory {
                     onAction = _ =>
                         getFileName("json", fileName =>
                         viewTypeCommonsModule.globalEventContainer
-                            .importModel("json", fileName)
+                            .importModel("json", Some(fileName))
                         )
                     },
                     new MenuItem("XML") {
                     onAction = _ =>
                         getFileName("xml", fileName =>
                         viewTypeCommonsModule.globalEventContainer
-                            .importModel("xml", fileName)
+                            .importModel("xml", Some(fileName))
                         )
                     },
                     new MenuItem("YAML") {
                     onAction = _ =>
                         getFileName("yaml", fileName =>
                         viewTypeCommonsModule.globalEventContainer
-                            .importModel("yaml", fileName)
+                            .importModel("yaml", Some(fileName))
                         )
                     }
                 )

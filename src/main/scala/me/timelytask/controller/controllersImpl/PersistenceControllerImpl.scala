@@ -55,7 +55,7 @@ class PersistenceControllerImpl(
 
   override def loadModel(
       userToken: String,
-      folderPathWithFileName: String,
+      folderPathWithFileName: Option[String],
       serializationType: String
     ): Unit = commandHandler.handle(userToken, new IrreversibleCommand(
       loadModelHandler(_, folderPathWithFileName, serializationType),
@@ -64,7 +64,7 @@ class PersistenceControllerImpl(
 
   private def loadModelHandler(
       userToken: String,
-      folderPathWithFileName: String,
+      folderPathWithFileName: Option[String],
       serializationType: String
     ): Boolean = {
     serviceModule.fileExportService.importFromFile(

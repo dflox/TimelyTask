@@ -61,7 +61,13 @@ object Config {
         Key.CtrlI -> EventTypeId("NewInstance"),
         Key.CtrlX -> EventTypeId("CloseInstance"),
         Key.N -> EventTypeId("NewTask"),
-        Key.G -> EventTypeId("SwitchToView")
+        Key.G -> EventTypeId("SwitchToView"),
+        Key.Num1 -> EventTypeId("ExportToJSON"),
+        Key.Num2 -> EventTypeId("ExportToYAML"),
+        Key.Num3 -> EventTypeId("ExportToXML"),
+        Key.ShiftOne -> EventTypeId("ImportFromJSON"),
+        Key.ShiftTwo -> EventTypeId("ImportFromYAML"),
+        Key.ShiftThree -> EventTypeId("ImportFromXML"),
       )
     ),
     startView = CALENDAR,

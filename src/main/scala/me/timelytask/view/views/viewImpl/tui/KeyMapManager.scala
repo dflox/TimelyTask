@@ -97,6 +97,32 @@ object KeyMapManager {
     keyMap.bind(Key.CtrlF11, "\u001b[23;5~")
     keyMap.bind(Key.CtrlF12, "\u001b[24;5~")
 
+    keyMap.bind(Key.Ctrl1, "\u001b[1;5P")
+    keyMap.bind(Key.Ctrl2, "\u001b[1;5Q")
+    keyMap.bind(Key.Ctrl3, "\u001b[1;5R")
+    keyMap.bind(Key.Ctrl4, "\u001b[1;5S")
+    keyMap.bind(Key.Ctrl5, "\u001b[15;5~")
+    keyMap.bind(Key.Ctrl6, "\u001b[17;5~")
+    keyMap.bind(Key.Ctrl7, "\u001b[18;5~")
+    keyMap.bind(Key.Ctrl8, "\u001b[19;5~")
+    keyMap.bind(Key.Ctrl9, "\u001b[20;5~")
+    keyMap.bind(Key.Ctrl0, "\u001b[21;5~")
+
+    keyMap.bind(Key.Alt1, "\u001b[1;3P")
+    keyMap.bind(Key.Alt2, "\u001b[1;3Q")
+    keyMap.bind(Key.Alt3, "\u001b[1;3R")
+    keyMap.bind(Key.Alt4, "\u001b[1;3S")
+    keyMap.bind(Key.Alt5, "\u001b[15;3~")
+    keyMap.bind(Key.Alt6, "\u001b[17;3~")
+    keyMap.bind(Key.Alt7, "\u001b[18;3~")
+    keyMap.bind(Key.Alt8, "\u001b[19;3~")
+    keyMap.bind(Key.Alt9, "\u001b[20;3~")
+    keyMap.bind(Key.Alt0, "\u001b[21;3~")
+
+    keyMap.bind(Key.ShiftOne, "\u0021")
+    keyMap.bind(Key.ShiftTwo, "\u0022")
+    keyMap.bind(Key.ShiftThree, "\u00a7")
+
     // Shift combinations
     keyMap.bind(Key.ShiftUp, "\u001b[1;2A")
     keyMap.bind(Key.ShiftDown, "\u001b[1;2B")

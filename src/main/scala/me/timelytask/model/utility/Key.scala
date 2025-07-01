@@ -91,6 +91,29 @@ object Key {
     CtrlF10.toString -> CtrlF10,
     CtrlF11.toString -> CtrlF11,
     CtrlF12.toString -> CtrlF12,
+    Ctrl1.toString -> Ctrl1,
+    Ctrl2.toString -> Ctrl2,
+    Ctrl3.toString -> Ctrl3,
+    Ctrl4.toString -> Ctrl4,
+    Ctrl5.toString -> Ctrl5,
+    Ctrl6.toString -> Ctrl6,
+    Ctrl7.toString -> Ctrl7,
+    Ctrl8.toString -> Ctrl8,
+    Ctrl9.toString -> Ctrl9,
+    Ctrl0.toString -> Ctrl0,
+    Alt1.toString -> Alt1,
+    Alt2.toString -> Alt2,
+    Alt3.toString -> Alt3,
+    Alt4.toString -> Alt4,
+    Alt5.toString -> Alt5,
+    Alt6.toString -> Alt6,
+    Alt7.toString -> Alt7,
+    Alt8.toString -> Alt8,
+    Alt9.toString -> Alt9,
+    Alt0.toString -> Alt0,
+    ShiftOne.toString -> ShiftOne,
+    ShiftTwo.toString -> ShiftTwo,
+    ShiftThree.toString -> ShiftThree,
     A.toString -> A,
     B.toString -> B,
     C.toString -> C,
@@ -280,6 +303,32 @@ object Key {
   case object CtrlF10 extends Key
   case object CtrlF11 extends Key
   case object CtrlF12 extends Key
+  
+  case object Ctrl1 extends Key
+  case object Ctrl2 extends Key
+  case object Ctrl3 extends Key
+  case object Ctrl4 extends Key
+  case object Ctrl5 extends Key
+  case object Ctrl6 extends Key
+  case object Ctrl7 extends Key
+  case object Ctrl8 extends Key
+  case object Ctrl9 extends Key
+  case object Ctrl0 extends Key
+  
+  case object Alt1 extends Key
+  case object Alt2 extends Key
+  case object Alt3 extends Key
+  case object Alt4 extends Key
+  case object Alt5 extends Key
+  case object Alt6 extends Key
+  case object Alt7 extends Key
+  case object Alt8 extends Key
+  case object Alt9 extends Key
+  case object Alt0 extends Key
+  
+  case object ShiftOne extends Key
+  case object ShiftTwo extends Key
+  case object ShiftThree extends Key
 
 // Letter keys
   case object A extends Key

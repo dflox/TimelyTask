@@ -33,10 +33,19 @@ class FileExportServiceImpl(serviceModule: ServiceModule) extends FileExportServ
   }
 
   override def importFromFile(userName: String,
-                              folderPathWithFileName: String,
+                              folderPathWithFileName: Option[String],
                               serializationType: String): Unit = {
+    var filePath = folderPathWithFileName.getOrElse("")
+    
+    if(filePath.isEmpty) {
+      FileIO.tryFindFile(serializationType) match {
+        case Some(path) => filePath = path
+        case None => return 
+      }
+    }
+    
     val serializer = getSerializer(serializationType)
-    val serializedModel = FileIO.readFromFile(folderPathWithFileName)
+    val serializedModel = FileIO.readFromFile(filePath)
 
     if (serializedModel.isEmpty) throw new IllegalArgumentException(
       s"File not found or empty: $folderPathWithFileName"
