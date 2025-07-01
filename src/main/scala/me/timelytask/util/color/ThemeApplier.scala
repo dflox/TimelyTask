@@ -13,18 +13,29 @@ object ThemeApplier {
 
   def getTheme: Theme = currentTheme
 
+  /**
+   * Extracts a value from the current theme using a selector function.
+   * This method contains the pure logic and is easy to test directly.
+   */
+  def getThemeValue(f: Theme => String): String = {
+    f(currentTheme)
+  }
+
   // Get color for terminal
   def getTerminalColor(f: Theme => String): String = {
-    ColorSupport.Terminal.hexToTerminal256(f(currentTheme))
+    val hexValue = getThemeValue(f)
+    ColorSupport.Terminal.hexToTerminal256(hexValue)
   }
 
   // Get background color for terminal
   def getTerminalBgColor(f: Theme => String): String = {
-    ColorSupport.Terminal.bgHexToTerminal256(f(currentTheme))
+    val hexValue = getThemeValue(f)
+    ColorSupport.Terminal.bgHexToTerminal256(hexValue)
   }
 
   // Get color for ScalaFX
   def getFXColor(f: Theme => String): Color = {
-    ColorSupport.ScalaFX.hexToColor(f(currentTheme))
+    val hexValue = getThemeValue(f)
+    ColorSupport.ScalaFX.hexToColor(hexValue)
   }
 }

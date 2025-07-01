@@ -1,17 +1,19 @@
 import scala.collection.Seq
 
 val scala3Version = "3.6.4"
-val circeVersion = "0.14.13"
+val circeVersion = "0.14.14"
 val scalaTestVersion = "3.2.19"
-val jlineVersion = "3.29.0"
+val jlineVersion = "3.30.4"
 val nscalaTimeVersion = "3.0.0"
 val scalaMetaVersion = "1.1.1"
 val scalaYamlVersion = "0.3.0"
-val scalaXmlVersion = "2.3.0"
+val scalaXmlVersion = "2.4.0"
 val mockitoVersion = "3.2.10.0"
 val scalaFxVersion = "24.0.0-R35"
 val macwireVersion = "2.6.6"
-val circeYamlVersion = "0.16.0"
+val circeYamlVersion = "1.15.0"
+val sqliteJdbcVersion = "3.50.1.0"
+val simpleSqlVersion = "0.4.0"
 
 lazy val root = project
   .in(file("."))
@@ -41,6 +43,8 @@ lazy val root = project
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
       "io.circe" %% "circe-yaml-v12" % circeYamlVersion,
-      "com.softwaremill.macwire" %% "macros" % macwireVersion % "provided"
+      "com.softwaremill.macwire" %% "macros" % macwireVersion % "provided",
+      "org.xerial" % "sqlite-jdbc" % sqliteJdbcVersion,
+      "io.crashbox" %% "simplesql" % simpleSqlVersion
     )
   )

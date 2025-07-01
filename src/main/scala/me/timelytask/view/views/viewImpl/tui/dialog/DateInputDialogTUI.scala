@@ -1,6 +1,6 @@
 package me.timelytask.view.views.viewImpl.tui.dialog
 
-import com.github.nscala_time.time.Imports.DateTime
+import com.github.nscala_time.time.Imports.{DateTime, Period}
 import me.timelytask.view.views.viewImpl.tui.TuiUtils.createLine
 import me.timelytask.view.viewmodel.dialogmodel.{DialogModel, InputDialogModel}
 import org.jline.reader.impl.history.DefaultHistory
@@ -17,9 +17,7 @@ class DateInputDialogTUI(override val dialogModel: Option[InputDialogModel[DateT
 
   override def apply(): Option[DateTime] = {
     if dialogModel.isEmpty | currentView.isEmpty then return None
-
-    var break = false
-
+    
     val terminalWidth = terminal.getWidth
     val dialogString = createDialogString(dialogModel.get.description, terminalWidth)
     val viewWithDialog = overlapString(currentView.get, dialogString)
@@ -53,5 +51,4 @@ class DateInputDialogTUI(override val dialogModel: Option[InputDialogModel[DateT
     stringBuilder.append(description + " (Format: yyyy-MM-dd)")
     stringBuilder.toString()
   }
-
 }

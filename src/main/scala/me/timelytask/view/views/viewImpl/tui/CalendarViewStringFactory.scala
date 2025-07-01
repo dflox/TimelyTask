@@ -1,12 +1,12 @@
 package me.timelytask.view.views.viewImpl.tui
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.model.Task
 import me.timelytask.model.settings.CALENDAR
 import me.timelytask.model.settings.ThemeSystem.ColorSupport.Terminal.{BOLD, ITALIC, colored}
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.util.color.ThemeApplier.{getTerminalBgColor, getTerminalColor}
 import TuiUtils.*
+import me.timelytask.model.task.Task
 import me.timelytask.view.viewmodel.elemts.TaskCollection
 import me.timelytask.view.viewmodel.{CalendarViewModel, ViewModel}
 
@@ -58,7 +58,7 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
     val builder = new StringBuilder()
 
     // Creating
-    builder.append(header(actualWidth, timeSelection))
+    builder.append(header(actualWidth, timeSelection, model.user.name))
     // Create the TopRow
     builder.append(colored(timeColumn, colorText1))
     daySpan.foreach(day => builder.append(
@@ -94,8 +94,8 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
     }
   }
 
-  def header(actualWidth: Int, timeSelection: TimeSelection): String = {
-    val title = "Calendar"
+  def header(actualWidth: Int, timeSelection: TimeSelection, userName: String): String = {
+    val title = "Calendar of " + userName
     val dateformat = "dd. - dd. MMM. yyyy"
     val headerLetterCount: Int = (title + dateformat)
       .length // the amount of space(letters) the period String takes

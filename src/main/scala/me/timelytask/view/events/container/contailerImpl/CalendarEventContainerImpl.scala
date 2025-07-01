@@ -16,13 +16,15 @@ import scala.util.{Failure, Success, Try}
 class CalendarEventContainerImpl(calendarViewModelPublisher: Publisher[CalendarViewModel],
                                  activeViewPublisher: Publisher[ViewType],
                                  eventHandler: EventHandler,
-                                 coreModule: CoreModule)
+                                 coreModule: CoreModule,
+                                 userToken: String)
   extends CalendarEventContainer
   with EventContainer(
     calendarViewModelPublisher,
     activeViewPublisher,
     eventHandler,
-    coreModule) {
+    coreModule,
+    userToken) {
 
   def nextDay(): Unit = eventHandler.handle(new Event[Unit](
     (args: Unit) => addPeriodToTimeSelection(1.days),
@@ -50,14 +52,6 @@ class CalendarEventContainerImpl(calendarViewModelPublisher: Publisher[CalendarV
 
 
   //  def initi(): Unit = {
-  //
-  //    GoToToday.setHandler((args: Unit) => {
-  //      Try[CalendarViewModel] {
-  //        viewModel().get.copy(timeSelection = viewModel().get.timeSelection.startingToday)
-  //      } match
-  //        case Success(value) => Some(value)
-  //        case Failure(exception) => None
-  //    }, (args: Unit) => None)
   //
   //    ShowWholeWeek.setHandler((args: Unit) => {
   //      Try[CalendarViewModel] {
@@ -186,4 +180,18 @@ class CalendarEventContainerImpl(calendarViewModelPublisher: Publisher[CalendarV
       case Success(value) => Some(value)
       case Failure(exception) => None
   }
+
+  override def goToToday(): Unit = eventHandler.handle(new Event[Unit](
+    (args: Unit) => {
+      Try[CalendarViewModel] {
+        viewModel().get.copy(timeSelection = viewModel().get.timeSelection.startingToday,
+          focusElementGrid = None)
+      } match {
+        case Success(value) => Some(value)
+        case Failure(exception) => None
+      }
+    },
+    (args: Unit) => None,
+    ()
+  ) {})
 }

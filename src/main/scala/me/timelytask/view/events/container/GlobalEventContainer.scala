@@ -1,6 +1,7 @@
 package me.timelytask.view.events.container
 
 trait GlobalEventContainer {
+  val userToken: String
 
   def undo(): Unit
 
@@ -19,4 +20,11 @@ trait GlobalEventContainer {
   def shutdownApplication(): Unit
   
   def closeInstance(): Unit
+  
+  def exportModel(serializationType: String,
+                   folderPath: Option[String] = None,
+                  fileName: Option[String] = None): Unit
+  
+  def importModel(serializationType: String,
+                   folderPathWithFileName: String): Unit
 }

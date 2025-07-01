@@ -1,19 +1,24 @@
 package me.timelytask.view.views.viewImpl.gui
 
-import com.github.nscala_time.time.Imports.{DateTime, Interval, Period}
-import me.timelytask.model.Task
+import com.github.nscala_time.time.Imports.{ DateTime, Interval, Period }
+import me.timelytask.model.task.Task
 import me.timelytask.model.utility.TimeSelection
 import me.timelytask.view.viewmodel.CalendarViewModel
 import me.timelytask.view.views.commonsModules.CalendarCommonsModule
-import scalafx.geometry.{HPos, Insets, Pos, VPos}
+import org.joda.time.DateTime
+import scalafx.application.Platform
+import scalafx.geometry.{ HPos, Insets, Pos, VPos }
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, ButtonBar, Label, TextArea}
+import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.control.*
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
-import scalafx.scene.text.{Font, FontWeight}
+import scalafx.scene.text.{ Font, FontWeight }
+import scalafx.stage.{ DirectoryChooser, FileChooser }
 
+import java.io.File
 import java.time.LocalDate
-import java.time.format.{DateTimeFormatter, TextStyle}
+import java.time.format.{ DateTimeFormatter, TextStyle }
 import java.util.Locale
 
 object CalendarViewGuiFactory {
@@ -23,28 +28,35 @@ object CalendarViewGuiFactory {
   private val numberOfTimeSlots = endTimeHour - startTimeHour
 
   private val germanLocale = new Locale("de", "DE")
-  private val dayMonthFormatter = DateTimeFormatter.ofPattern("dd.MM", germanLocale)
+
+  private val dayMonthFormatter =
+    DateTimeFormatter.ofPattern("dd.MM", germanLocale)
   private val dayFormatter = DateTimeFormatter.ofPattern("dd.", germanLocale)
-  private val dayMonthYearFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", germanLocale)
+
+  private val dayMonthYearFormatter =
+    DateTimeFormatter.ofPattern("dd.MM.yyyy", germanLocale)
 
   private def toJavaLocalDate(dateTime: DateTime): LocalDate = {
-    LocalDate.of(dateTime.getYear, dateTime.getMonthOfYear, dateTime.getDayOfMonth)
+    LocalDate.of(
+      dateTime.getYear,
+      dateTime.getMonthOfYear,
+      dateTime.getDayOfMonth
+    )
   }
 
   /**
    * Updates or creates the content pane for the calendar view.
    *
    * @param viewModel The CalendarViewModel containing data for the view, including tasks.
-   *                  It is assumed that `viewModel` has a property `tasks: List[Task]`.
    * @param currentScene The current scene, if any.
    * @param viewTypeCommonsModule Common module for calendar view interactions.
    * @return A Pane representing the calendar view.
    */
   def updateContent(
-                     viewModel: CalendarViewModel,
-                     currentScene: Option[Scene],
-                     viewTypeCommonsModule: CalendarCommonsModule
-                   ): Pane = {
+      viewModel: CalendarViewModel,
+      currentScene: Option[Scene],
+      viewTypeCommonsModule: CalendarCommonsModule
+    ): Pane = {
     val rootPane = new BorderPane()
 
     rootPane.setPrefSize(1000, 800)
@@ -62,7 +74,9 @@ object CalendarViewGuiFactory {
         (firstD, lastD, s"${startDayText} - ${endDayMonthYearText}")
       } else {
         System.err.println(
-          "CalendarViewGuiFactory: timeSelection.getDaySpan is empty. Displaying empty date range.")
+          "CalendarViewGuiFactory: timeSelection.getDaySpan is empty. Displaying" +
+            " empty date range."
+        )
         (LocalDate.now(), LocalDate.now(), "Keine Daten - Keine Daten")
       }
     }
@@ -77,10 +91,7 @@ object CalendarViewGuiFactory {
     }
 
     val todayBtn = new Button("Heute") {
-      onAction = _ => {
-        println("Heute button clicked - goToToday action pending implementation")
-        // Example: viewTypeCommonsModule.eventContainer.goToToday()
-      }
+      onAction = _ => viewTypeCommonsModule.eventContainer.goToToday()
     }
     val prevWeekBtn = new Button("<< Woche") {
       onAction = _ => viewTypeCommonsModule.eventContainer.previousWeek()
@@ -116,11 +127,13 @@ object CalendarViewGuiFactory {
     }
 
     val shutdownApplicationBtn = new Button("App beenden") {
-      onAction = _ => viewTypeCommonsModule.globalEventContainer.shutdownApplication()
+      onAction = _ =>
+        viewTypeCommonsModule.globalEventContainer.shutdownApplication()
     }
 
     val globalNavBar = new HBox() {
       alignment = Pos.Center
+      spacing = 5
       children = Seq(
         undoBtn,
         redoBtn,
@@ -144,10 +157,119 @@ object CalendarViewGuiFactory {
       }
     }
 
+    val globalMenuBar = new MenuBar {
+      minHeight = 30
+      maxHeight = 30
+      menus = Seq(
+        new Menu("Datei") {
+          items = Seq(
+            new Menu("Modell exportieren") {
+              items = Seq(
+                new MenuItem("JSON") {
+                  onAction = _ =>
+                    getFolderLocation(folderPath =>
+                      viewTypeCommonsModule.globalEventContainer
+                        .exportModel("json", folderPath)
+                    )
+                },
+                new MenuItem("XML") {
+                  onAction = _ =>
+                    getFolderLocation(folderPath =>
+                      viewTypeCommonsModule.globalEventContainer
+                        .exportModel("xml", folderPath)
+                    )
+                },
+                new MenuItem("YAML") {
+                  onAction = _ =>
+                    getFolderLocation(folderPath =>
+                      viewTypeCommonsModule.globalEventContainer
+                        .exportModel("yaml", folderPath)
+                    )
+                }
+              )
+            },
+            new Menu("Modell importieren") {
+                items = Seq(
+                    new MenuItem("JSON") {
+                    onAction = _ =>
+                        getFileName("json", fileName =>
+                        viewTypeCommonsModule.globalEventContainer
+                            .importModel("json", fileName)
+                        )
+                    },
+                    new MenuItem("XML") {
+                    onAction = _ =>
+                        getFileName("xml", fileName =>
+                        viewTypeCommonsModule.globalEventContainer
+                            .importModel("xml", fileName)
+                        )
+                    },
+                    new MenuItem("YAML") {
+                    onAction = _ =>
+                        getFileName("yaml", fileName =>
+                        viewTypeCommonsModule.globalEventContainer
+                            .importModel("yaml", fileName)
+                        )
+                    }
+                )
+            },
+          )
+        },
+        new Menu("Bearbeiten") {
+          items = Seq(
+            new MenuItem("Undo") {
+              onAction = _ => viewTypeCommonsModule.globalEventContainer.undo()
+            },
+            new MenuItem("Redo") {
+              onAction = _ => viewTypeCommonsModule.globalEventContainer.redo()
+            }
+          )
+        },
+        new Menu("Ansicht") {
+          items = Seq(
+            new MenuItem("Heute") {
+              onAction = _ => viewTypeCommonsModule.eventContainer.goToToday()
+            },
+            new MenuItem("Vorherige Woche") {
+              onAction =
+                _ => viewTypeCommonsModule.eventContainer.previousWeek()
+            },
+            new MenuItem("Nächste Woche") {
+              onAction = _ => viewTypeCommonsModule.eventContainer.nextWeek()
+            },
+            new MenuItem("Vorheriger Tag") {
+              onAction = _ => viewTypeCommonsModule.eventContainer.previousDay()
+            },
+            new MenuItem("Nächster Tag") {
+              onAction = _ => viewTypeCommonsModule.eventContainer.nextDay()
+            }
+          )
+        },
+        new Menu("Fenster") {
+          items = Seq(
+            new MenuItem("Neues Fenster") {
+              onAction =
+                _ => viewTypeCommonsModule.globalEventContainer.newWindow()
+            },
+            new MenuItem("Neue Instanz") {
+              onAction =
+                _ => viewTypeCommonsModule.globalEventContainer.newInstance()
+            },
+            new SeparatorMenuItem(),
+            new MenuItem("Beenden") {
+              onAction = _ =>
+                viewTypeCommonsModule.globalEventContainer.shutdownApplication()
+            }
+          )
+        }
+      )
+    }
+
     val header = new VBox(5) {
       alignment = Pos.Center
       padding = Insets(10)
-      children = Seq(headerLabel, dateSpanLabel, globalNavBar, navBar)
+      children =
+        Seq(globalMenuBar, headerLabel, dateSpanLabel, globalNavBar, navBar)
     }
 
     val calendarGrid = createCalendarGrid(viewModel)
@@ -170,7 +292,8 @@ object CalendarViewGuiFactory {
       // Debugging layout: style = "-fx-grid-lines-visible: true"
     }
 
-    val weekDates: Seq[LocalDate] = viewModel.timeSelection.getDaySpan.map(toJavaLocalDate)
+    val weekDates: Seq[LocalDate] =
+      viewModel.timeSelection.getDaySpan.map(toJavaLocalDate)
 
     val allTasks: List[Task] = viewModel.model.tasks
 
@@ -181,7 +304,8 @@ object CalendarViewGuiFactory {
     // Columns for days
     (0 until weekDates.length).foreach { _ =>
       grid.columnConstraints.add(new ColumnConstraints {
-        minWidth = 80; prefWidth = 110; hgrow = scalafx.scene.layout.Priority.Always
+        minWidth = 80; prefWidth = 110;
+        hgrow = scalafx.scene.layout.Priority.Always
       })
     }
 
@@ -192,7 +316,8 @@ object CalendarViewGuiFactory {
     // Rows for time slots
     (0 until numberOfTimeSlots).foreach { _ =>
       grid.rowConstraints.add(new RowConstraints {
-        minHeight = 40; prefHeight = 50; vgrow = scalafx.scene.layout.Priority.Always
+        minHeight = 40; prefHeight = 50;
+        vgrow = scalafx.scene.layout.Priority.Always
       })
     }
 
@@ -201,24 +326,31 @@ object CalendarViewGuiFactory {
     }
 
     // Day header labels (e.g., Mo 01.07)
-    weekDates.zipWithIndex.foreach { case (date, colIdx) =>
-      val dayOfWeekShortName = date.getDayOfWeek.getDisplayName(TextStyle.SHORT, germanLocale)
-      val dayDateText = s"$dayOfWeekShortName ${date.format(dayMonthFormatter)}"
+    weekDates.zipWithIndex.foreach {
+      case (date, colIdx) =>
+        val dayOfWeekShortName =
+          date.getDayOfWeek.getDisplayName(TextStyle.SHORT, germanLocale)
+        val dayDateText =
+          s"$dayOfWeekShortName ${date.format(dayMonthFormatter)}"
 
-      val dayLabel = new Label(dayDateText) {
-        font = Font.font(null, FontWeight.Bold, 14); alignmentInParent = Pos.Center; maxWidth = Double.MaxValue
-      }
-      GridPane.setColumnIndex(dayLabel, colIdx + 1); GridPane.setRowIndex(dayLabel, 0)
-      grid.children.add(dayLabel)
+        val dayLabel = new Label(dayDateText) {
+          font = Font.font(null, FontWeight.Bold, 14);
+          alignmentInParent = Pos.Center; maxWidth = Double.MaxValue
+        }
+        GridPane.setColumnIndex(dayLabel, colIdx + 1);
+        GridPane.setRowIndex(dayLabel, 0)
+        grid.children.add(dayLabel)
     }
 
     // Time labels (e.g., 08:00)
     (0 until numberOfTimeSlots).foreach { hourOffset =>
       val hour = startTimeHour + hourOffset
       val timeLabel = new Label(f"$hour%02d:00") {
-        padding = Insets(0, 5, 0, 0); alignmentInParent = Pos.CenterRight; font = Font.font(null, FontWeight.Normal, 12)
+        padding = Insets(0, 5, 0, 0); alignmentInParent = Pos.CenterRight;
+        font = Font.font(null, FontWeight.Normal, 12)
       }
-      GridPane.setColumnIndex(timeLabel, 0); GridPane.setRowIndex(timeLabel, hourOffset + 1)
+      GridPane.setColumnIndex(timeLabel, 0);
+      GridPane.setRowIndex(timeLabel, hourOffset + 1)
       grid.children.add(timeLabel)
     }
 
@@ -233,20 +365,19 @@ object CalendarViewGuiFactory {
       val tasksInCell: List[Task] = allTasks.filter { task =>
         val taskStartJodaDateTime: DateTime = task.scheduleDate
 
-        val taskStartDateJava: LocalDate = toJavaLocalDate(taskStartJodaDateTime)
+        val taskStartDateJava: LocalDate =
+          toJavaLocalDate(taskStartJodaDateTime)
         val taskStartActualHour: Int = taskStartJodaDateTime.getHourOfDay
 
         taskStartDateJava.equals(date) && taskStartActualHour == hour
       }
-
-      val cellContent = tasksInCell.map(_.name).mkString("\n") // Display task names, one per line
-
+      val cellContent = tasksInCell.map(_.name).mkString("\n")
       val cell = new TextArea {
         text = cellContent
         wrapText = true
         editable = false
         if (tasksInCell.nonEmpty) {
-          style = "-fx-control-inner-background: #e0f7fa;" // light cyan/blue background
+          style = "-fx-control-inner-background: #e0f7fa;"
         }
       }
       GridPane.setColumnIndex(cell, dayCol + 1)
@@ -255,4 +386,83 @@ object CalendarViewGuiFactory {
     }
     grid
   }
+
+  private def getFolderLocation(callback: Option[String] => Unit): Unit = {
+    Platform.runLater {
+      val fileChooser = new DirectoryChooser {
+        title = "Ordner auswählen"
+        initialDirectory = new File(System.getProperty("user.home"))
+      }
+      val selectedFolder: Option[File] = Option(fileChooser.showDialog(null))
+      selectedFolder match {
+        case Some(folder) =>
+          val folderPath = Some(folder.getAbsolutePath)
+          callback(folderPath)
+        case None =>
+          callback(None) // No folder selected
+      }
+    }
+  }
+
+  private def getFileName(serializationType: String, callback: String => Unit): Unit = {
+    Platform.runLater {
+      val fileChooser = new FileChooser {
+        title = "Datei auswählen"
+        initialDirectory = new File(System.getProperty("user.home"))
+        extensionFilters.add(
+          serializationType match {
+            case "json" => new FileChooser.ExtensionFilter("JSON-Datei", "*.json")
+            case "xml"  => new FileChooser.ExtensionFilter("XML-Datei", "*.xml")
+            case "yaml" => new FileChooser.ExtensionFilter("YAML-Datei", "*.yaml")
+          }
+        )
+      }
+      val selectedFile: Option[File] = Option(fileChooser.showOpenDialog(null))
+      selectedFile match {
+        case Some(file) =>
+          val fileName = file.getAbsolutePath
+          callback(fileName)
+        case None =>
+      }
+    }
+  }
 }
+
+//Platform.runLater {
+//  val fileChooser = new FileChooser {
+//    title = "Modell exportieren unter..."
+//    initialFileName = s"${DateTime.now().toString("yyyy_MM_dd")}_TimelyTask.json"
+//    extensionFilters.addAll(
+//      new FileChooser.ExtensionFilter("JSON-Datei", "*.json"),
+//      new FileChooser.ExtensionFilter("XML-Datei", "*.xml"),
+//      new FileChooser.ExtensionFilter("Alle Dateien", "*.*")
+//    )
+//  }
+//
+//  val selectedFile: Option[File] = Option(fileChooser.showSaveDialog(mainStage))
+//
+//  selectedFile.foreach { file =>
+//    val folderPath = Option(file.getParent)
+//    val fileName = Some(file.getName)
+//    val serializationType = file.getName.split('.').lastOption.getOrElse("json").toLowerCase
+//
+//    val success = coreModule.controllers.persistenceController.saveModel(userToken, folderPath,
+//    fileName, serializationType)
+//
+//    if (success) {
+//      new Alert(AlertType.Information) {
+//        initOwner(mainStage)
+//        title = "Export erfolgreich"
+//        headerText = "Das Modell wurde erfolgreich exportiert."
+//        contentText = s"Gespeichert unter: ${file.getAbsolutePath}"
+//      }.showAndWait()
+//    } else {
+//      new Alert(AlertType.Error) {
+//        initOwner(mainStage)
+//        title = "Export fehlgeschlagen"
+//        headerText = "Das Modell konnte nicht exportiert werden."
+//        contentText = "Bitte überprüfen Sie die Konsolenausgabe für weitere Details."
+//      }.showAndWait()
+//    }
+//  }
+//}

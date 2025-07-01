@@ -1,11 +1,13 @@
 package me.timelytask.model.state
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.model.Task
+import me.timelytask.model.task.Task
 import scalafx.scene.paint.Color
 
-class DeletedState(name: String, description: String, color: Color) extends TaskState(name,
-  description, color) {
+import java.util.UUID
+
+class DeletedState(name: String, description: String, color: Color, uuid: UUID = UUID.randomUUID())
+  extends TaskState(name, description, color, uuid) {
   override def start(task: Task, openState: OpenState): Option[Task] = {
     Some(task.copy(state = Some(openState.uuid)))
   }
@@ -24,5 +26,16 @@ class DeletedState(name: String, description: String, color: Color) extends Task
     // Do nothing
     // a deleted task cannot have its deadline extended
     None
+  }
+}
+object DeletedState {
+  val stateType: String = "deleted"
+
+  def apply(name: String, description: String, color: Color): DeletedState = {
+    new DeletedState(name, description, color)
+  }
+
+  def apply(name: String, description: String, color: Color, uuid: UUID): DeletedState = {
+    new DeletedState(name, description, color, uuid)
   }
 }

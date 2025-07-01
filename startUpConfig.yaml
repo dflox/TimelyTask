@@ -1,5 +1,5 @@
 uiInstances:
   - uis:
-      - uiType: tui
       - uiType: gui
+      - uiType: tui
     startView: calendar

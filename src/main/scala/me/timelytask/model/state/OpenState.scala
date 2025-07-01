@@ -1,11 +1,13 @@
 package me.timelytask.model.state
 
 import com.github.nscala_time.time.Imports.*
-import me.timelytask.model.Task
+import me.timelytask.model.task.Task
 import scalafx.scene.paint.Color
 
-class OpenState(name: String, description: String, color: Color) extends TaskState(name,
-  description, color) {
+import java.util.UUID
+
+class OpenState(name: String, description: String, color: Color, uuid: UUID = UUID.randomUUID()) 
+  extends TaskState(name, description, color, uuid) {
   override def start(task: Task, openState: OpenState): Option[Task] = {
     // Do nothing
     // a task that is already open cannot be started again
@@ -23,5 +25,17 @@ class OpenState(name: String, description: String, color: Color) extends TaskSta
   override def extendDeadline(task: Task, extension: Period): Option[Task] = {
     val newDeadline = task.deadline.copy(date = task.deadline.date + extension)
     Some(task.copy(deadline = newDeadline))
+  }
+}
+
+object OpenState {
+  val stateType: String = "open"
+
+  def apply(name: String, description: String, color: Color): OpenState = {
+    new OpenState(name, description, color)
+  }
+
+  def apply(name: String, description: String, color: Color, uuid: UUID): OpenState = {
+    new OpenState(name, description, color, uuid)
   }
 }

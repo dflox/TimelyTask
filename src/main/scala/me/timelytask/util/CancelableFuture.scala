@@ -24,8 +24,8 @@ class CancelableFuture[ReturnType](
    * @return true if the task that was cancelled never started, false otherwise
    */
   def cancel(): Boolean = {
-    val cancelResult = executor.shutdownNow()
     promise.tryFailure(new CancellationException("Task was cancelled"))
+    val cancelResult = executor.shutdownNow()
 
     !cancelResult.isEmpty
   }
@@ -50,7 +50,7 @@ class CancelableFuture[ReturnType](
    * Returns the result of the future if it is completed.
    */
   def value(): Option[Try[ReturnType]] = {
-    future.value
+    promise.future.value
   }
 
   def isCancelled: Boolean = promise.future.value.exists(_.isFailure)

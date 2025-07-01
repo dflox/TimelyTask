@@ -45,3 +45,5 @@ trait TASKEdit extends ViewType
 case object TASKEdit extends ViewType {
   override def toString: String = "taskedit"
 }
+
+trait StartUp extends ViewType

@@ -2,12 +2,15 @@ package me.timelytask.view.viewmodel
 
 import com.github.nscala_time.time.Imports.{DateTime, Period}
 import me.timelytask.model.builder.TaskBuilder
+import me.timelytask.model.deadline.Deadline
 import me.timelytask.model.settings.*
 import me.timelytask.model.state.TaskState
-import me.timelytask.model.{Deadline, Model, Task}
+import me.timelytask.model.Model
+import me.timelytask.model.task.Task
 import me.timelytask.util.publisher.PublisherImpl
 import me.timelytask.view.viewmodel.dialogmodel.DialogModel
-import me.timelytask.view.viewmodel.elemts.{FocusElementGrid, Focusable, InputField, OptionInputField}
+import me.timelytask.view.viewmodel.elemts.{DateInputField, FocusElementGrid, Focusable, 
+  InputField, OptionInputField, PeriodInputField, TextInputField}
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
@@ -15,7 +18,8 @@ import scala.compiletime.erasedValue
 import scala.util.{Failure, Success, Try}
 
 case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
-                             lastView: Option[ViewType], isNewTask: Boolean = false,
+                             lastView: Option[ViewType],
+                             isNewTask: Boolean = false,
                              protected var focusElementGrid: Option[FocusElementGrid] = None,
                              dialogModel: Option[DialogModel[?]] = None,
                              override val model: Model)
@@ -36,48 +40,53 @@ case class TaskEditViewModel(taskID: UUID, task: Task = Task(),
 
   private def createElements(task: Task, model: Model): Vector[Vector[Option[Focusable[?]]]] =
     Vector(Vector(
-      Some(InputField[String](Task.descDescription, Some(task.description), (s: String) => s)),
+      Some(TextInputField(Task.descDescription, Some(task.description))),
 
       Some(OptionInputField[UUID](Task.descPriority, model.priorities.toList.map(_.uuid),
-        (uuid: UUID) =>
-          model.priorities.find(_.uuid.equals(uuid)) match
+        (uuid: UUID) => {
+          model.priorities.find(_.uuid.equals(uuid)) match {
             case Some(p) => p.name
-            case None => "Priority undefined",
+            case None => "Priority undefined"
+          }
+        },
         task.priority.toList)),
 
       Some(OptionInputField[UUID](Task.descTags, model.tags.toList.map(_.uuid), (uuid: UUID) =>
-        model.tags.find(_.uuid.equals(uuid)) match
+        model.tags.find(_.uuid.equals(uuid)) match {
           case Some(t) => t.name
-          case None => "Tag undefined",
+          case None => "Tag undefined"
+        },
         task.tags.toList, None, None)),
 
-      Some(InputField[DateTime](Task.descDeadline, Some(task.deadline.date), (dt: DateTime) =>
-        dt.toString("dd/MM/yyyy HH:mm"))),
+      Some(DateInputField(Task.descDeadline, Some(task.deadline.date))),
 
-      Some(InputField[DateTime](Task.descScheduleDate, Some(task.scheduleDate), (dt: DateTime) =>
-        dt.toString("dd/MM/yyyy HH:mm"))),
+      Some(DateInputField(Task.descScheduleDate, Some(task.scheduleDate))),
 
       Some(OptionInputField[UUID](Task.descState, model.states.toList.map(_.uuid), (uuid: UUID) =>
-        model.states.find(_.uuid.equals(uuid)) match
+        model.states.find(_.uuid.equals(uuid)) match {
           case Some(s) => s.name
-          case None => "State undefined",
+          case None => "State undefined"
+        },
         task.state.toList)),
 
-      Some(InputField[Period](Task.descTedDuration, Some(task.tedDuration), (p: Period) =>
-        p.getHours.toString + "h " + p.getMinutes + "m")),
+      Some(PeriodInputField(Task.descTedDuration, Some(task.tedDuration))),
 
       Some(OptionInputField[UUID](Task.descDependentOn, model.tasks.map(_.uuid), (uuid: UUID) =>
-        model.tasks.find(_.uuid.equals(uuid)) match
+        model.tasks.find(_.uuid.equals(uuid)) match {
           case Some(t) => t.name
-          case None => "Task undefined",
+          case None => "Task undefined"
+        },
         task.dependentOn.toList, Some(0), None)),
 
-      Some(InputField[Boolean](Task.descReoccurring, Some(task.reoccurring), (b: Boolean) =>
-        if (b) "Yes" else "No")),
+      Some(OptionInputField[Boolean](
+        Task.descReoccurring,
+        List(true, false),
+        (b: Boolean) => if (b) "Yes" else "No",
+        List(task.reoccurring),
+        Some(1),
+        Some(1))),
 
-      Some(InputField[Period](Task.descRecurrenceInterval, Some(task.recurrenceInterval),
-        (p: Period) =>
-          p.getWeeks.toString + "w " + p.getDays + "d " + p.getHours + "h " + p.getMinutes + "m"))
+      Some(PeriodInputField(Task.descRecurrenceInterval, Some(task.recurrenceInterval)))
     ))
 
   override def interact(inputGetter: Option[DialogModel[?]] => Option[?])
