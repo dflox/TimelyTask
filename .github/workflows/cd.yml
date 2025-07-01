@@ -79,6 +79,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/scala-3.5.1/timelytask-${{ env.VERSION }}.jar
+          asset_path: ./target/scala-3.6.4/timelytask-${{ env.VERSION }}.jar
           asset_name: timelytask-${{ env.VERSION }}.jar
           asset_content_type: application/java-archive
