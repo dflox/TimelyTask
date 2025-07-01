@@ -56,7 +56,7 @@ object Config {
         Key.Z -> EventTypeId("Undo"),
         Key.Y -> EventTypeId("Redo"),
         Key.R -> EventTypeId("AddRandomTask"),
-        Key.CtrlF4 -> EventTypeId("ShutdownApplication"),
+        Key.F4 -> EventTypeId("ShutdownApplication"),
         Key.CtrlG -> EventTypeId("NewGuiWindow"),
         Key.CtrlI -> EventTypeId("NewInstance"),
         Key.CtrlX -> EventTypeId("CloseInstance"),

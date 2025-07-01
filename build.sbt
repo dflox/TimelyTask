@@ -48,3 +48,13 @@ lazy val root = project
       "io.crashbox" %% "simplesql" % simpleSqlVersion
     )
   )
+
+assembly / assemblyMergeStrategy := {
+  case "module-info.class" => MergeStrategy.discard
+  case x if x.endsWith("module-info.class") => MergeStrategy.discard
+  case x if x.contains("META-INF/substrate") => MergeStrategy.first
+  case x if x.contains("META-INF/versions") => MergeStrategy.first
+  case x =>
+    val oldStrategy = (assembly / assemblyMergeStrategy).value
+    oldStrategy(x)
+}

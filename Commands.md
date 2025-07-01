@@ -23,3 +23,17 @@ sbt coverageReport
 ```bash
 sbt -jvm-debug 5005
 ```
+
+```bash
+sbt assembly
+```
+
+Delete git tag
+```bash
+git tag -d v0.1.0
+```
+
+list all git tags
+```bash
+git tag
+```
