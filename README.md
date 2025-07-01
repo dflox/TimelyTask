@@ -33,9 +33,6 @@ Use the following key combinations in the Terminal UI:
 | **Ctrl + →**      | Jump to next week        |
 | **Ctrl + ←**      | Jump to previous week    |
 | **T**             | Go to today              |
-| **W**             | Show full week           |
-| **\+**            | Show more days           |
-| **\-**            | Show fewer days          |
 
 ### General Actions
 | Shortcut          | Function                        |
