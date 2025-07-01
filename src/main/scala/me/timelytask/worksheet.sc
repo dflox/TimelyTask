@@ -12,7 +12,16 @@ import me.timelytask.util.serialization.decoder.given
 import me.timelytask.util.serialization.encoder.given
 import simplesql.DataSource
 
-var testModel = Model.emptyModel
-var serializationStrategy = SerializationStrategy.apply("xml")
-var testModelSerialized = serializationStrategy.serialize(testModel)
-var testModelAfterSerialization = serializationStrategy.deserialize[Model](testModelSerialized)
+import scala.collection.mutable
+
+//var testModel = Model.emptyModel
+//var serializationStrategy = SerializationStrategy.apply("xml")
+//var testModelSerialized = serializationStrategy.serialize(testModel)
+//var testModelAfterSerialization = serializationStrategy.deserialize[Model](testModelSerialized)
+
+val map: mutable.Map[String, Any] = mutable.Map.empty
+
+map("test") = "testValue"
+
+map("test")
+map.get("test1")

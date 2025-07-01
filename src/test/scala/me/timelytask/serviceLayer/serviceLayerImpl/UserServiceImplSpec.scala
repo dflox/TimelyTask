@@ -1,7 +1,7 @@
 package me.timelytask.serviceLayer.servicelayerImpl
 
 import me.timelytask.model.user.User
-import me.timelytask.repository.UserRepository
+import me.timelytask.repository.{TaskRepository, UserRepository}
 import me.timelytask.serviceLayer.{ServiceModule, UserService}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
@@ -16,10 +16,11 @@ class UserServiceImplSpec extends AnyWordSpec with Matchers with MockitoSugar {
     // 1. Mock the dependencies passed to the constructor.
     // We don't need to mock ServiceModule since it's not used in this specific implementation.
     val mockUserRepository: UserRepository = mock[UserRepository]
+    val mockTaskRepository: TaskRepository = mock[TaskRepository]
     val mockServiceModule: ServiceModule = mock[ServiceModule]
 
     // 2. Instantiate the actual class we want to test, injecting our mock repository.
-    val userService: UserService = new UserServiceImpl(mockServiceModule, mockUserRepository)
+    val userService: UserService = new UserServiceImpl(mockServiceModule, mockUserRepository, mockTaskRepository)
 
     // 3. Helper variables for use in tests.
     val testUserName = "test-user"

@@ -4,14 +4,15 @@ import me.timelytask.model.task.Task
 import me.timelytask.model.task.*
 import me.timelytask.repository.TaskRepository
 import me.timelytask.repository.simpleReaders.given
+import me.timelytask.util.extensions.simplesql.*
 import simplesql.*
 
 import java.util.UUID
 import scala.collection.immutable.HashSet
 
-class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
+class SqliteTaskRepository(ds: DataSource) extends TaskRepository {
 
-  private def createTaskTable(): Unit = dataSource.transaction {
+  private def createTaskTable(): Connection ?=> Int = {
     sql"""
         CREATE TABLE IF NOT EXISTS tasks(
           userid TEXT,
@@ -28,13 +29,13 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
           reoccurring BOOLEAN,
           recurrenceInterval TEXT,
           realDuration TEXT,
-          PRIMARY KEY (id, userid),
+          PRIMARY KEY (userid, id),
           FOREIGN KEY (userid) REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE
         )
        """.write()
   }
 
-  private def createTagAssignmentTable(): Unit = dataSource.transaction {
+  private def createTagAssignmentTable(): Connection ?=> Int = {
     // FOREIGN KEY (tagId) REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE
     sql"""
          CREATE TABLE IF NOT EXISTS task_tags(
@@ -42,22 +43,25 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
          taskId TEXT,
          tagId TEXT,
          PRIMARY KEY (userId, taskId, tagId),
-         FOREIGN KEY (userId) REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE,
-         FOREIGN KEY (taskId) REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE
-         )
+         FOREIGN KEY (userId, taskId) REFERENCES tasks(userid, id) ON UPDATE CASCADE ON DELETE
+         CASCADE
+       )
        """.write()
   }
 
-  private def createDependentOnTable(): Unit = dataSource.transaction {
+  private def createDependentOnTable(): Connection ?=> Int = {
     sql"""
          CREATE TABLE IF NOT EXISTS task_dependencies(
          userId TEXT,
          taskId TEXT,
+         userIdDependent TEXT,
          dependentOnId TEXT,
          PRIMARY KEY (userId, taskId, dependentOnId),
-         FOREIGN KEY (userId) REFERENCES users(name) ON UPDATE CASCADE ON DELETE CASCADE,
-         FOREIGN KEY (taskId) REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE,
-         FOREIGN KEY (dependentOnId) REFERENCES tasks(id) ON UPDATE CASCADE ON DELETE CASCADE
+         FOREIGN KEY (userId, taskId) REFERENCES tasks(userid, id) ON UPDATE CASCADE ON DELETE
+         CASCADE,
+         FOREIGN KEY (userIdDependent, dependentOnId) REFERENCES tasks(userid, id) ON UPDATE CASCADE ON
+         DELETE CASCADE,
+         CHECK ( userId = userIdDependent )
          )
        """.write()
   }
@@ -67,11 +71,12 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
       taskId: UUID,
       tags: Set[UUID]
     ): Unit = {
-    createTagAssignmentTable()
-    dataSource.transaction {
+    ds.transactionWithForeignKeys {
+      createTagAssignmentTable()
       sql"""
         DELETE FROM task_tags WHERE taskId = ${taskId.toString} AND tagId NOT IN (${tags
-        .map(_.toString).mkString(",")})
+          .map(_.toString)
+          .mkString(",")})
        """.write()
       tags.foreach { tagId =>
         sql"""
@@ -87,8 +92,8 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
       taskId: UUID,
       dependentTasks: Set[UUID]
     ): Unit = {
-    createDependentOnTable()
-    dataSource.transaction {
+    ds.transactionWithForeignKeys {
+      createDependentOnTable()
       sql"""
         DELETE FROM task_dependencies WHERE taskId = ${taskId.toString} AND dependentOnId NOT IN
         (${dependentTasks.map(_.toString).mkString(",")})
@@ -103,28 +108,27 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   }
 
   private def getTagsForTask(userName: String, taskId: UUID): Set[UUID] = {
+    ds.transactionWithForeignKeys {
       createTagAssignmentTable()
-      dataSource.transaction {
-        sql"""
+      sql"""
         SELECT tagId FROM task_tags WHERE taskId = ${taskId.toString} AND userId = $userName
        """.read[UUID].toSet
-      }
     }
+  }
 
   private def getDependentTasksForTask(userName: String, taskId: UUID): Set[UUID] = {
-    createDependentOnTable()
-    dataSource
-      .transaction {
-        sql"""
+    ds.transactionWithForeignKeys {
+      createDependentOnTable()
+      sql"""
         SELECT dependentOnId FROM task_dependencies WHERE taskId = ${taskId.toString} AND userId = 
         $userName
        """.read[UUID].toSet
-      }
+    }
   }
 
   override def getTaskById(userName: String, taskId: UUID): Task = {
-    createTaskTable()
-    dataSource.transaction {
+    ds.transactionWithForeignKeys {
+      createTaskTable()
       val result = sql"""
           SELECT * FROM tasks WHERE id = ${taskId.toString} AND userid = $userName
        """.readOne[Task]
@@ -137,8 +141,8 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   }
 
   override def addTask(userName: String, task: Task): Unit = {
-    createTaskTable()
-    dataSource.transaction {
+    ds.transactionWithForeignKeys {
+      createTaskTable()
       sql"""
         INSERT INTO tasks(userid, id, name, description, priority, deadline_date,
         deadline_initialDate,
@@ -165,10 +169,10 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   }
 
   override def getAllTasks(userName: String): Seq[Task] = {
-    createTaskTable()
-    createTagAssignmentTable()
-    createDependentOnTable()
-    dataSource.transaction {
+    ds.transactionWithForeignKeys {
+      createTaskTable()
+      createTagAssignmentTable()
+      createDependentOnTable()
       val result = sql"""
         SELECT * FROM tasks WHERE userid = $userName
        """.read[Task]
@@ -183,7 +187,10 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
   }
 
   override def deleteTask(userName: String, taskId: UUID): Unit =
-    dataSource.transaction {
+    ds.transactionWithForeignKeys {
+      createTaskTable()
+      createTagAssignmentTable()
+      createDependentOnTable()
       sql"""
             DELETE FROM tasks WHERE id = ${taskId.toString} AND userid = $userName
        """.write()
@@ -194,16 +201,20 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
       taskId: UUID,
       updatedTask: Task
     ): Unit = {
-    createTaskTable()
-    dataSource.transaction {
+    ds.transactionWithForeignKeys {
+      createTaskTable()
       sql"""
         UPDATE tasks SET 
           name = ${updatedTask.name},
           description = ${updatedTask.description},
           priority = ${updatedTask.priority.getOrElse("").toString},
           deadline_date = ${updatedTask.deadline.date.toString},
-          deadline_initialDate = ${updatedTask.deadline.initialDate.getOrElse("").toString},
-          deadline_completionDate = ${updatedTask.deadline.completionDate.getOrElse("").toString},
+          deadline_initialDate = ${updatedTask.deadline.initialDate
+          .getOrElse("")
+          .toString},
+          deadline_completionDate = ${updatedTask.deadline.completionDate
+          .getOrElse("")
+          .toString},
           scheduleDate = ${updatedTask.scheduleDate.toString}, 
           state = ${updatedTask.state.getOrElse("").toString},
           tedDuration = ${updatedTask.tedDuration.toString},
@@ -212,8 +223,25 @@ class SqliteTaskRepository(dataSource: DataSource) extends TaskRepository {
           realDuration = ${updatedTask.realDuration.getOrElse("").toString}
         WHERE id = ${taskId.toString} AND userid = $userName
        """.write()
-      updateTags(userName, taskId, updatedTask.tags)
-      updateDependentTasks(userName, taskId, updatedTask.dependentOn)
+    }
+    updateTags(userName, taskId, updatedTask.tags)
+    updateDependentTasks(userName, taskId, updatedTask.dependentOn)
+  }
+
+  override def deleteAllTasks(userName: String): Unit = {
+    ds.transactionWithForeignKeys {
+      createTaskTable()
+      createTagAssignmentTable()
+      createDependentOnTable()
+      sql"""
+        DELETE FROM tasks WHERE userid = $userName
+       """.write()
+      sql"""
+        DELETE FROM task_tags WHERE userId = $userName
+       """.write()
+      sql"""
+        DELETE FROM task_dependencies WHERE userId = $userName
+       """.write()
     }
   }
 }

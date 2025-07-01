@@ -29,6 +29,11 @@ class TaskServiceImpl(serviceModule: ServiceModule, taskRepository: TaskReposito
     taskRepository.deleteTask(userName, taskUUID)
     serviceModule.modelService.loadModel(userName)
   }
+  
+  override def deleteAllTasks(userName: String): Unit = {
+    taskRepository.deleteAllTasks(userName)
+    serviceModule.modelService.loadModel(userName)
+  }
 
   override def updateDescription(userName: String, taskUUID: UUID, newDescription: String): Unit = {
     val task = taskRepository.getTaskById(userName, taskUUID)

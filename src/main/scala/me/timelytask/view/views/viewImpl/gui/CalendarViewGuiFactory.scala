@@ -91,12 +91,7 @@ object CalendarViewGuiFactory {
     }
 
     val todayBtn = new Button("Heute") {
-      onAction = _ => {
-        println(
-          "Heute button clicked - goToToday action pending implementation"
-        )
-        // Example: viewTypeCommonsModule.eventContainer.goToToday()
-      }
+      onAction = _ => viewTypeCommonsModule.eventContainer.goToToday()
     }
     val prevWeekBtn = new Button("<< Woche") {
       onAction = _ => viewTypeCommonsModule.eventContainer.previousWeek()
@@ -192,7 +187,32 @@ object CalendarViewGuiFactory {
                     )
                 }
               )
-            }
+            },
+            new Menu("Modell importieren") {
+                items = Seq(
+                    new MenuItem("JSON") {
+                    onAction = _ =>
+                        getFileName("json", fileName =>
+                        viewTypeCommonsModule.globalEventContainer
+                            .importModel("json", fileName)
+                        )
+                    },
+                    new MenuItem("XML") {
+                    onAction = _ =>
+                        getFileName("xml", fileName =>
+                        viewTypeCommonsModule.globalEventContainer
+                            .importModel("xml", fileName)
+                        )
+                    },
+                    new MenuItem("YAML") {
+                    onAction = _ =>
+                        getFileName("yaml", fileName =>
+                        viewTypeCommonsModule.globalEventContainer
+                            .importModel("yaml", fileName)
+                        )
+                    }
+                )
+            },
           )
         },
         new Menu("Bearbeiten") {
@@ -248,7 +268,8 @@ object CalendarViewGuiFactory {
     val header = new VBox(5) {
       alignment = Pos.Center
       padding = Insets(10)
-      children = Seq(globalMenuBar, headerLabel, dateSpanLabel, globalNavBar, navBar)
+      children =
+        Seq(globalMenuBar, headerLabel, dateSpanLabel, globalNavBar, navBar)
     }
 
     val calendarGrid = createCalendarGrid(viewModel)
@@ -383,9 +404,27 @@ object CalendarViewGuiFactory {
     }
   }
 
-  private def getFileName(callback: Option[String] => Unit): Unit = {
-    // This method can be implemented to return a default file name for file operations.
-    // For now, it returns None, indicating no specific file name is set.
+  private def getFileName(serializationType: String, callback: String => Unit): Unit = {
+    Platform.runLater {
+      val fileChooser = new FileChooser {
+        title = "Datei auswählen"
+        initialDirectory = new File(System.getProperty("user.home"))
+        extensionFilters.add(
+          serializationType match {
+            case "json" => new FileChooser.ExtensionFilter("JSON-Datei", "*.json")
+            case "xml"  => new FileChooser.ExtensionFilter("XML-Datei", "*.xml")
+            case "yaml" => new FileChooser.ExtensionFilter("YAML-Datei", "*.yaml")
+          }
+        )
+      }
+      val selectedFile: Option[File] = Option(fileChooser.showOpenDialog(null))
+      selectedFile match {
+        case Some(file) =>
+          val fileName = file.getAbsolutePath
+          callback(fileName)
+        case None =>
+      }
+    }
   }
 }
 

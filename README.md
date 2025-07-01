@@ -64,6 +64,7 @@ Use the following key combinations in the Terminal UI:
 
 - [Scala](https://www.scala-lang.org/download/)
 - [sbt (Scala Build Tool)](https://www.scala-sbt.org/download.html)
+- [jdk 24](https://jdk.java.net/24/)
 
 ### Clone the Repository
 

@@ -9,5 +9,6 @@ trait TaskRepository {
   def getTaskById(userName: String, taskId: UUID): Task
   def addTask(userName: String, task: Task): Unit
   def deleteTask(userName: String, taskId: UUID): Unit
+  def deleteAllTasks(userName: String): Unit
   def updateTask(userName: String, taskId: UUID, updatedTask: Task): Unit
 }

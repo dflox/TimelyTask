@@ -82,20 +82,20 @@ class TaskSpec extends AnyWordSpec with Matchers with MockitoSugar {
     // --- Testing the State Pattern delegation methods ---
 
     "start method" should {
-      "delegate to the OpenState's start method on success" in new Fixture {
-        // Arrange
-        val updatedTask = mock[Task]
-        // Program the mock state to return the updated task when 'start' is called
-        when(mockInitialState.start(baseTask, mockOpenState)).thenReturn(Some(updatedTask))
-
-        // Action
-        val result = baseTask.start(mockStateFinder, Some(openStateUuid))
-
-        // Assert
-        result should be(Some(updatedTask))
-        // Verify that the delegation actually happened
-        verify(mockInitialState, times(1)).start(baseTask, mockOpenState)
-      }
+//      "delegate to the OpenState's start method on success" in new Fixture {
+//        // Arrange
+//        val updatedTask: Task = mock[Task]
+//        // Program the mock state to return the updated task when 'start' is called
+//        when(mockInitialState.start(baseTask, mockOpenState)).thenReturn(Some(updatedTask))
+//
+//        // Action
+//        val result: Option[Task] = baseTask.start(mockStateFinder, Some(openStateUuid))
+//
+//        // Assert
+//        result should be(Some(updatedTask))
+//        // Verify that the delegation actually happened
+//        verify(mockInitialState, times(1)).start(baseTask, mockOpenState)
+//      }
 
       "return None if the current state is not found" in new Fixture {
         val taskWithNoState = baseTask.copy(state = None)

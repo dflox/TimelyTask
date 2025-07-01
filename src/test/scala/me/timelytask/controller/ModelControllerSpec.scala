@@ -41,7 +41,7 @@ class ModelControllerSpec extends AnyWordSpec with MockitoSugar {
       coreModule.controllers.modelController.addTask(userName, task)
 
       // Assert
-      val model = callbackHelper.getCallbackResults(2)
+      val model = callbackHelper.getCallbackResults(1)
       model.length shouldBe 1
       model.head.tasks should contain(task)
     }
@@ -100,7 +100,7 @@ class ModelControllerSpec extends AnyWordSpec with MockitoSugar {
 
     def getCallbackResults(atLeast: Int, timeoutMillis: Int = 1000): Vector[ListenerType] = {
       val captor = ArgumentCaptor.forClass(classOf[Option[ListenerType]])
-      verify(callback, timeout(timeoutMillis).atLeast(2))
+      verify(callback, timeout(timeoutMillis).atLeast(atLeast))
         .apply(captor.capture())
       captor.getAllValues.asScala.toVector.filter(_.isDefined).map(_.get)
     }

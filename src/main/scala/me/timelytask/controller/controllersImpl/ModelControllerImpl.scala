@@ -13,35 +13,35 @@ class ModelControllerImpl(modelPublisher: Publisher[Model],
   extends Controller(modelPublisher, commandHandler)
   with ModelController {
 
-  override def addTask(userToken: String, task: Task): Unit = commandHandler.handle(new
-      ReversibleCommand[Task](
-    new ReversibleHandler[Task] {
-      override def apply(args: Task): Boolean = {
-        serviceModule.taskService.newTask(userToken, args)
-        true
-      }
+  override def addTask(userToken: String, task: Task): Unit = commandHandler.handle(userToken,
+    new ReversibleCommand[Task](
+      new ReversibleHandler[Task] {
+        override def apply(args: Task): Boolean = {
+          serviceModule.taskService.newTask(userToken, args)
+          true
+        }
 
-      override def unapply(args: Task): Boolean = {
-        serviceModule.taskService.deleteTask(userToken, args.uuid)
-        true
-      }
-    },
-    task
-  ) {})
+        override def unapply(args: Task): Boolean = {
+          serviceModule.taskService.deleteTask(userToken, args.uuid)
+          true
+        }
+      },
+      task
+    ) {})
 
-  override def removeTask(userToken: String, task: Task): Unit = commandHandler.handle(new
-      ReversibleCommand[Task](
-    new ReversibleHandler[Task] {
-      override def apply(args: Task): Boolean = {
-        serviceModule.taskService.deleteTask(userToken, args.uuid)
-        true
-      }
+  override def removeTask(userToken: String, task: Task): Unit = commandHandler.handle(userToken,
+    new ReversibleCommand[Task](
+      new ReversibleHandler[Task] {
+        override def apply(args: Task): Boolean = {
+          serviceModule.taskService.deleteTask(userToken, args.uuid)
+          true
+        }
 
-      override def unapply(args: Task): Boolean = {
-        serviceModule.taskService.newTask(userToken, args)
-        true
-      }
-    },
-    task
-  ) {})
+        override def unapply(args: Task): Boolean = {
+          serviceModule.taskService.newTask(userToken, args)
+          true
+        }
+      },
+      task
+    ) {})
 }

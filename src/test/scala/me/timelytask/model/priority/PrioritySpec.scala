@@ -39,14 +39,14 @@ class PrioritySpec extends AnyWordSpec with Matchers {
 
     // --- Testing Equality ---
     "be equal to another Priority with the same UUID, regardless of other fields" in new Fixture {
-      val samePriorityWithDifferentData = Priority("Low", "Different desc", 99, Color.Green, 0, false, uuid1)
+      val samePriorityWithDifferentData: Priority = Priority("Low", "Different desc", 99, Color.Green, 0, false, uuid1)
 
       (basePriority == samePriorityWithDifferentData) should be(true)
       basePriority.equals(samePriorityWithDifferentData) should be(true)
     }
 
     "not be equal to another Priority with a different UUID" in new Fixture {
-      val differentPriority = basePriority.copy(uuid = uuid2)
+      val differentPriority: Priority = basePriority.copy(uuid = uuid2)
       (basePriority == differentPriority) should be(false)
     }
 

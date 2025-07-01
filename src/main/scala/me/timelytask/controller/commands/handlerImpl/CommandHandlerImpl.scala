@@ -6,12 +6,17 @@ import me.timelytask.util.CancelableFuture
 import java.util.concurrent.LinkedBlockingQueue
 
 class CommandHandlerImpl extends CommandHandler {
-  private val commandQueue: LinkedBlockingQueue[Command[?]] = new LinkedBlockingQueue[Command[?]]()
-  private var undoStack: List[Command[?]] = Nil
-  private var redoStack: List[Command[?]] = Nil
+  private case class QueueCommand(userToken: String, command: Command[?])
 
-  private[controller] var runner: CancelableFuture[Unit] = CancelableFuture[Unit](commandExecutor
-    (), onFailure = Some(handleFailure))
+  private case class UserSession(undoStack: List[Command[?]], redoStack: List[Command[?]])
+
+  private val commandQueue: LinkedBlockingQueue[QueueCommand] = new
+      LinkedBlockingQueue[QueueCommand]()
+
+  private var userSessions: Map[String, UserSession] = Map.empty
+
+  private[controller] var runner: CancelableFuture[Unit] = CancelableFuture[Unit](
+    commandExecutor(), onFailure = Some(handleFailure))
 
   private def handleFailure(throwable: Throwable): Unit = {
     System.err.println(throwable.toString)
@@ -23,54 +28,67 @@ class CommandHandlerImpl extends CommandHandler {
       this.doStep(commandQueue.take())
     }
   }
-  
-  override def handle(command: Command[?]): Unit = commandQueue.add(command)
 
-  private def doStep(command: Command[?]): Boolean = {
-    if command.execute then
-      command match {
+  private[controller] override def handle(userToken: String, command: Command[?]): Unit =
+    commandQueue.add(QueueCommand(
+    userToken, command))
+
+  private def doStep(queueCommand: QueueCommand): Boolean = {
+    if queueCommand.command.execute then
+      queueCommand.command match {
         case cmd: CommandHandlerCommand => ()
         case cmd: IrreversibleCommand[?] =>
-          undoStack = Nil
-          redoStack = Nil
+          userSessions = userSessions.removed(queueCommand.userToken)
         case _ =>
-          undoStack = command :: undoStack
-          redoStack = Nil
+          val userSession = userSessions.getOrElse(queueCommand.userToken, UserSession(Nil, Nil))
+          userSessions = userSessions.updated(queueCommand.userToken,
+            userSession.copy(
+              undoStack = queueCommand.command :: userSession.undoStack,
+              redoStack = Nil
+            ))
       }
       true
     else
       false
   }
-  
-  private def undoStep(args: Unit): Boolean = {
-    undoStack match {
-      case Nil => false
-      case head :: stack =>
-        if head.undo then
-          undoStack = stack
-          redoStack = head :: redoStack
-          true
-        else
-          false
+
+  override def undo(userToken: String): Unit = commandQueue.add(QueueCommand(userToken, new
+      CommandHandlerCommand(undoStep(_, userToken)) {}))
+
+  override def redo(userToken: String): Unit = commandQueue.add(QueueCommand(userToken, new
+      CommandHandlerCommand(redoStep(_, userToken)) {}))
+
+  private def undoStep(args: Unit, userToken: String): Boolean = {
+    userSessions.get(userToken) match {
+      case Some(session) => session.undoStack match {
+        case Nil => false
+        case head :: stack =>
+          if head.undo then
+            userSessions = userSessions.updated(userToken,
+              session.copy(undoStack = stack, redoStack = head :: session.redoStack))
+            true
+          else
+            false
+      }
+      case None => false
     }
   }
 
-  private def redoStep(args: Unit): Boolean = {
-    redoStack match {
-      case Nil => false
-      case head :: stack =>
-        if head.redo then
-          redoStack = stack
-          undoStack = head :: undoStack
-          true
-        else
-          false
+  private def redoStep(args: Unit, userToken: String): Boolean = {
+    userSessions.get(userToken) match {
+      case Some(session) => session.redoStack match {
+        case Nil => false
+        case head :: stack =>
+          if head.redo then
+            userSessions = userSessions.updated(userToken,
+              session.copy(undoStack = head :: session.undoStack, redoStack = stack))
+            true
+          else
+            false
+      }
+      case None => false
     }
   }
-
-  override def undo(): Unit = commandQueue.add(new CommandHandlerCommand(undoStep) {})
-
-  override def redo(): Unit = commandQueue.add(new CommandHandlerCommand(redoStep) {})
 
   private trait CommandHandlerCommand(handler: Handler[Unit]) extends Command[Unit] {
     private var done: Boolean = false
@@ -86,4 +104,11 @@ class CommandHandlerImpl extends CommandHandler {
 
     override def redo: Boolean = false
   }
+
+  override private[controller] def terminateUserSession(userToken: String): Unit = {
+    userSessions = userSessions.removed(userToken)
+  }
+
+  override private[controller] def handleGlobally(command: Command[?]): Unit =
+    commandQueue.add(QueueCommand("", command))
 }

@@ -11,6 +11,8 @@ trait TaskService {
   def newTask(userName: String, task: Task): Unit
 
   def deleteTask(userName: String, taskUUID: UUID): Unit
+  
+  def deleteAllTasks(userName: String): Unit
 
   def updateName(userName: String, taskUUID: UUID, newName: String): Unit
 

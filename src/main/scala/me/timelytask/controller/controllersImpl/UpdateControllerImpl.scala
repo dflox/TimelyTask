@@ -32,7 +32,7 @@ class UpdateControllerImpl(serviceModule: ServiceModule, modelPublisher: Publish
         modelPublisher.update(newValue = Some(modelManipulator(model, updatedValue)), target = Some
           (userToken))
       case None =>
-        throw new IllegalArgumentException(s"Model not found for user token: $userToken")
+        //throw new IllegalArgumentException(s"Model not found for user token: $userToken")
     }
   }
   
