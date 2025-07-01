@@ -15,13 +15,16 @@ jobs:
       repository-projects: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache sbt dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.ivy2/cache
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt') }}
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.coursier
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
           restore-keys: |
             ${{ runner.os }}-sbt-
 
@@ -31,6 +34,9 @@ jobs:
         with:
           java-version: 24
           distribution: temurin
+
+      - name: Setup SBT
+        uses: sbt/setup-sbt@v1
 
       - name: Verify Java version
         run: java -version
