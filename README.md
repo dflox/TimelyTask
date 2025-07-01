@@ -6,25 +6,60 @@
 
 # TimelyTask
 
-TimelyTask is a Scala-based application designed to help users manage their tasks and schedules efficiently. The application provides a terminal-based user interface (TUI) for viewing and organizing tasks within a calendar format.
+TimelyTask is a Scala-based application designed to efficiently manage your calendar and tasks. It's built to be as agile as possible, offering flexible options for organizing and planning your activities. In the future, TimelyTask will intelligently manage your tasks to optimize your schedule and help you become more productive.
 
 This is an educational project for the Software Engineering module at HTWG Konstanz written in Scala.
 
+---
+
 ## Table of Contents
 
-- [Features](#Features)
+- [Keyboard Shortcuts and Functions](#Keyboard-Shortcuts-and-Functions)
 - [Instalation](#Instalation)
-- [Projekt Structure](#Project)
-- [Additional Information](#License)
-## Features
+- [License](#License)
+- [Acknowledgements](#Acknowledgements)
+- [Contact](#Contact)
 
-- **Task Management**: Add, edit, and delete tasks. (not fully implemented yet)
-- **Calendar View**: Display tasks in a calendar format.
-- **Time Selection**: Customize the time frame for viewing tasks.
-- **Terminal Interface**: Interact with the application through a terminal-based user interface.
+---
+## Keyboard Shortcuts and Functions
+
+Use the following key combinations in the Terminal UI:
+
+### Calendar Navigation
+| Shortcut          | Function                 |
+|-------------------|--------------------------|
+| **Shift + →**     | Move to next day         |
+| **Shift + ←**     | Move to previous day     |
+| **Ctrl + →**      | Jump to next week        |
+| **Ctrl + ←**      | Jump to previous week    |
+| **T**             | Go to today              |
+| **W**             | Show full week           |
+| **\+**            | Show more days           |
+| **\-**            | Show fewer days          |
+
+### General Actions
+| Shortcut          | Function                        |
+|-------------------|---------------------------------|
+| **Z**             | Undo                            |
+| **Y**             | Redo                            |
+| **R**             | Create random test task         |
+| **Ctrl + G**      | Open new GUI window             |
+| **Ctrl + I**      | Start new instance              |
+| **Ctrl + X**      | Close current instance          |
+
+### Import / Export
+| Shortcut          | Function                   |
+|-------------------|----------------------------|
+| **1**             | Export to JSON             |
+| **2**             | Export to YAML             |
+| **3**             | Export to XML              |
+| **Shift + 1**     | Import from JSON           |
+| **Shift + 2**     | Import from YAML           |
+| **Shift + 3**     | Import from XML            |
+
+---
 
 ## Installation
-
 ### Prerequisites
 
 - [Scala](https://www.scala-lang.org/download/)
@@ -43,23 +78,20 @@ cd TimelyTask
 sbt compile
 sbt run
 ````
-
-## Project Structure
-- src/main/scala/me/timelytask/: Contains the main application code.
-  - view/tui/: Terminal user interface components.
-  - view/viewmodel/: ViewModel components for managing the application's state.
-  - model/: Data models and business logic.
-  - utility/: Utility functions and helpers.
-- src/test/scala/me/timelytask/: Contains test cases for the application.
+---
 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/UnKompetent/TimelyTask/blob/main/LICENSE) file for details.
 
+---
+
 ## Acknowledgements
 
 - [nscala-time](https://github.com/nscala-time/nscala-time): A Scala wrapper for Joda Time.
 - [ScalaTest](https://www.scalatest.org/): A testing tool for Scala and Java.
+
+---
 
 ## Contact
 
