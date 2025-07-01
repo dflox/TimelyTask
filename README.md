@@ -43,6 +43,7 @@ Use the following key combinations in the Terminal UI:
 | **Ctrl + G**      | Open new GUI window             |
 | **Ctrl + I**      | Start new instance              |
 | **Ctrl + X**      | Close current instance          |
+| **F4** | Close Application |
 
 ### Import / Export
 | Shortcut          | Function                   |
