@@ -90,7 +90,7 @@ class CoreControllerImplSpec extends AnyWordSpec with Matchers with MockitoSugar
           Vector(mockUiInstance1, mockUiInstance2)
         )
 
-        coreController.closeInstance(mockUiInstance1)
+        coreController.closeInstance(mockUiInstance1) 
 
         verify(mockUiInstance1, times(1)).shutdown()
         verify(mockUiInstance2, never()).shutdown()
