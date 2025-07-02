@@ -23,7 +23,7 @@ class EventHandlerImpl extends EventHandler {
 
   override def shutdown(): Unit = {
     running = false
-    runner.await(Duration(200, MILLISECONDS))
+    runner.await(Duration(100, MILLISECONDS))
     while (!eventQueue.isEmpty) {
       eventQueue.take().call
     }

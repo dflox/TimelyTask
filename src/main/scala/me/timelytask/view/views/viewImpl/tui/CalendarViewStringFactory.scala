@@ -82,15 +82,15 @@ object CalendarViewStringFactory extends StringFactory[CALENDAR, CalendarViewMod
 
   // Align the text (by adding spaces) to the left, right or middle
   def columnSpacer(text: String, totalSpace: Int, format: String): String = {
-    cutText(text, totalSpace)
-    var space = totalSpace - text.length
+    val textCut = cutText(text, totalSpace)
+    var space = totalSpace - textCut.length
     if space < 0 then space = 0
 
     format match {
-      case "l" => text + createSpace(space) // left
-      case "m" => if (space % 2 == 0) createSpace(space / 2) + text + createSpace(space / 2)
-                  else createSpace(space / 2) + text + createSpace(space / 2 + 1) // middle
-      case "r" => createSpace(math.max(space, 0)) + text // right
+      case "l" => textCut + createSpace(space) // left
+      case "m" => if (space % 2 == 0) createSpace(space / 2) + textCut + createSpace(space / 2)
+                  else createSpace(space / 2) + textCut + createSpace(space / 2 + 1) // middle
+      case "r" => createSpace(math.max(space, 0)) + textCut // right
     }
   }
 

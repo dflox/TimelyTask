@@ -1,6 +1,6 @@
 import scala.collection.Seq
 
-val scala3Version = "3.6.4"
+val scala3Version = "3.7.1"
 val circeVersion = "0.14.14"
 val scalaTestVersion = "3.2.19"
 val jlineVersion = "3.30.4"

@@ -1,0 +1,10 @@
+.git/
+.gitignore
+*.md
+.bsp/
+.metals/
+.vscode/
+.idea/
+*.log
+Commands.md
+release.bat

@@ -9,6 +9,9 @@ import me.timelytask.view.UiInstance
 import me.timelytask.view.views.MinimalStartUpView
 import me.timelytask.view.views.viewImpl.gui.GUIMinimalStartupView
 import me.timelytask.view.views.viewImpl.tui.TUIMinimalStartupView
+import scalafx.application.Platform
+
+import java.lang.management.ManagementFactory
 
 class CoreControllerImpl(private val commandHandler: CommandHandler,
                          private val persistenceController: PersistenceController,
@@ -29,6 +32,12 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
     uiInstances.foreach(_.shutdown())
     runningFlag = false
     commandHandler.runner.cancel()
+    Platform.exit()
+    val threadMXBean = ManagementFactory.getThreadMXBean
+    val threads = threadMXBean.dumpAllThreads(false, false)
+    threads.foreach { t =>
+      println(s"Thread: ${t.getThreadName} - State: ${t.getThreadState}")
+    }
     true
   }
 

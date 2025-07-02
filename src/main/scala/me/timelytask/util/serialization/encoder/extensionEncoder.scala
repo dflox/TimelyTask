@@ -20,7 +20,7 @@ import scala.collection.immutable.HashSet
 
 extension (e: Encoder.type) {
   def uiType: Encoder[UIType] = Encoder.forProduct1[UIType, String]("uiType")(
-    s => s.toString)()
+    s => s.toString)( using Encoder.encodeString )
 
   def viewType: Encoder[ViewType] = Encoder.encodeString.contramap(_.toString)
 
