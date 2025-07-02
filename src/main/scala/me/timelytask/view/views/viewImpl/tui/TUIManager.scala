@@ -6,8 +6,8 @@ import me.timelytask.model.utility.Key
 import me.timelytask.util.{ CancelableFuture, Publisher }
 import me.timelytask.view.views.*
 import me.timelytask.view.views.commonsModules.{
-  CalendarCommonsModule,
-  TaskEditCommonsModule
+  CalendarCommonsModule
+//  , TaskEditCommonsModule
 }
 import me.timelytask.view.views.viewImpl.tui.dialog.DialogFactoryTUI
 import org.jline.keymap.BindingReader
@@ -17,8 +17,9 @@ import org.jline.utils.InfoCmp.Capability
 import java.io.PrintWriter
 
 class TUIManager(override val activeViewPublisher: Publisher[ViewType],
-                 override protected val calendarViewModule: CalendarCommonsModule,
-                 override protected val taskEditViewModule: TaskEditCommonsModule
+                 override protected val calendarViewModule: CalendarCommonsModule
+//                 ,
+//                 override protected val taskEditViewModule: TaskEditCommonsModule
                 )
   extends UIManager[String] {
 
@@ -33,7 +34,7 @@ class TUIManager(override val activeViewPublisher: Publisher[ViewType],
   private def init(): Unit = {
     terminal.enterRawMode()
     calendarView.init()
-    taskEditView.init()
+//    taskEditView.init()
   }
 
   val terminal: Terminal = TerminalBuilder.builder()
@@ -63,8 +64,8 @@ class TUIManager(override val activeViewPublisher: Publisher[ViewType],
   val calendarView: CalendarView[String] = wireWith[TuiCalendarView](
     () => new TuiCalendarView(render, createTuiModel, dialogFactoryTUI, calendarViewModule))
 
-  val taskEditView: TaskEditView[String] = wireWith[TuiTaskEditView](
-    () => new TuiTaskEditView(render, createTuiModel, dialogFactoryTUI, taskEditViewModule))
+//  val taskEditView: TaskEditView[String] = wireWith[TuiTaskEditView](
+//    () => new TuiTaskEditView(render, createTuiModel, dialogFactoryTUI, taskEditViewModule))
 
   private var keyInputTask: Option[CancelableFuture[Unit]] = None
 
@@ -96,7 +97,7 @@ class TUIManager(override val activeViewPublisher: Publisher[ViewType],
   private def handleNewKeyInput(key: Key): Unit = {
     activeViewPublisher.getValue.get match {
       case CALENDAR => calendarView.handleKey(Some(key))
-      case TASKEdit => taskEditView.handleKey(Some(key))
+//      case TASKEdit => taskEditView.handleKey(Some(key))
       case _ => ()
     }
   }

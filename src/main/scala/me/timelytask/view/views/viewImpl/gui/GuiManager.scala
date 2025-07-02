@@ -4,10 +4,10 @@ import com.softwaremill.macwire.{wire, wireWith}
 import me.timelytask.model.settings.{CALENDAR, ViewType}
 import me.timelytask.util.Publisher
 import me.timelytask.view.viewmodel.CalendarViewModel
-import me.timelytask.view.views.commonsModules.{CalendarCommonsModule, TaskEditCommonsModule}
+import me.timelytask.view.views.commonsModules.{CalendarCommonsModule}
 import me.timelytask.view.views.viewImpl.gui.GuiCalendarView
 import me.timelytask.view.views.viewImpl.gui.dialog.DialogFactoryImpl
-import me.timelytask.view.views.{CalendarView, DialogFactory, TaskEditView, UIManager}
+import me.timelytask.view.views.{CalendarView, DialogFactory, UIManager}
 import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.geometry.Pos
@@ -17,8 +17,10 @@ import scalafx.scene.layout.VBox
 import scalafx.stage.Stage
 
 class GuiManager(override val activeViewPublisher: Publisher[ViewType],
-                 override protected val calendarViewModule: CalendarCommonsModule,
-                 override protected val taskEditViewModule: TaskEditCommonsModule)
+                 override protected val calendarViewModule: CalendarCommonsModule
+//                 ,
+//                 override protected val taskEditViewModule: TaskEditCommonsModule
+                 )
   extends UIManager[Scene] {
   private var stage: Option[Stage] = None
 
@@ -33,8 +35,8 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
 
   override val calendarView: CalendarView[Scene] = wireWith[GuiCalendarView](() =>
     GuiCalendarView(render, dialogFactory, calendarViewModule))
-  override val taskEditView: TaskEditView[Scene] = wireWith[GuiTaskEditView](() =>
-    GuiTaskEditView(render, dialogFactory, taskEditViewModule))
+//  override val taskEditView: TaskEditView[Scene] = wireWith[GuiTaskEditView](() =>
+//    GuiTaskEditView(render, dialogFactory, taskEditViewModule))
 
   override def render(scene: Scene, viewType: ViewType): Unit = {
     if activeViewPublisher.getValue.contains(viewType) then {
@@ -67,7 +69,7 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
       })
       stage.foreach(_.show())
       calendarView.init()
-      taskEditView.init()
+//      taskEditView.init()
     }
 
   }

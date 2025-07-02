@@ -11,8 +11,12 @@ import me.timelytask.view.events.container.GlobalEventContainer
 import me.timelytask.view.events.container.contailerImpl.GlobalEventContainerImpl
 import me.timelytask.view.events.handler.EventHandlerImpl
 import me.timelytask.view.views.UIManager
-import me.timelytask.view.views.commonsModules.commonsModuleImpl.{CalendarCommonsModuleImpl, TaskEditCommonsModuleImpl}
-import me.timelytask.view.views.commonsModules.{CalendarCommonsModule, TaskEditCommonsModule}
+import me.timelytask.view.views.commonsModules.commonsModuleImpl.{CalendarCommonsModuleImpl
+//  , TaskEditCommonsModuleImpl
+}
+import me.timelytask.view.views.commonsModules.{CalendarCommonsModule
+//  , TaskEditCommonsModule
+}
 import me.timelytask.view.views.viewImpl.gui.GuiManager
 import me.timelytask.view.views.viewImpl.tui.TUIManager
 
@@ -41,7 +45,7 @@ class UiInstance(protected val uiInstanceConfig: UiInstanceConfig,
   
   private lazy val calendarViewModule: CalendarCommonsModule = wire[CalendarCommonsModuleImpl]
   
-  private lazy val taskEditViewModule: TaskEditCommonsModule = wire[TaskEditCommonsModuleImpl]
+//  private lazy val taskEditViewModule: TaskEditCommonsModule = wire[TaskEditCommonsModuleImpl]
   
   private var uiManager: Vector[UIManager[?]] = Vector.empty
 
@@ -74,6 +78,6 @@ class UiInstance(protected val uiInstanceConfig: UiInstanceConfig,
     // Initialize the event containers
     activeViewPublisher.update(Some(uiInstanceConfig.startView))
     calendarViewModule.eventContainer.init()
-    taskEditViewModule.eventContainer.init()
+//    taskEditViewModule.eventContainer.init()
   }
 }

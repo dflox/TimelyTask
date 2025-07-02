@@ -93,4 +93,4 @@ This project is licensed under the MIT License. See the [LICENSE](https://github
 
 ## Contact
 
-For any questions or feedback, please open an issue on the [GitHub repository](https://github.com/dflox/TimelyTask/issues).
+For any questions or feedback, please open an issue on the [GitHub repository](https://github.com/dflox/TimelyTask/issues). }
