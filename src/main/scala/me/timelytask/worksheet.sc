@@ -14,14 +14,14 @@ import simplesql.DataSource
 
 import scala.collection.mutable
 
-//var testModel = Model.emptyModel
-//var serializationStrategy = SerializationStrategy.apply("xml")
-//var testModelSerialized = serializationStrategy.serialize(testModel)
-//var testModelAfterSerialization = serializationStrategy.deserialize[Model](testModelSerialized)
+var testModel = Model.emptyModel
+var serializationStrategy = SerializationStrategy.apply("yaml")
+var testModelSerialized = serializationStrategy.serialize(testModel)
+var testModelAfterSerialization = serializationStrategy.deserialize[Model](testModelSerialized)
 
-val map: mutable.Map[String, Any] = mutable.Map.empty
-
-map("test") = "testValue"
-
-map("test")
-map.get("test1")
+//val map: mutable.Map[String, Any] = mutable.Map.empty
+//
+//map("test") = "testValue"
+//
+//map("test")
+//map.get("test1")
