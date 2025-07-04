@@ -12,7 +12,7 @@ WORKDIR /app
 RUN chown appuser:appuser /app
 
 # Copy the assembly JAR
-COPY target/scala-3.7.1/timelytask-v0.0.2.jar timelytask.jar
+COPY target/scala-3.7.1/timelytask-v0.0.3.jar timelytask.jar
 
 # Copy TUI-only startup configuration
 COPY <<EOF /app/startUpConfig.yaml

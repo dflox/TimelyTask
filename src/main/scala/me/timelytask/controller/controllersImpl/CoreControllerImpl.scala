@@ -12,6 +12,7 @@ import me.timelytask.view.views.viewImpl.tui.TUIMinimalStartupView
 import scalafx.application.Platform
 
 import java.lang.management.ManagementFactory
+import scala.util.Try
 
 class CoreControllerImpl(private val commandHandler: CommandHandler,
                          private val persistenceController: PersistenceController,
