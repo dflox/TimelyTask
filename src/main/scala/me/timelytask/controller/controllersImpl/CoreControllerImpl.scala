@@ -32,9 +32,11 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
   private def shutdownCommandHandler(): Handler[Unit] = (args: Unit) => {
     uiInstances.foreach(_.shutdown())
     runningFlag = false
-    commandHandler.runner.cancel()
     Try[Unit] {
+      commandHandler.runner.cancel()
       Platform.exit()
+    }.recover {
+      case e: Exception => System.exit(0)
     }
 //    val threadMXBean = ManagementFactory.getThreadMXBean
 //    val threads = threadMXBean.dumpAllThreads(false, false)
