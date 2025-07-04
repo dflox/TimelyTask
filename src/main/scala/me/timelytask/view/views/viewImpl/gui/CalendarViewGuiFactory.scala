@@ -269,7 +269,7 @@ object CalendarViewGuiFactory {
       alignment = Pos.Center
       padding = Insets(10)
       children =
-        Seq(globalMenuBar, headerLabel, dateSpanLabel, globalNavBar, navBar)
+        Seq(globalMenuBar, headerLabel, dateSpanLabel, navBar)
     }
 
     val calendarGrid = createCalendarGrid(viewModel)

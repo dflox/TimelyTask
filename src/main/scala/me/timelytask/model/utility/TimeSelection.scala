@@ -28,7 +28,7 @@ case class TimeSelection(day: DateTime, dayCount: Int, timeFrame: Period) {
     (0 until dayCount).map(day + _.days).toList
   }
 
-  // Get a time period in a given Format as String starting with a given day and going forward 
+  // Get a time period in a given Format as String starting with a given day and going forward
   // for a given TimePeriod
   def toString(formatStart: String, formatEnd: String, separator: String): String = {
     val lastDay: DateTime = day + (dayCount - 1).days

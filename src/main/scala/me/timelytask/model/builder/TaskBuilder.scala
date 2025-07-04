@@ -24,52 +24,42 @@ class TaskBuilder(defaultInstance: Task = Task()) extends Builder[Task](defaultI
     this.name = name
     this
   }
-
   def setDescription(description: String): TaskBuilder = {
     this.description = description
     this
   }
-
   def setPriority(priority: UUID): TaskBuilder = {
     this.priority = Some(priority)
     this
   }
-
   def setTags(tags: HashSet[UUID]): TaskBuilder = {
     this.tags = tags
     this
   }
-
   def setDeadline(deadline: Deadline): TaskBuilder = {
     this.deadline = deadline
     this
   }
-
   def setScheduleDate(scheduleDate: DateTime): TaskBuilder = {
     this.scheduleDate = scheduleDate
     this
   }
-
   def setState(state: Option[UUID]): TaskBuilder = {
     this.state = state
     this
   }
-
   def setTedDuration(tedDuration: Period): TaskBuilder = {
     this.tedDuration = tedDuration
     this
   }
-
   def setDependentOn(dependentOn: HashSet[UUID]): TaskBuilder = {
     this.dependentOn = dependentOn
     this
   }
-
   def setReoccurring(reoccurring: Boolean): TaskBuilder = {
     this.reoccurring = reoccurring
     this
   }
-
   def setRecurrenceInterval(recurrenceInterval: Period): TaskBuilder = {
     this.recurrenceInterval = recurrenceInterval
     this

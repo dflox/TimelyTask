@@ -4,6 +4,8 @@ import io.circe.yaml.v12.parser
 import io.circe.yaml.v12.syntax.AsYaml
 import me.timelytask.util.serialization.{SerializationStrategy, TypeDecoder, TypeEncoder}
 
+
+//noinspection DuplicatedCode
 class YamlSerializationStrategy extends SerializationStrategy {
   override val fileExtension: String = "yaml"
   override def serialize[T](obj: T)(using typeEncoder: TypeEncoder[T]): String = {

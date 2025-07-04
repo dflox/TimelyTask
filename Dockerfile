@@ -30,3 +30,6 @@ ENV JAVA_OPTS="-Xms512m -Xmx1024m -XX:+UseContainerSupport -XX:MaxRAMPercentage=
 
 # Run the application
 CMD java $JAVA_OPTS -jar timelytask.jar
+
+
+
