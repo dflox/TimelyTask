@@ -12,17 +12,23 @@ case class TimeSelection(day: DateTime, dayCount: Int, timeFrame: Period) {
 
   val timeFrameInterval: Interval = new Interval(day, day.withPeriodAdded(timeFrame, 1))
 
-  // Get the first Day of the week
+  /**
+   * Get the first day of the week for the given day.
+   * @return the first day of the week as a DateTime object
+   */
   def getFirstDayOfWeek: DateTime = {
     day - (day.getDayOfWeek - 1).days
   }
 
-  // Get a list of days starting with a given day and going forward for a given TimePeriod
+  /**
+   * Get the span of days starting from the given day.
+   * @return a list of DateTime objects representing each day in the span
+   */
   def getDaySpan: List[DateTime] = {
     (0 until dayCount).map(day + _.days).toList
   }
 
-  // Get a time period in a given Format as String starting with a given day and going forward 
+  // Get a time period in a given Format as String starting with a given day and going forward
   // for a given TimePeriod
   def toString(formatStart: String, formatEnd: String, separator: String): String = {
     val lastDay: DateTime = day + (dayCount - 1).days

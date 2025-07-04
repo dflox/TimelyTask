@@ -4,7 +4,8 @@ import me.timelytask.view.views.MinimalStartUpView
 import scalafx.application.Platform
 import scalafx.geometry.Pos
 import scalafx.scene.Scene
-import scalafx.scene.control.{ Button, Label, TextField }
+import scalafx.scene.control.{Button, Label, TextField}
+import scalafx.scene.image.Image
 import scalafx.scene.layout.VBox
 import scalafx.stage.Stage
 
@@ -17,6 +18,7 @@ class GUIMinimalStartupView extends MinimalStartUpView {
       stage = Some(new Stage {
         title = "TimelyTask"
         scene = initialScene
+        icons += new Image("icons/app_icon.png")
       })
       stage.foreach { s =>
         s.setOnCloseRequest(_ => {

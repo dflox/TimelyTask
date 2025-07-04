@@ -105,7 +105,6 @@ class XmlSerializationStrategy extends SerializationStrategy {
     val childrenAsJsonObject = collectObjectFields(node)
 
     val text = node.child.collect { case t: Text => t.text.trim }.mkString
-    val hasElementChildren = childrenAsJsonObject.nonEmpty
     val hasAttributes = attributesAsJson.asObject.exists(_.nonEmpty)
 
     var fields = Map.empty[String, Json]

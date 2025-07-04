@@ -15,6 +15,7 @@ import scalafx.scene.Scene
 import scalafx.scene.control.Label
 import scalafx.scene.layout.VBox
 import scalafx.stage.Stage
+import scalafx.scene.image.Image
 
 class GuiManager(override val activeViewPublisher: Publisher[ViewType],
                  override protected val calendarViewModule: CalendarCommonsModule
@@ -63,6 +64,7 @@ class GuiManager(override val activeViewPublisher: Publisher[ViewType],
       stage = Some(new Stage {
         title = "TimelyTask - " + calendarViewModule.globalEventContainer.userToken // bit hacky, but works
         scene = initialScene
+        icons += new Image("/icons/app_icon.png")
         onCloseRequest = _ => {
           calendarViewModule.globalEventContainer.closeInstance()
         }
