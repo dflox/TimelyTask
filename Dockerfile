@@ -1,4 +1,3 @@
-# Simple Dockerfile for Scala TUI Application
 FROM eclipse-temurin:24-jre
 
 # Update package list and install only essential packages

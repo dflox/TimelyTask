@@ -37,7 +37,6 @@ class SqliteUserRepository(ds: DataSource) extends UserRepository {
       createUserTable()
     }
     ds.transactionWithForeignKeys {
-      // TODO: Try with run not transaction
       sql"""
             DELETE FROM users WHERE name = $userName
          """.write()

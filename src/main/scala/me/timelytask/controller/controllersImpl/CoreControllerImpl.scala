@@ -32,12 +32,14 @@ class CoreControllerImpl(private val commandHandler: CommandHandler,
     uiInstances.foreach(_.shutdown())
     runningFlag = false
     commandHandler.runner.cancel()
-    Platform.exit()
-    val threadMXBean = ManagementFactory.getThreadMXBean
-    val threads = threadMXBean.dumpAllThreads(false, false)
-    threads.foreach { t =>
-      println(s"Thread: ${t.getThreadName} - State: ${t.getThreadState}")
+    Try[Unit] {
+      Platform.exit()
     }
+//    val threadMXBean = ManagementFactory.getThreadMXBean
+//    val threads = threadMXBean.dumpAllThreads(false, false)
+//    threads.foreach { t =>
+//      println(s"Thread: ${t.getThreadName} - State: ${t.getThreadState}")
+//    }
     true
   }
 

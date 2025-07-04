@@ -8,8 +8,6 @@ import scala.util.Try
 class GuiValidationStep(nextValidator: Option[ValidationStep] = None)
   extends ValidationStep(nextValidator) {
 
-
-
   override protected def validationProcess(startUpConfig: StartUpConfig): Unit = {
     Try[Unit] {
       PlatformImpl.startup(() => {})

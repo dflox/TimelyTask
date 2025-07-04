@@ -8,8 +8,8 @@ import java.util.UUID
 
 // TODO: Make TaskState a sealed trait to restrict its subclasses and make the subclasses case 
 //  classes so the equals method can be removed
-trait TaskState(val name: String, val description: String, val color: Color, val uuid: UUID =
-  UUID.randomUUID()) {
+trait TaskState(val name: String, val description: String,
+                val color: Color, val uuid: UUID = UUID.randomUUID()) {
 
   override def equals(obj: Any): Boolean = obj match {
     case that: TaskState => this.uuid == that.uuid
@@ -26,6 +26,7 @@ trait TaskState(val name: String, val description: String, val color: Color, val
 
   def extendDeadline(task: Task, extension: Period): Option[Task]
 }
+
 object TaskState {
   def apply(name: String, description: String, color: Color): TaskState = {
     new OpenState(name, description, color)
